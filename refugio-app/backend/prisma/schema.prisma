@@ -1,5 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Schema de Prisma para el refugio de animales
+// Documentación: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -8,4 +8,196 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// =========================================
+// ENUMS
+// =========================================
+
+enum Role {
+  ADMIN
+  VOLUNTARIO
+  ADOPTANTE
+}
+
+enum Especie {
+  PERRO
+  GATO
+  OTRO
+}
+
+enum Sexo {
+  MACHO
+  HEMBRA
+}
+
+enum EstadoAnimal {
+  DISPONIBLE
+  EN_ACOGIDA
+  ADOPTADO
+  EN_TRATAMIENTO
+  NO_DISPONIBLE
+}
+
+enum TipoExpediente {
+  VACUNA
+  DESPARASITACION
+  CIRUGIA
+  REVISION
+  TRATAMIENTO
+}
+
+enum EstadoAdopcion {
+  SOLICITADA
+  EN_REVISION
+  APROBADA
+  RECHAZADA
+  COMPLETADA
+  CANCELADA
+}
+
+enum TipoApadrinamiento {
+  MENSUAL
+  PUNTUAL
+}
+
+enum EstadoApadrinamiento {
+  ACTIVO
+  CANCELADO
+  FINALIZADO
+}
+
+// =========================================
+// MODELOS
+// =========================================
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String
+  nombre        String
+  apellidos     String?
+  telefono      String?
+  rol           Role     @default(ADOPTANTE)
+  preferencias  Json?    // Para matchmaking: tipo de vivienda, experiencia, etc.
+  activo        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relaciones
+  adopciones       Adopcion[]
+  apadrinamientos  Apadrinamiento[]
+  donaciones       Donacion[]
+
+  @@index([email])
+  @@map("usuarios")
+}
+
+model Animal {
+  id                String       @id @default(uuid())
+  nombre            String
+  especie           Especie
+  raza              String?
+  sexo              Sexo
+  fechaNacimiento   DateTime?
+  edadEstimada      Int?         // En años, si no se conoce fecha exacta
+  peso              Decimal?     @db.Decimal(5, 2)
+  color             String?
+  chip              String?      @unique
+  estado            EstadoAnimal @default(DISPONIBLE)
+  descripcion       String?      @db.Text // Generada por IA
+  descripcionManual String?      @db.Text // Escrita por voluntario
+  fotos             String[]     // Array de URLs
+  fechaIngreso      DateTime     @default(now())
+  ubicacion         String?      // Jaula/zona del refugio
+  caracteristicas   Json?        // Temperamento, energía, apto niños, etc.
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  // Relaciones
+  expedientes      ExpedienteMedico[]
+  adopciones       Adopcion[]
+  apadrinamientos  Apadrinamiento[]
+
+  @@index([estado])
+  @@index([especie])
+  @@map("animales")
+}
+
+model ExpedienteMedico {
+  id               String         @id @default(uuid())
+  animalId         String
+  tipo             TipoExpediente
+  descripcion      String         @db.Text
+  veterinario      String?
+  fecha            DateTime
+  proximaRevision  DateTime?
+  documentos       String[]       // URLs a PDFs/imágenes
+  createdAt        DateTime       @default(now())
+
+  animal Animal @relation(fields: [animalId], references: [id], onDelete: Cascade)
+
+  @@index([animalId])
+  @@index([fecha])
+  @@map("expedientes_medicos")
+}
+
+model Adopcion {
+  id                       String         @id @default(uuid())
+  animalId                 String
+  usuarioId                String
+  estado                   EstadoAdopcion @default(SOLICITADA)
+  fechaSolicitud           DateTime       @default(now())
+  fechaAprobacion          DateTime?
+  fechaCompletada          DateTime?
+  notas                    String?        @db.Text
+  puntuacionCompatibilidad Float?         // Calculada por IA/algoritmo
+  motivoRechazo            String?        @db.Text
+  createdAt                DateTime       @default(now())
+  updatedAt                DateTime       @updatedAt
+
+  animal  Animal @relation(fields: [animalId], references: [id])
+  usuario User   @relation(fields: [usuarioId], references: [id])
+
+  @@index([estado])
+  @@index([animalId])
+  @@index([usuarioId])
+  @@map("adopciones")
+}
+
+model Apadrinamiento {
+  id          String               @id @default(uuid())
+  animalId    String
+  usuarioId   String
+  tipo        TipoApadrinamiento
+  cantidad    Decimal              @db.Decimal(10, 2)
+  estado      EstadoApadrinamiento @default(ACTIVO)
+  fechaInicio DateTime             @default(now())
+  fechaFin    DateTime?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  animal  Animal @relation(fields: [animalId], references: [id])
+  usuario User   @relation(fields: [usuarioId], references: [id])
+
+  @@index([estado])
+  @@index([usuarioId])
+  @@map("apadrinamientos")
+}
+
+model Donacion {
+  id              String   @id @default(uuid())
+  usuarioId       String?  // Nullable para donaciones anónimas
+  cantidad        Decimal  @db.Decimal(10, 2)
+  concepto        String?
+  metodoPago      String?
+  stripePaymentId String?  @unique
+  fecha           DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  usuario User? @relation(fields: [usuarioId], references: [id])
+
+  @@index([usuarioId])
+  @@index([fecha])
+  @@map("donaciones")
 }
