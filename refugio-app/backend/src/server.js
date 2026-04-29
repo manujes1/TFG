@@ -2,12 +2,15 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
+import authRoutes from './routes/auth.routes.js';
+import { errorHandler } from './middleware/errorHandler.js';
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// Middleware base
 app.use(cors({
   origin: process.env.FRONTEND_URL,
   credentials: true
@@ -23,13 +26,14 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Manejador de errores global (básico por ahora)
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Error interno del servidor' });
-});
+// Rutas de la API
+app.use('/api/auth', authRoutes);
+
+// Manejador de errores (siempre al final)
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`🐾 Servidor corriendo en http://localhost:${PORT}`);
   console.log(`   Health check: http://localhost:${PORT}/health`);
+  console.log(`   Auth API:     http://localhost:${PORT}/api/auth`);
 });
