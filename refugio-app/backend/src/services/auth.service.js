@@ -61,3 +61,23 @@ export async function loginUser({ email, password }) {
   const { passwordHash: _, ...userSafe } = user;
   return { user: userSafe, token };
 }
+
+/**
+ * Devuelve los datos del usuario a partir de su id.
+ * Se usa en /me, después de que el middleware de auth haya validado el token.
+ * @param {string} id - ID del usuario.
+ * @returns {Promise<object>} Usuario sin passwordHash.
+ * @throws Si el usuario no existe o está inactivo.
+ */
+export async function getUserById(id) {
+  const user = await prisma.user.findUnique({ where: { id } });
+
+  if (!user || !user.activo) {
+    const error = new Error('Usuario no encontrado');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const { passwordHash: _, ...userSafe } = user;
+  return userSafe;
+}

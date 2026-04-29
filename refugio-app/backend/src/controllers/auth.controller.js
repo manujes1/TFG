@@ -1,4 +1,4 @@
-import { registerUser, loginUser } from '../services/auth.service.js';
+import { registerUser, loginUser, getUserById } from '../services/auth.service.js';
 import { registerSchema, loginSchema } from '../utils/validation.js';
 
 export async function register(req, res, next) {
@@ -16,6 +16,16 @@ export async function login(req, res, next) {
     const data = loginSchema.parse(req.body);
     const result = await loginUser(data);
     res.json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function me(req, res, next) {
+  try {
+    // req.user lo añade el middleware authenticate
+    const user = await getUserById(req.user.id);
+    res.json({ user });
   } catch (err) {
     next(err);
   }
