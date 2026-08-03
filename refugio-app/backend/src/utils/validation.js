@@ -24,7 +24,6 @@ export const loginSchema = z.object({
 // Animales
 // =========================================
 
-// Enums espejo de los de Prisma (mantener sincronizados)
 const especieEnum = z.enum(['PERRO', 'GATO', 'OTRO']);
 const sexoEnum = z.enum(['MACHO', 'HEMBRA']);
 const estadoAnimalEnum = z.enum([
@@ -35,7 +34,6 @@ const estadoAnimalEnum = z.enum([
   'NO_DISPONIBLE'
 ]);
 
-// Crear animal (todos los campos requeridos son los mínimos)
 export const createAnimalSchema = z.object({
   nombre: z.string().min(1, 'El nombre es obligatorio').max(50),
   especie: especieEnum,
@@ -46,21 +44,42 @@ export const createAnimalSchema = z.object({
   peso: z.number().positive().max(200).optional(),
   color: z.string().max(50).optional(),
   chip: z.string().max(30).optional(),
-  estado: estadoAnimalEnum.optional(), // por defecto DISPONIBLE en BD
+  estado: estadoAnimalEnum.optional(),
   descripcionManual: z.string().max(2000).optional(),
   ubicacion: z.string().max(50).optional(),
   caracteristicas: z.record(z.string(), z.any()).optional()
 });
 
-// Actualizar animal: todos los campos opcionales
 export const updateAnimalSchema = createAnimalSchema.partial();
 
-// Query params para listar/filtrar animales
 export const listAnimalesQuerySchema = z.object({
   especie: especieEnum.optional(),
   sexo: sexoEnum.optional(),
   estado: estadoAnimalEnum.optional(),
-  search: z.string().max(50).optional(), // busca en nombre y raza
+  search: z.string().max(50).optional(), // Búsqueda por nombre o raza
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(20)
 });
+
+// =========================================
+// Expedientes médicos
+// =========================================
+
+const tipoExpedienteEnum = z.enum([
+  'VACUNA',
+  'DESPARASITACION',
+  'CIRUGIA',
+  'REVISION',
+  'TRATAMIENTO'
+]);
+
+export const createExpedienteSchema = z.object({
+  tipo: tipoExpedienteEnum,
+  descripcion: z.string().min(1, 'La descripción es obligatoria').max(2000),
+  veterinario: z.string().max(100).optional(),
+  fecha: z.coerce.date(),
+  proximaRevision: z.coerce.date().optional(),
+  documentos: z.array(z.string().url()).optional()
+});
+
+export const updateExpedienteSchema = createExpedienteSchema.partial();
