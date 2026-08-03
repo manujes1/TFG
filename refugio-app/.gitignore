@@ -32,3 +32,8 @@ backend/uploads/
 # Docker volumes locales
 postgres-data/
 ollama-data/
+
+
+# Notas
+decisiones.md
+tokens.md

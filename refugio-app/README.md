@@ -14,4 +14,11 @@ Plataforma web para la gestión integral de un refugio de animales. TFG de Ingen
 - PostgreSQL (local o vía Docker)
 
 ## Arranque rápido
-Pendiente de documentar.
+# Empezar a trabajar
+cd ~/proyectos/refugio-app
+docker compose up -d
+cd backend && npm run dev
+
+# Acabar de trabajar
+# Ctrl+C en el terminal del backend
+docker compose down       # desde la raíz del proyecto
