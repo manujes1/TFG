@@ -56,7 +56,7 @@ export const listAnimalesQuerySchema = z.object({
   especie: especieEnum.optional(),
   sexo: sexoEnum.optional(),
   estado: estadoAnimalEnum.optional(),
-  search: z.string().max(50).optional(), // Búsqueda por nombre o raza
+  search: z.string().max(50).optional(),
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(20)
 });
@@ -83,3 +83,37 @@ export const createExpedienteSchema = z.object({
 });
 
 export const updateExpedienteSchema = createExpedienteSchema.partial();
+
+// =========================================
+// Adopciones
+// =========================================
+
+export const estadoAdopcionEnum = z.enum([
+  'SOLICITADA',
+  'EN_REVISION',
+  'APROBADA',
+  'RECHAZADA',
+  'COMPLETADA',
+  'CANCELADA'
+]);
+
+// Crear solicitud: el adoptante solo aporta el animal y una nota opcional
+export const createAdopcionSchema = z.object({
+  animalId: z.string().uuid('animalId debe ser un UUID válido'),
+  notas: z.string().max(1000).optional()
+});
+
+// Cambiar de estado: admin/voluntario. Puede añadir motivo si rechaza.
+export const updateEstadoAdopcionSchema = z.object({
+  estado: estadoAdopcionEnum,
+  motivoRechazo: z.string().max(1000).optional(),
+  notas: z.string().max(1000).optional()
+});
+
+export const listAdopcionesQuerySchema = z.object({
+  estado: estadoAdopcionEnum.optional(),
+  animalId: z.string().uuid().optional(),
+  usuarioId: z.string().uuid().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(20)
+});
