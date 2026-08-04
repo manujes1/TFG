@@ -97,13 +97,11 @@ export const estadoAdopcionEnum = z.enum([
   'CANCELADA'
 ]);
 
-// Crear solicitud: el adoptante solo aporta el animal y una nota opcional
 export const createAdopcionSchema = z.object({
   animalId: z.string().uuid('animalId debe ser un UUID válido'),
   notas: z.string().max(1000).optional()
 });
 
-// Cambiar de estado: admin/voluntario. Puede añadir motivo si rechaza.
 export const updateEstadoAdopcionSchema = z.object({
   estado: estadoAdopcionEnum,
   motivoRechazo: z.string().max(1000).optional(),
@@ -114,6 +112,47 @@ export const listAdopcionesQuerySchema = z.object({
   estado: estadoAdopcionEnum.optional(),
   animalId: z.string().uuid().optional(),
   usuarioId: z.string().uuid().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(20)
+});
+
+// =========================================
+// Apadrinamientos
+// =========================================
+
+const tipoApadrinamientoEnum = z.enum(['MENSUAL', 'PUNTUAL']);
+const estadoApadrinamientoEnum = z.enum(['ACTIVO', 'CANCELADO', 'FINALIZADO']);
+
+export const createApadrinamientoSchema = z.object({
+  animalId: z.string().uuid('animalId debe ser un UUID válido'),
+  tipo: tipoApadrinamientoEnum,
+  cantidad: z.number().positive('La cantidad debe ser positiva').max(10000)
+});
+
+export const listApadrinamientosQuerySchema = z.object({
+  estado: estadoApadrinamientoEnum.optional(),
+  animalId: z.string().uuid().optional(),
+  usuarioId: z.string().uuid().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(20)
+});
+
+// =========================================
+// Donaciones
+// =========================================
+
+export const createDonacionSchema = z.object({
+  cantidad: z.number().positive('La cantidad debe ser positiva').max(100000),
+  concepto: z.string().max(200).optional(),
+  metodoPago: z.string().max(50).optional(),
+  // Opcional: si viene, marca al usuario donante; si no, es anónima
+  usuarioId: z.string().uuid().optional()
+});
+
+export const listDonacionesQuerySchema = z.object({
+  usuarioId: z.string().uuid().optional(),
+  desde: z.coerce.date().optional(),
+  hasta: z.coerce.date().optional(),
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(20)
 });
