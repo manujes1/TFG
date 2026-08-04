@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { list, getById, create, update, remove } from '../controllers/animal.controller.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import expedienteRoutes from './expediente.routes.js';
+import fotoRoutes from './foto.routes.js';
 
 const router = Router();
 
@@ -12,7 +13,8 @@ router.post('/', authenticate, authorize('ADMIN', 'VOLUNTARIO'), create);
 router.patch('/:id', authenticate, authorize('ADMIN', 'VOLUNTARIO'), update);
 router.delete('/:id', authenticate, authorize('ADMIN'), remove);
 
-// Rutas anidadas de expedientes: /api/animales/:animalId/expedientes
+// Rutas anidadas
 router.use('/:animalId/expedientes', expedienteRoutes);
+router.use('/:animalId/fotos', fotoRoutes);
 
 export default router;

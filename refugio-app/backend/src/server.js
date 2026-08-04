@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'node:path';
 
 import authRoutes from './routes/auth.routes.js';
 import animalRoutes from './routes/animal.routes.js';
@@ -14,12 +15,16 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const UPLOAD_DIR = process.env.UPLOAD_DIR || './uploads';
 
 app.use(cors({
   origin: process.env.FRONTEND_URL,
   credentials: true
 }));
 app.use(express.json());
+
+// Servir archivos subidos (fotos de animales, documentos de expedientes)
+app.use('/uploads', express.static(path.resolve(UPLOAD_DIR)));
 
 app.get('/health', (req, res) => {
   res.json({
@@ -41,6 +46,7 @@ app.use(errorHandler);
 app.listen(PORT, () => {
   console.log(`🐾 Servidor corriendo en http://localhost:${PORT}`);
   console.log(`   Health check:        http://localhost:${PORT}/health`);
+  console.log(`   Uploads públicos:    http://localhost:${PORT}/uploads/`);
   console.log(`   Auth API:            http://localhost:${PORT}/api/auth`);
   console.log(`   Animales API:        http://localhost:${PORT}/api/animales`);
   console.log(`   Adopciones API:      http://localhost:${PORT}/api/adopciones`);
