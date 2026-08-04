@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { generales } from '../controllers/estadisticas.controller.js';
+import { authenticate, authorize } from '../middleware/auth.js';
+
+const router = Router();
+
+// Solo admin/voluntario ven las estadísticas globales del refugio
+router.get('/', authenticate, authorize('ADMIN', 'VOLUNTARIO'), generales);
+
+export default router;
