@@ -1,41 +1,38 @@
-import { useEffect, useState } from 'react';
-import api from '../api/client.js';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 
-/**
- * Página inicial. De momento sirve como prueba de conexión:
- * llama al endpoint /health del backend y muestra el resultado.
- */
 export default function HomePage() {
-  const [status, setStatus] = useState('cargando...');
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    api.get('/health')
-      .then((response) => setStatus(response.data.status))
-      .catch((err) => setError(err.message));
-  }, []);
+  const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-refugio-50 flex flex-col items-center justify-center p-8">
-      <h1 className="text-4xl font-bold text-refugio-700 mb-4">
-        🐾 Refugio de Animales
-      </h1>
-      <p className="text-lg text-gray-700 mb-8">
-        Plataforma de gestión integral. TFG en desarrollo.
-      </p>
+    <div className="space-y-8">
+      <section className="bg-white shadow rounded-xl p-8 text-center">
+        <h1 className="text-3xl font-bold text-refugio-700 mb-3">
+          Encuentra a tu nuevo compañero
+        </h1>
+        <p className="text-gray-600 max-w-xl mx-auto mb-6">
+          Somos un refugio de animales. Aquí puedes conocer a los animales que
+          buscan hogar, solicitar una adopción, apadrinar o colaborar con una
+          donación.
+        </p>
+        <Link
+          to="/animales"
+          className="inline-block bg-refugio-600 hover:bg-refugio-700 text-white font-medium rounded-lg px-6 py-3 transition"
+        >
+          Ver animales disponibles
+        </Link>
+      </section>
 
-      <div className="bg-white shadow rounded-lg p-6 max-w-md w-full">
-        <h2 className="font-semibold text-gray-800 mb-2">
-          Estado del backend
-        </h2>
-        {error ? (
-          <p className="text-red-600">Error: {error}</p>
-        ) : (
-          <p className="text-refugio-600">
-            <span className="font-medium">Backend:</span> {status}
+      {user && (
+        <section className="bg-white shadow rounded-xl p-6">
+          <h2 className="font-semibold text-gray-800 mb-1">
+            Hola, {user.nombre} 👋
+          </h2>
+          <p className="text-sm text-gray-600">
+            Has iniciado sesión como <span className="font-medium">{user.rol}</span>.
           </p>
-        )}
-      </div>
+        </section>
+      )}
     </div>
   );
 }
