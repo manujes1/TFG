@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import AnimalesPage from './pages/AnimalesPage.jsx';
 import AnimalDetallePage from './pages/AnimalDetallePage.jsx';
+import MisSolicitudesPage from './pages/MisSolicitudesPage.jsx';
 
 export default function App() {
   return (
@@ -28,12 +29,7 @@ export default function App() {
               path="/mis-solicitudes"
               element={
                 <ProtectedRoute>
-                  <div className="bg-white shadow rounded-xl p-8">
-                    <h1 className="text-2xl font-bold text-refugio-700">
-                      Mis solicitudes
-                    </h1>
-                    <p className="text-gray-600 mt-2">Próximamente.</p>
-                  </div>
+                  <MisSolicitudesPage />
                 </ProtectedRoute>
               }
             />
