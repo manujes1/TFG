@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import AnimalesPage from './pages/AnimalesPage.jsx';
+import AnimalDetallePage from './pages/AnimalDetallePage.jsx';
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/animales" element={<AnimalesPage />} />
+            <Route path="/animales/:id" element={<AnimalDetallePage />} />
 
             <Route
               path="/mis-solicitudes"

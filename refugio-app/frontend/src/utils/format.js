@@ -1,0 +1,46 @@
+/**
+ * Helpers de formato para presentación.
+ */
+
+/**
+ * Formatea una fecha ISO a formato español legible.
+ * @param {string|Date|null} fecha
+ * @param {boolean} conHora
+ */
+export function formatFecha(fecha, conHora = false) {
+  if (!fecha) return '—';
+  const d = new Date(fecha);
+  if (Number.isNaN(d.getTime())) return '—';
+
+  const opciones = { day: '2-digit', month: 'short', year: 'numeric' };
+  if (conHora) {
+    opciones.hour = '2-digit';
+    opciones.minute = '2-digit';
+  }
+  return d.toLocaleDateString('es-ES', opciones);
+}
+
+/**
+ * Formatea un importe como euros.
+ * El backend devuelve Decimal serializado como string, así que aceptamos ambos.
+ * @param {string|number|null} cantidad
+ */
+export function formatEuros(cantidad) {
+  if (cantidad == null) return '—';
+  const num = typeof cantidad === 'string' ? parseFloat(cantidad) : cantidad;
+  if (Number.isNaN(num)) return '—';
+  return new Intl.NumberFormat('es-ES', {
+    style: 'currency',
+    currency: 'EUR'
+  }).format(num);
+}
+
+/**
+ * Formatea el peso en kilos.
+ */
+export function formatPeso(peso) {
+  if (peso == null) return null;
+  const num = typeof peso === 'string' ? parseFloat(peso) : peso;
+  if (Number.isNaN(num)) return null;
+  return `${num} kg`;
+}
