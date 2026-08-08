@@ -1,6 +1,11 @@
 import prisma from '../config/prisma.js';
 import { generarTexto } from '../config/ollama.js';
 import { ESPECIE_ETIQUETAS, SEXO_ETIQUETAS } from '../utils/etiquetas.js';
+import { calcularCompatibilidad } from '../utils/compatibilidad.js';
+
+/* ================================================================== */
+/* Generación de descripciones                                         */
+/* ================================================================== */
 
 /**
  * Construye el prompt para generar la descripción de un animal.
@@ -51,10 +56,6 @@ Descripción:`;
 
 /**
  * Genera una descripción para un animal y, opcionalmente, la persiste.
- *
- * @param {string} animalId
- * @param {{ guardar?: boolean }} [opciones]
- * @returns {Promise<{ descripcion: string, guardada: boolean }>}
  */
 export async function generarDescripcionAnimal(animalId, { guardar = false } = {}) {
   const animal = await prisma.animal.findUnique({ where: { id: animalId } });
@@ -84,6 +85,128 @@ export async function generarDescripcionAnimal(animalId, { guardar = false } = {
   return { descripcion, guardada: guardar };
 }
 
+/* ================================================================== */
+/* Explicación de compatibilidad                                       */
+/* ================================================================== */
+
+/**
+ * Construye el prompt para explicar un resultado de compatibilidad.
+ *
+ * IMPORTANTE: el modelo NO calcula ni cuestiona la puntuación. Recibe el
+ * resultado ya computado por el algoritmo determinista y su única tarea es
+ * redactarlo en lenguaje natural. Esto mantiene la decisión fuera del LLM.
+ */
+function construirPromptExplicacion(animal, resultado, perfil) {
+  const evaluacion = resultado.criterios
+    .map((c) => `- ${c.etiqueta}: ${c.detalle}`)
+    .join('\n');
+
+  const hogar = [];
+  hogar.push(`Vivienda: ${perfil.tipoVivienda}${perfil.jardin ? ' con jardín' : ' sin jardín'}`);
+  hogar.push(`Niños en casa: ${perfil.ninos ? 'sí' : 'no'}`);
+  hogar.push(`Otros animales: ${perfil.otrosPerros || perfil.otrosGatos ? 'sí' : 'no'}`);
+  hogar.push(`Experiencia previa: ${perfil.experiencia}`);
+  hogar.push(`Tiempo diario disponible: ${perfil.tiempoDiario}`);
+
+  return `Eres un asesor de adopciones de un refugio de animales en España.
+
+Un sistema ha evaluado la compatibilidad entre una persona interesada en adoptar y un animal concreto. Tu tarea es explicar ese resultado en lenguaje natural, dirigiéndote a la persona interesada.
+
+ANIMAL: ${animal.nombre} (${ESPECIE_ETIQUETAS[animal.especie] ?? animal.especie}${animal.raza ? `, ${animal.raza}` : ''})
+
+SITUACIÓN DE LA PERSONA:
+${hogar.join('\n')}
+
+RESULTADO DE LA EVALUACIÓN (compatibilidad: ${resultado.puntuacion} sobre 100):
+${evaluacion}
+
+Instrucciones estrictas:
+- Escribe en español de España, tuteando a la persona.
+- Extensión: entre 60 y 90 palabras, en un solo párrafo.
+- Explica los puntos fuertes de la compatibilidad y, si los hay, los aspectos a tener en cuenta.
+- Basa tu explicación ÚNICAMENTE en la evaluación proporcionada. No inventes datos del animal ni de la persona, ni cuestiones la puntuación.
+- Sé honesto: si hay aspectos poco favorables, menciónalos con naturalidad en lugar de ocultarlos.
+- No repitas la cifra de compatibilidad ni enumeres los criterios como lista: redacta un texto fluido.
+- Devuelve solo el texto, sin títulos ni comillas.
+
+Explicación:`;
+}
+
+/**
+ * Genera una explicación en lenguaje natural de la compatibilidad entre
+ * un usuario y un animal.
+ *
+ * El cálculo lo hace el algoritmo determinista; el modelo solo redacta.
+ *
+ * @param {string} usuarioId
+ * @param {string} animalId
+ * @returns {Promise<{ puntuacion: number, criterios: object[], explicacion: string }>}
+ */
+export async function explicarCompatibilidad(usuarioId, animalId) {
+  const [usuario, animal] = await Promise.all([
+    prisma.user.findUnique({ where: { id: usuarioId } }),
+    prisma.animal.findUnique({ where: { id: animalId } })
+  ]);
+
+  if (!usuario) {
+    const error = new Error('Usuario no encontrado');
+    error.statusCode = 404;
+    throw error;
+  }
+  if (!animal) {
+    const error = new Error('Animal no encontrado');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const perfil = usuario.preferencias;
+  if (!perfil || Object.keys(perfil).length === 0) {
+    const error = new Error(
+      'Necesitas completar tu perfil de adopción para obtener recomendaciones personalizadas'
+    );
+    error.statusCode = 400;
+    throw error;
+  }
+
+  // 1. Cálculo determinista
+  const resultado = calcularCompatibilidad(perfil, animal);
+
+  if (resultado.descartado) {
+    // No llamamos al modelo: el motivo del descarte ya es claro por sí mismo
+    return {
+      puntuacion: 0,
+      criterios: [],
+      descartado: true,
+      motivoDescarte: resultado.motivoDescarte,
+      explicacion: `${animal.nombre} no encaja con tu situación: ${resultado.motivoDescarte.toLowerCase()}.`,
+      generadaPorIA: false
+    };
+  }
+
+  // 2. Redacción con el modelo
+  const prompt = construirPromptExplicacion(animal, resultado, perfil);
+  const texto = await generarTexto(prompt, { temperature: 0.6, numPredict: 240 });
+  const explicacion = limpiarSalida(texto);
+
+  if (!explicacion) {
+    const error = new Error('El modelo no devolvió una explicación utilizable');
+    error.statusCode = 502;
+    throw error;
+  }
+
+  return {
+    puntuacion: resultado.puntuacion,
+    criterios: resultado.criterios,
+    descartado: false,
+    explicacion,
+    generadaPorIA: true
+  };
+}
+
+/* ================================================================== */
+/* Utilidades                                                          */
+/* ================================================================== */
+
 /**
  * Normaliza la salida del modelo: elimina prefijos residuales y comillas
  * envolventes que los modelos tienden a añadir pese a las instrucciones.
@@ -91,7 +214,7 @@ export async function generarDescripcionAnimal(animalId, { guardar = false } = {
 function limpiarSalida(texto) {
   let limpio = texto.trim();
 
-  limpio = limpio.replace(/^(descripci[oó]n|respuesta)\s*:\s*/i, '');
+  limpio = limpio.replace(/^(descripci[oó]n|explicaci[oó]n|respuesta)\s*:\s*/i, '');
 
   if (
     (limpio.startsWith('"') && limpio.endsWith('"')) ||

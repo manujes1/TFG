@@ -1,4 +1,7 @@
-import { generarDescripcionAnimal } from '../services/ia.service.js';
+import {
+  generarDescripcionAnimal,
+  explicarCompatibilidad
+} from '../services/ia.service.js';
 import { generarDescripcionSchema } from '../utils/validation.js';
 
 /**
@@ -9,6 +12,19 @@ export async function generarDescripcion(req, res, next) {
   try {
     const { guardar } = generarDescripcionSchema.parse(req.body ?? {});
     const resultado = await generarDescripcionAnimal(req.params.animalId, { guardar });
+    res.json(resultado);
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Explica en lenguaje natural la compatibilidad entre el usuario
+ * logueado y un animal concreto.
+ */
+export async function explicarMatch(req, res, next) {
+  try {
+    const resultado = await explicarCompatibilidad(req.user.id, req.params.animalId);
     res.json(resultado);
   } catch (err) {
     next(err);
