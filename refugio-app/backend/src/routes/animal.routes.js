@@ -3,6 +3,7 @@ import { list, getById, create, update, remove } from '../controllers/animal.con
 import { authenticate, authorize } from '../middleware/auth.js';
 import expedienteRoutes from './expediente.routes.js';
 import fotoRoutes from './foto.routes.js';
+import iaRoutes from './ia.routes.js';
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.delete('/:id', authenticate, authorize('ADMIN'), remove);
 // Rutas anidadas
 router.use('/:animalId/expedientes', expedienteRoutes);
 router.use('/:animalId/fotos', fotoRoutes);
+router.use('/:animalId/ia', iaRoutes);
 
 export default router;

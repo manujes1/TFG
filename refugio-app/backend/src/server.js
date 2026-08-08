@@ -10,6 +10,7 @@ import apadrinamientoRoutes from './routes/apadrinamiento.routes.js';
 import donacionRoutes from './routes/donacion.routes.js';
 import estadisticasRoutes from './routes/estadisticas.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import { comprobarOllama } from './config/ollama.js';
 
 dotenv.config();
 
@@ -23,14 +24,15 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Servir archivos subidos (fotos de animales, documentos de expedientes)
+// Servir archivos subidos (fotos de animales)
 app.use('/uploads', express.static(path.resolve(UPLOAD_DIR)));
 
-app.get('/health', (req, res) => {
+app.get('/health', async (req, res) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
-    env: process.env.NODE_ENV
+    env: process.env.NODE_ENV,
+    ia: await comprobarOllama()
   });
 });
 

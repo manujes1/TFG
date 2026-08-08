@@ -17,5 +17,27 @@ services:
       timeout: 5s
       retries: 5
 
+  # Servicio de IA local.
+  # Perfil "ia": no arranca con `docker compose up -d` por defecto,
+  # solo con `docker compose --profile ia up -d`.
+  # Se aísla así porque consume memoria y no es necesario para el
+  # desarrollo del resto de módulos.
+  ollama:
+    image: ollama/ollama:latest
+    container_name: refugio-ollama
+    restart: unless-stopped
+    profiles: ["ia"]
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
 volumes:
   postgres-data:
+  ollama-data:
