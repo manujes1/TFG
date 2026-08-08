@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 import Layout from './components/Layout.jsx';
+import AdminLayout from './components/AdminLayout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 import HomePage from './pages/HomePage.jsx';
@@ -9,6 +10,12 @@ import RegisterPage from './pages/RegisterPage.jsx';
 import AnimalesPage from './pages/AnimalesPage.jsx';
 import AnimalDetallePage from './pages/AnimalDetallePage.jsx';
 import MisSolicitudesPage from './pages/MisSolicitudesPage.jsx';
+
+import DashboardPage from './pages/admin/DashboardPage.jsx';
+import AnimalesAdminPage from './pages/admin/AnimalesAdminPage.jsx';
+import AdopcionesAdminPage from './pages/admin/AdopcionesAdminPage.jsx';
+
+const STAFF = ['ADMIN', 'VOLUNTARIO'];
 
 export default function App() {
   return (
@@ -34,19 +41,19 @@ export default function App() {
               }
             />
 
+            {/* Panel de administración (rutas anidadas) */}
             <Route
               path="/admin"
               element={
-                <ProtectedRoute roles={['ADMIN', 'VOLUNTARIO']}>
-                  <div className="bg-white shadow rounded-xl p-8">
-                    <h1 className="text-2xl font-bold text-refugio-700">
-                      Panel de administración
-                    </h1>
-                    <p className="text-gray-600 mt-2">Próximamente.</p>
-                  </div>
+                <ProtectedRoute roles={STAFF}>
+                  <AdminLayout />
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route index element={<DashboardPage />} />
+              <Route path="animales" element={<AnimalesAdminPage />} />
+              <Route path="adopciones" element={<AdopcionesAdminPage />} />
+            </Route>
           </Route>
 
           {/* 404 */}
