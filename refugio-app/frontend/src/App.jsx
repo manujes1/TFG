@@ -13,6 +13,7 @@ import MisSolicitudesPage from './pages/MisSolicitudesPage.jsx';
 
 import DashboardPage from './pages/admin/DashboardPage.jsx';
 import AnimalesAdminPage from './pages/admin/AnimalesAdminPage.jsx';
+import AnimalFormPage from './pages/admin/AnimalFormPage.jsx';
 import AdopcionesAdminPage from './pages/admin/AdopcionesAdminPage.jsx';
 
 const STAFF = ['ADMIN', 'VOLUNTARIO'];
@@ -41,7 +42,7 @@ export default function App() {
               }
             />
 
-            {/* Panel de administración (rutas anidadas) */}
+            {/* Panel de administración */}
             <Route
               path="/admin"
               element={
@@ -52,6 +53,8 @@ export default function App() {
             >
               <Route index element={<DashboardPage />} />
               <Route path="animales" element={<AnimalesAdminPage />} />
+              <Route path="animales/nuevo" element={<AnimalFormPage />} />
+              <Route path="animales/:id/editar" element={<AnimalFormPage />} />
               <Route path="adopciones" element={<AdopcionesAdminPage />} />
             </Route>
           </Route>
