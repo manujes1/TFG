@@ -4,14 +4,10 @@ import { signToken } from '../utils/jwt.js';
 
 /**
  * Registra un nuevo usuario en el sistema.
- * @param {object} data - Datos validados del usuario.
- * @returns {Promise<{ user: object, token: string }>}
- * @throws Si el email ya está registrado.
  */
 export async function registerUser(data) {
   const { email, password, nombre, apellidos, telefono } = data;
 
-  // Comprobar si ya existe
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
     const error = new Error('El email ya está registrado');
@@ -19,30 +15,24 @@ export async function registerUser(data) {
     throw error;
   }
 
-  // Crear usuario con password hasheada
   const passwordHash = await hashPassword(password);
   const user = await prisma.user.create({
     data: { email, passwordHash, nombre, apellidos, telefono }
   });
 
-  // Generar token
   const token = signToken({ id: user.id, email: user.email, rol: user.rol });
 
-  // Devolvemos el usuario sin el hash (importante)
   const { passwordHash: _, ...userSafe } = user;
   return { user: userSafe, token };
 }
 
 /**
  * Autentica a un usuario por email y contraseña.
- * @param {{ email: string, password: string }} data
- * @returns {Promise<{ user: object, token: string }>}
- * @throws Si las credenciales son inválidas.
  */
 export async function loginUser({ email, password }) {
   const user = await prisma.user.findUnique({ where: { email } });
 
-  // Mensaje genérico (no revelamos si el email existe o no, por seguridad)
+  // Mensaje genérico: no revelamos si el email existe (evita enumeración)
   if (!user || !user.activo) {
     const error = new Error('Credenciales inválidas');
     error.statusCode = 401;
@@ -64,10 +54,6 @@ export async function loginUser({ email, password }) {
 
 /**
  * Devuelve los datos del usuario a partir de su id.
- * Se usa en /me, después de que el middleware de auth haya validado el token.
- * @param {string} id - ID del usuario.
- * @returns {Promise<object>} Usuario sin passwordHash.
- * @throws Si el usuario no existe o está inactivo.
  */
 export async function getUserById(id) {
   const user = await prisma.user.findUnique({ where: { id } });
@@ -77,6 +63,23 @@ export async function getUserById(id) {
     error.statusCode = 404;
     throw error;
   }
+
+  const { passwordHash: _, ...userSafe } = user;
+  return userSafe;
+}
+
+/**
+ * Actualiza el perfil de preferencias del adoptante.
+ * Estas preferencias alimentan el algoritmo de compatibilidad.
+ *
+ * @param {string} id - ID del usuario (del token).
+ * @param {object} preferencias - Datos validados.
+ */
+export async function updatePreferencias(id, preferencias) {
+  const user = await prisma.user.update({
+    where: { id },
+    data: { preferencias }
+  });
 
   const { passwordHash: _, ...userSafe } = user;
   return userSafe;

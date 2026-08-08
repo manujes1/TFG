@@ -164,3 +164,24 @@ export const listDonacionesQuerySchema = z.object({
 export const generarDescripcionSchema = z.object({
   guardar: z.boolean().optional().default(false)
 });
+
+// =========================================
+// Perfil del adoptante
+// =========================================
+
+export const perfilAdoptanteSchema = z.object({
+  tipoVivienda: z.enum(['piso', 'casa']),
+  metrosCuadrados: z.number().int().min(10).max(2000).optional(),
+  jardin: z.boolean(),
+  ninos: z.boolean(),
+  otrosPerros: z.boolean(),
+  otrosGatos: z.boolean(),
+  experiencia: z.enum(['ninguna', 'baja', 'media', 'alta']),
+  tiempoDiario: z.enum(['poco', 'medio', 'mucho']),
+  preferenciaEspecie: z.enum(['PERRO', 'GATO', 'indiferente'])
+});
+
+export const recomendacionesQuerySchema = z.object({
+  limite: z.coerce.number().int().min(1).max(50).default(10),
+  minimo: z.coerce.number().int().min(0).max(100).default(0)
+});

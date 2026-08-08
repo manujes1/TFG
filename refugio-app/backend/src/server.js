@@ -9,6 +9,7 @@ import adopcionRoutes from './routes/adopcion.routes.js';
 import apadrinamientoRoutes from './routes/apadrinamiento.routes.js';
 import donacionRoutes from './routes/donacion.routes.js';
 import estadisticasRoutes from './routes/estadisticas.routes.js';
+import recomendacionRoutes from './routes/recomendacion.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { comprobarOllama } from './config/ollama.js';
 
@@ -42,6 +43,7 @@ app.use('/api/adopciones', adopcionRoutes);
 app.use('/api/apadrinamientos', apadrinamientoRoutes);
 app.use('/api/donaciones', donacionRoutes);
 app.use('/api/estadisticas', estadisticasRoutes);
+app.use('/api/recomendaciones', recomendacionRoutes);
 
 app.use(errorHandler);
 
