@@ -16,6 +16,9 @@ import AnimalesAdminPage from './pages/admin/AnimalesAdminPage.jsx';
 import AnimalFormPage from './pages/admin/AnimalFormPage.jsx';
 import AdopcionesAdminPage from './pages/admin/AdopcionesAdminPage.jsx';
 
+import PerfilPage from './pages/PerfilPage.jsx';
+import RecomendacionesPage from './pages/RecomendacionesPage.jsx';
+
 const STAFF = ['ADMIN', 'VOLUNTARIO'];
 
 export default function App() {
@@ -33,6 +36,23 @@ export default function App() {
             <Route path="/animales" element={<AnimalesPage />} />
             <Route path="/animales/:id" element={<AnimalDetallePage />} />
 
+            <Route
+              path="/perfil"
+              element={
+                <ProtectedRoute>
+                  <PerfilPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/recomendaciones"
+              element={
+                <ProtectedRoute>
+                  <RecomendacionesPage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/mis-solicitudes"
               element={

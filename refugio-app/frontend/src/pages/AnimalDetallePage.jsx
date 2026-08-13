@@ -7,6 +7,7 @@ import { createApadrinamiento } from '../api/apadrinamientos.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import EstadoBadge from '../components/EstadoBadge.jsx';
 import HistorialMedico from '../components/HistorialMedico.jsx';
+import CompatibilidadAnimal from '../components/CompatibilidadAnimal.jsx';
 import {
   ESPECIES,
   SEXOS,
@@ -339,6 +340,11 @@ export default function AnimalDetallePage() {
           )}
         </div>
       </div>
+
+      {/* Compatibilidad personalizada: solo para adoptantes logueados */}
+      {user && !isStaff && (
+        <CompatibilidadAnimal animalId={animal.id} nombreAnimal={animal.nombre} />
+      )}
 
       {/* Historial médico: solo staff */}
       {isStaff && (

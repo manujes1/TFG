@@ -1,0 +1,89 @@
+/**
+ * Componentes de presentación del resultado de compatibilidad.
+ */
+
+/**
+ * Devuelve el color y la etiqueta según el tramo de puntuación.
+ */
+function tramo(puntuacion) {
+  if (puntuacion >= 80) {
+    return { etiqueta: 'Muy compatible', barra: 'bg-refugio-600', texto: 'text-refugio-700', fondo: 'bg-refugio-50' };
+  }
+  if (puntuacion >= 60) {
+    return { etiqueta: 'Buena compatibilidad', barra: 'bg-green-500', texto: 'text-green-700', fondo: 'bg-green-50' };
+  }
+  if (puntuacion >= 40) {
+    return { etiqueta: 'Compatibilidad media', barra: 'bg-amber-500', texto: 'text-amber-700', fondo: 'bg-amber-50' };
+  }
+  return { etiqueta: 'Poca compatibilidad', barra: 'bg-red-500', texto: 'text-red-700', fondo: 'bg-red-50' };
+}
+
+/**
+ * Indicador circular compacto de compatibilidad.
+ */
+export function CompatibilidadBadge({ puntuacion }) {
+  const t = tramo(puntuacion);
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full ${t.fondo} ${t.texto}`}
+    >
+      <span className={`w-2 h-2 rounded-full ${t.barra}`} />
+      {puntuacion}% compatible
+    </span>
+  );
+}
+
+/**
+ * Barra de progreso con la puntuación y su etiqueta.
+ */
+export function CompatibilidadBarra({ puntuacion }) {
+  const t = tramo(puntuacion);
+  return (
+    <div>
+      <div className="flex items-baseline justify-between mb-1.5">
+        <span className={`text-sm font-medium ${t.texto}`}>{t.etiqueta}</span>
+        <span className="text-2xl font-bold text-gray-900">{puntuacion}%</span>
+      </div>
+      <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+        <div
+          className={`h-full rounded-full transition-all duration-500 ${t.barra}`}
+          style={{ width: `${puntuacion}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Desglose de los criterios que componen la puntuación.
+ * Es lo que hace explicable la recomendación.
+ */
+export function CriteriosDesglose({ criterios }) {
+  if (!criterios || criterios.length === 0) return null;
+
+  return (
+    <ul className="space-y-2.5">
+      {criterios.map((c) => {
+        const icono = c.valor >= 0.8 ? '✓' : c.valor >= 0.5 ? '~' : '!';
+        const color =
+          c.valor >= 0.8
+            ? 'text-refugio-600'
+            : c.valor >= 0.5
+              ? 'text-amber-600'
+              : 'text-red-600';
+
+        return (
+          <li key={c.id} className="flex gap-2.5 text-sm">
+            <span className={`font-bold shrink-0 w-4 ${color}`} aria-hidden="true">
+              {icono}
+            </span>
+            <div className="min-w-0">
+              <p className="text-gray-800 font-medium">{c.etiqueta}</p>
+              <p className="text-gray-600 text-xs">{c.detalle}</p>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}

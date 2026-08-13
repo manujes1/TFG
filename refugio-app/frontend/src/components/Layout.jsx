@@ -33,6 +33,12 @@ export default function Layout() {
               Animales
             </NavLink>
 
+            {user && !isStaff && (
+              <NavLink to="/recomendaciones" className={linkClass}>
+                Para ti
+              </NavLink>
+            )}
+
             {user && (
               <NavLink to="/mis-solicitudes" className={linkClass}>
                 Mis solicitudes
@@ -49,9 +55,12 @@ export default function Layout() {
           <div className="flex items-center gap-2 shrink-0">
             {user ? (
               <>
-                <span className="text-sm text-gray-600 hidden sm:inline">
+                <Link
+                  to="/perfil"
+                  className="text-sm text-gray-600 hover:text-refugio-700 hidden sm:inline transition"
+                >
                   {user.nombre}
-                </span>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="text-sm px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition"

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import api from '../api/client.js';
 
 const AuthContext = createContext(null);
@@ -12,8 +12,24 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  /**
+   * Vuelve a pedir los datos del usuario al backend.
+   * Se usa tras modificar el perfil, para que el contexto refleje los cambios.
+   */
+  const refrescarUsuario = useCallback(async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+    try {
+      const res = await api.get('/api/auth/me');
+      setUser(res.data.user);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      return res.data.user;
+    } catch {
+      return null;
+    }
+  }, []);
+
   // Al montar, si hay token guardado, verificamos que sigue siendo válido
-  // preguntando al backend quién somos.
   useEffect(() => {
     const token = localStorage.getItem('token');
 
@@ -28,7 +44,6 @@ export function AuthProvider({ children }) {
         localStorage.setItem('user', JSON.stringify(res.data.user));
       })
       .catch(() => {
-        // El token es inválido o ha expirado: limpiamos.
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         setUser(null);
@@ -36,9 +51,6 @@ export function AuthProvider({ children }) {
       .finally(() => setLoading(false));
   }, []);
 
-  /**
-   * Inicia sesión y guarda token + usuario.
-   */
   async function login(email, password) {
     const res = await api.post('/api/auth/login', { email, password });
     localStorage.setItem('token', res.data.token);
@@ -47,9 +59,6 @@ export function AuthProvider({ children }) {
     return res.data.user;
   }
 
-  /**
-   * Registra un usuario nuevo y lo deja logueado.
-   */
   async function register(data) {
     const res = await api.post('/api/auth/register', data);
     localStorage.setItem('token', res.data.token);
@@ -58,14 +67,14 @@ export function AuthProvider({ children }) {
     return res.data.user;
   }
 
-  /**
-   * Cierra sesión.
-   */
   function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
   }
+
+  const tienePerfil =
+    user?.preferencias != null && Object.keys(user.preferencias).length > 0;
 
   const value = {
     user,
@@ -73,18 +82,16 @@ export function AuthProvider({ children }) {
     login,
     register,
     logout,
+    refrescarUsuario,
     isAuthenticated: user !== null,
     isStaff: user?.rol === 'ADMIN' || user?.rol === 'VOLUNTARIO',
-    isAdmin: user?.rol === 'ADMIN'
+    isAdmin: user?.rol === 'ADMIN',
+    tienePerfil
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-/**
- * Hook para consumir el contexto de autenticación.
- * Lanza si se usa fuera del AuthProvider (error de programación).
- */
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === null) {
