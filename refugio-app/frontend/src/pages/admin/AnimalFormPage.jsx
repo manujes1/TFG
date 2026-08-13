@@ -8,6 +8,7 @@ import {
 } from '../../api/animales.js';
 import GestionFotos from '../../components/GestionFotos.jsx';
 import { ESPECIES, SEXOS, ESTADOS_ANIMAL } from '../../utils/constants.js';
+import GenerarDescripcionIA from '../../components/GenerarDescripcionIA.jsx';
 
 const FORM_INICIAL = {
   nombre: '',
@@ -300,17 +301,33 @@ export default function AnimalFormPage() {
             </div>
           </div>
 
-          <div>
-            <label htmlFor="descripcionManual" className={labelClass}>Descripción</label>
-            <textarea
-              id="descripcionManual"
-              name="descripcionManual"
-              rows={4}
-              value={form.descripcionManual}
-              onChange={handleChange}
-              maxLength={2000}
-              className={inputClass}
-            />
+          <div className="space-y-3">
+            <div>
+              <label htmlFor="descripcionManual" className={labelClass}>Descripción</label>
+              <textarea
+                id="descripcionManual"
+                name="descripcionManual"
+                rows={5}
+                value={form.descripcionManual}
+                onChange={handleChange}
+                maxLength={2000}
+                className={inputClass}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {form.descripcionManual.length} / 2000 caracteres
+              </p>
+            </div>
+
+            {/* La generación requiere un animal ya creado, porque el modelo
+                necesita sus datos persistidos para construir el prompt */}
+            {esEdicion && (
+              <GenerarDescripcionIA
+                animalId={id}
+                onAceptar={(texto) =>
+                  setForm((actual) => ({ ...actual, descripcionManual: texto }))
+                }
+              />
+            )}
           </div>
         </fieldset>
 
