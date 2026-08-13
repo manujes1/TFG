@@ -64,3 +64,14 @@ export function fotoUrl(rutaRelativa) {
   if (!rutaRelativa) return null;
   return `${API_URL}${rutaRelativa}`;
 }
+
+/**
+ * Tipos de expediente médico, con su etiqueta, icono y color.
+ */
+export const TIPOS_EXPEDIENTE = {
+  VACUNA: { etiqueta: 'Vacuna', icono: '💉', color: 'bg-blue-100 text-blue-800' },
+  DESPARASITACION: { etiqueta: 'Desparasitación', icono: '🧴', color: 'bg-teal-100 text-teal-800' },
+  CIRUGIA: { etiqueta: 'Cirugía', icono: '🩹', color: 'bg-red-100 text-red-800' },
+  REVISION: { etiqueta: 'Revisión', icono: '🔍', color: 'bg-gray-100 text-gray-700' },
+  TRATAMIENTO: { etiqueta: 'Tratamiento', icono: '💊', color: 'bg-amber-100 text-amber-800' }
+};

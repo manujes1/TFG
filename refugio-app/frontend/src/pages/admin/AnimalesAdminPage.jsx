@@ -174,6 +174,12 @@ export default function AnimalesAdminPage() {
                           >
                             Editar
                           </Link>
+                          <Link
+                            to={`/admin/animales/${animal.id}/expedientes`}
+                            className="text-xs px-2 py-1 rounded text-refugio-700 hover:bg-refugio-50 transition"
+                          >
+                            Historial
+                          </Link>
                           {isAdmin && (
                             <button
                               onClick={() => setABorrar(animal)}

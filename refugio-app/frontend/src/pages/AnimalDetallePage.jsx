@@ -349,7 +349,15 @@ export default function AnimalDetallePage() {
       {/* Historial médico: solo staff */}
       {isStaff && (
         <section className="bg-white shadow rounded-xl p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-3">Historial médico</h2>
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <h2 className="text-lg font-semibold text-gray-800">Historial médico</h2>
+            <Link
+              to={`/admin/animales/${animal.id}/expedientes`}
+              className="text-sm text-refugio-600 hover:underline"
+            >
+              Gestionar
+            </Link>
+          </div>
           <HistorialMedico expedientes={animal.expedientes} />
         </section>
       )}

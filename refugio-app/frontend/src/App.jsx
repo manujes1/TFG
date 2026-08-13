@@ -10,14 +10,14 @@ import RegisterPage from './pages/RegisterPage.jsx';
 import AnimalesPage from './pages/AnimalesPage.jsx';
 import AnimalDetallePage from './pages/AnimalDetallePage.jsx';
 import MisSolicitudesPage from './pages/MisSolicitudesPage.jsx';
+import PerfilPage from './pages/PerfilPage.jsx';
+import RecomendacionesPage from './pages/RecomendacionesPage.jsx';
 
 import DashboardPage from './pages/admin/DashboardPage.jsx';
 import AnimalesAdminPage from './pages/admin/AnimalesAdminPage.jsx';
 import AnimalFormPage from './pages/admin/AnimalFormPage.jsx';
+import ExpedientesAdminPage from './pages/admin/ExpedientesAdminPage.jsx';
 import AdopcionesAdminPage from './pages/admin/AdopcionesAdminPage.jsx';
-
-import PerfilPage from './pages/PerfilPage.jsx';
-import RecomendacionesPage from './pages/RecomendacionesPage.jsx';
 
 const STAFF = ['ADMIN', 'VOLUNTARIO'];
 
@@ -36,6 +36,7 @@ export default function App() {
             <Route path="/animales" element={<AnimalesPage />} />
             <Route path="/animales/:id" element={<AnimalDetallePage />} />
 
+            {/* Área personal del usuario */}
             <Route
               path="/perfil"
               element={
@@ -53,6 +54,7 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/mis-solicitudes"
               element={
@@ -62,7 +64,7 @@ export default function App() {
               }
             />
 
-            {/* Panel de administración */}
+            {/* Panel de administración (rutas anidadas) */}
             <Route
               path="/admin"
               element={
@@ -75,6 +77,10 @@ export default function App() {
               <Route path="animales" element={<AnimalesAdminPage />} />
               <Route path="animales/nuevo" element={<AnimalFormPage />} />
               <Route path="animales/:id/editar" element={<AnimalFormPage />} />
+              <Route
+                path="animales/:animalId/expedientes"
+                element={<ExpedientesAdminPage />}
+              />
               <Route path="adopciones" element={<AdopcionesAdminPage />} />
             </Route>
           </Route>
