@@ -151,9 +151,19 @@ export default function AnimalFormPage() {
         <h2 className="text-xl font-semibold text-gray-800">
           {esEdicion ? `Editar a ${animal?.nombre ?? ''}` : 'Nuevo animal'}
         </h2>
-        <Link to="/admin/animales" className="text-sm text-refugio-600 hover:underline">
-          ← Volver al listado
-        </Link>
+        <div className="flex gap-3 shrink-0">
+          {esEdicion && (
+            <Link
+              to={`/admin/animales/${id}/expedientes`}
+              className="text-sm text-refugio-600 hover:underline"
+            >
+              Historial médico
+            </Link>
+          )}
+          <Link to="/admin/animales" className="text-sm text-refugio-600 hover:underline">
+            ← Volver al listado
+          </Link>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="bg-white shadow rounded-xl p-6 space-y-5">

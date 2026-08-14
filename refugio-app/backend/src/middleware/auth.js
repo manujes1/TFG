@@ -1,11 +1,22 @@
 import { verifyToken } from '../utils/jwt.js';
+import prisma from '../config/prisma.js';
 
 /**
  * Middleware de autenticación.
+ *
  * Requiere un header `Authorization: Bearer <token>`.
- * Si el token es válido, añade `req.user` con el payload decodificado.
+ *
+ * Tras verificar la firma del token, se consulta el usuario en base de datos
+ * para obtener su rol y su estado actuales. Confiar únicamente en el payload
+ * del JWT haría imposible revocar permisos antes de la expiración del token
+ * (7 días): un usuario degradado o desactivado conservaría sus privilegios.
+ *
+ * El coste es una consulta indexada por clave primaria en cada petición
+ * autenticada, asumible para la escala de esta aplicación. La alternativa
+ * (tokens de vida corta con refresh tokens) se descartó por complejidad
+ * frente al beneficio en este contexto.
  */
-export function authenticate(req, res, next) {
+export async function authenticate(req, res, next) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -14,18 +25,35 @@ export function authenticate(req, res, next) {
 
   const token = authHeader.slice(7); // Quita "Bearer "
 
+  let payload;
   try {
-    const payload = verifyToken(token);
-    req.user = payload; // { id, email, rol, iat, exp }
+    payload = verifyToken(token);
+  } catch {
+    return res.status(401).json({ error: 'Token inválido o expirado' });
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: payload.id },
+      select: { id: true, email: true, rol: true, activo: true }
+    });
+
+    // El usuario pudo ser eliminado o desactivado después de emitir el token
+    if (!user || !user.activo) {
+      return res.status(401).json({ error: 'Sesión no válida' });
+    }
+
+    req.user = { id: user.id, email: user.email, rol: user.rol };
     next();
   } catch (err) {
-    return res.status(401).json({ error: 'Token inválido o expirado' });
+    next(err);
   }
 }
 
 /**
  * Middleware de autorización por rol.
  * Debe usarse SIEMPRE después de `authenticate`.
+ *
  * @param  {...string} rolesPermitidos - Roles que pueden acceder.
  */
 export function authorize(...rolesPermitidos) {
