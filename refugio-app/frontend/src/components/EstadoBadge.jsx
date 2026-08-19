@@ -5,10 +5,12 @@
  */
 export default function EstadoBadge({ estado, etiquetas, colores }) {
   const texto = etiquetas[estado] ?? estado;
-  const color = colores[estado] ?? 'bg-gray-100 text-gray-700';
+  const color = colores[estado] ?? 'bg-stone-100 text-stone-700';
 
   return (
-    <span className={`inline-block text-xs font-medium px-2 py-1 rounded-full ${color}`}>
+    <span
+      className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full ring-1 ring-inset ring-black/5 ${color}`}
+    >
       {texto}
     </span>
   );

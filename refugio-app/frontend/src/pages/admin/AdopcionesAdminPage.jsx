@@ -64,12 +64,8 @@ export default function AdopcionesAdminPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-xl font-semibold text-gray-800">Solicitudes de adopción</h2>
-        <select
-          value={estadoFiltro}
-          onChange={handleFiltro}
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-refugio-500"
-        >
+        <h2 className="text-xl font-semibold text-stone-800 tracking-tight">Solicitudes de adopción</h2>
+        <select value={estadoFiltro} onChange={handleFiltro} className="field-input w-auto">
           <option value="">Todos los estados</option>
           {Object.entries(ESTADOS_ADOPCION).map(([v, l]) => (
             <option key={v} value={v}>{l}</option>
@@ -79,9 +75,9 @@ export default function AdopcionesAdminPage() {
 
       {feedback && (
         <div
-          className={`text-sm rounded-lg px-3 py-2 border ${
+          className={`text-sm rounded-lg px-3 py-2 border animate-fadeIn ${
             feedback.tipo === 'ok'
-              ? 'bg-refugio-50 border-refugio-100 text-refugio-700'
+              ? 'bg-refugio-50 border-refugio-200 text-refugio-700'
               : 'bg-red-50 border-red-200 text-red-700'
           }`}
         >
@@ -89,7 +85,7 @@ export default function AdopcionesAdminPage() {
         </div>
       )}
 
-      {isPending && <p className="text-center text-gray-500 py-12">Cargando…</p>}
+      {isPending && <p className="text-center text-stone-500 py-12">Cargando…</p>}
 
       {isError && (
         <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4">
@@ -100,8 +96,8 @@ export default function AdopcionesAdminPage() {
       {data && (
         <>
           {data.data.length === 0 ? (
-            <div className="bg-white shadow rounded-xl p-12 text-center">
-              <p className="text-gray-500">
+            <div className="card p-12 text-center">
+              <p className="text-stone-500">
                 {estadoFiltro
                   ? 'No hay solicitudes en ese estado.'
                   : 'Todavía no hay solicitudes de adopción.'}
@@ -110,17 +106,17 @@ export default function AdopcionesAdminPage() {
           ) : (
             <ul className="space-y-3">
               {data.data.map((adopcion) => (
-                <li key={adopcion.id} className="bg-white shadow rounded-xl p-5">
+                <li key={adopcion.id} className="card card-hover p-5">
                   <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2 mb-1">
                         <Link
                           to={`/animales/${adopcion.animal.id}`}
-                          className="font-semibold text-gray-900 hover:text-refugio-700"
+                          className="font-semibold text-stone-900 hover:text-refugio-700 transition-colors"
                         >
                           {adopcion.animal.nombre}
                         </Link>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-stone-400">
                           ({ESPECIES[adopcion.animal.especie]})
                         </span>
                         <EstadoBadge
@@ -129,13 +125,13 @@ export default function AdopcionesAdminPage() {
                           colores={ESTADO_ADOPCION_COLORES}
                         />
                       </div>
-                      <p className="text-sm text-gray-700">
+                      <p className="text-sm text-stone-700">
                         {adopcion.usuario.nombre} {adopcion.usuario.apellidos ?? ''}
                       </p>
-                      <p className="text-xs text-gray-500">{adopcion.usuario.email}</p>
+                      <p className="text-xs text-stone-500">{adopcion.usuario.email}</p>
                     </div>
 
-                    <div className="text-right text-xs text-gray-500 shrink-0">
+                    <div className="text-right text-xs text-stone-500 shrink-0">
                       <p>Solicitada el {formatFecha(adopcion.fechaSolicitud)}</p>
                       {adopcion.fechaAprobacion && (
                         <p>Aprobada el {formatFecha(adopcion.fechaAprobacion)}</p>
@@ -147,15 +143,15 @@ export default function AdopcionesAdminPage() {
                   </div>
 
                   {adopcion.notas && (
-                    <div className="bg-gray-50 rounded-lg px-3 py-2 mb-3">
-                      <p className="text-xs text-gray-500 mb-0.5">Notas del solicitante</p>
-                      <p className="text-sm text-gray-700">{adopcion.notas}</p>
+                    <div className="bg-stone-50 border border-stone-100 rounded-lg px-3 py-2 mb-3">
+                      <p className="text-xs text-stone-500 mb-0.5 font-medium">Notas del solicitante</p>
+                      <p className="text-sm text-stone-700">{adopcion.notas}</p>
                     </div>
                   )}
 
                   {adopcion.motivoRechazo && (
                     <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-3">
-                      <p className="text-xs text-red-600 mb-0.5">Motivo del rechazo</p>
+                      <p className="text-xs text-red-600 mb-0.5 font-medium">Motivo del rechazo</p>
                       <p className="text-sm text-red-700">{adopcion.motivoRechazo}</p>
                     </div>
                   )}
@@ -169,7 +165,7 @@ export default function AdopcionesAdminPage() {
                       </div>
                     )}
 
-                  <div className="pt-3 border-t border-gray-100">
+                  <div className="pt-3 border-t border-stone-100">
                     <AccionesAdopcion
                       adopcion={adopcion}
                       cargando={enProceso === adopcion.id}
@@ -182,8 +178,8 @@ export default function AdopcionesAdminPage() {
           )}
 
           {data.pagination.totalPages > 1 && (
-            <div className="flex items-center justify-between bg-white shadow rounded-xl px-4 py-3">
-              <span className="text-xs text-gray-500">
+            <div className="flex items-center justify-between card px-4 py-3">
+              <span className="text-xs text-stone-500">
                 {data.pagination.total} solicitudes · página {data.pagination.page} de{' '}
                 {data.pagination.totalPages}
               </span>
@@ -191,14 +187,14 @@ export default function AdopcionesAdminPage() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="px-3 py-1 text-sm rounded-lg border border-gray-300 disabled:opacity-40 hover:bg-gray-50 transition"
+                  className="btn-ghost border border-stone-300 text-sm px-3 py-1"
                 >
                   Anterior
                 </button>
                 <button
                   onClick={() => setPage((p) => p + 1)}
                   disabled={page >= data.pagination.totalPages}
-                  className="px-3 py-1 text-sm rounded-lg border border-gray-300 disabled:opacity-40 hover:bg-gray-50 transition"
+                  className="btn-ghost border border-stone-300 text-sm px-3 py-1"
                 >
                   Siguiente
                 </button>

@@ -94,14 +94,14 @@ export default function ExpedientesAdminPage() {
   }
 
   if (animal.isPending) {
-    return <p className="text-center text-gray-500 py-12">Cargando…</p>;
+    return <p className="text-center text-stone-500 py-12">Cargando…</p>;
   }
 
   if (animal.isError) {
     return (
-      <div className="bg-white shadow rounded-xl p-8 text-center">
-        <p className="text-gray-700 mb-4">No se pudo cargar el animal.</p>
-        <Link to="/admin/animales" className="text-refugio-600 hover:underline">
+      <div className="card p-8 text-center">
+        <p className="text-stone-700 mb-4">No se pudo cargar el animal.</p>
+        <Link to="/admin/animales" className="text-refugio-600 hover:underline font-medium">
           ← Volver al listado
         </Link>
       </div>
@@ -117,10 +117,10 @@ export default function ExpedientesAdminPage() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-xl font-semibold text-gray-800">
+          <h2 className="text-xl font-semibold text-stone-800 tracking-tight">
             Historial médico de {animal.data.nombre}
           </h2>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-stone-500">
             {ESPECIES[animal.data.especie]}
             {animal.data.raza ? ` · ${animal.data.raza}` : ''}
           </p>
@@ -128,14 +128,11 @@ export default function ExpedientesAdminPage() {
         <div className="flex gap-2 shrink-0">
           <Link
             to={`/admin/animales/${animalId}/editar`}
-            className="text-sm text-refugio-600 hover:underline px-2 py-2"
+            className="text-sm text-refugio-600 hover:underline px-2 py-2 font-medium"
           >
             Editar animal
           </Link>
-          <button
-            onClick={abrirNuevo}
-            className="bg-refugio-600 hover:bg-refugio-700 text-white text-sm font-medium rounded-lg px-4 py-2 transition"
-          >
+          <button onClick={abrirNuevo} className="btn-primary text-sm px-4 py-2">
             + Nuevo expediente
           </button>
         </div>
@@ -149,9 +146,9 @@ export default function ExpedientesAdminPage() {
 
       {/* Aviso de próximas revisiones */}
       {proximas.length > 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 shadow-soft">
           <p className="text-sm text-amber-800">
-            <span className="font-medium">Próxima revisión:</span>{' '}
+            <span className="font-semibold">Próxima revisión:</span>{' '}
             {formatFecha(proximas[0].proximaRevision)} (
             {TIPOS_EXPEDIENTE[proximas[0].tipo]?.etiqueta ?? proximas[0].tipo})
           </p>
@@ -167,7 +164,7 @@ export default function ExpedientesAdminPage() {
       )}
 
       {expedientes.isPending && (
-        <p className="text-center text-gray-500 py-8">Cargando expedientes…</p>
+        <p className="text-center text-stone-500 py-8">Cargando expedientes…</p>
       )}
 
       {expedientes.isError && (
@@ -178,14 +175,11 @@ export default function ExpedientesAdminPage() {
 
       {expedientes.data && (
         lista.length === 0 && !formAbierto ? (
-          <div className="bg-white shadow rounded-xl p-12 text-center">
-            <p className="text-gray-500 mb-4">
+          <div className="card p-12 text-center">
+            <p className="text-stone-500 mb-4">
               {animal.data.nombre} todavía no tiene expedientes médicos registrados.
             </p>
-            <button
-              onClick={abrirNuevo}
-              className="bg-refugio-600 hover:bg-refugio-700 text-white text-sm font-medium rounded-lg px-5 py-2.5 transition"
-            >
+            <button onClick={abrirNuevo} className="btn-primary text-sm px-5 py-2.5">
               Registrar el primero
             </button>
           </div>
@@ -195,7 +189,7 @@ export default function ExpedientesAdminPage() {
               const tipo = TIPOS_EXPEDIENTE[exp.tipo] ?? {
                 etiqueta: exp.tipo,
                 icono: '📋',
-                color: 'bg-gray-100 text-gray-700'
+                color: 'bg-stone-100 text-stone-700'
               };
 
               if (editando?.id === exp.id) {
@@ -214,31 +208,34 @@ export default function ExpedientesAdminPage() {
               }
 
               return (
-                <li key={exp.id} className="bg-white shadow rounded-xl p-4">
+                <li key={exp.id} className="card card-hover p-4">
                   <div className="flex items-start gap-3">
-                    <span className="text-xl shrink-0" aria-hidden="true">
+                    <span
+                      className="text-xl shrink-0 w-9 h-9 rounded-full bg-stone-50 ring-1 ring-stone-200 flex items-center justify-center"
+                      aria-hidden="true"
+                    >
                       {tipo.icono}
                     </span>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2 mb-1">
                         <span
-                          className={`text-xs font-medium px-2 py-0.5 rounded-full ${tipo.color}`}
+                          className={`text-xs font-semibold px-2 py-0.5 rounded-full ring-1 ring-inset ring-black/5 ${tipo.color}`}
                         >
                           {tipo.etiqueta}
                         </span>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-stone-500">
                           {formatFecha(exp.fecha)}
                         </span>
                         {exp.veterinario && (
-                          <span className="text-xs text-gray-500">· {exp.veterinario}</span>
+                          <span className="text-xs text-stone-500">· {exp.veterinario}</span>
                         )}
                       </div>
 
-                      <p className="text-sm text-gray-700">{exp.descripcion}</p>
+                      <p className="text-sm text-stone-700">{exp.descripcion}</p>
 
                       {exp.proximaRevision && (
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-stone-500 mt-1">
                           Próxima revisión: {formatFecha(exp.proximaRevision)}
                         </p>
                       )}
@@ -247,14 +244,14 @@ export default function ExpedientesAdminPage() {
                     <div className="flex gap-1 shrink-0">
                       <button
                         onClick={() => abrirEdicion(exp)}
-                        className="text-xs px-2 py-1 rounded text-refugio-700 hover:bg-refugio-50 transition"
+                        className="text-xs px-2 py-1 rounded text-refugio-700 hover:bg-refugio-50 transition-colors font-medium"
                       >
                         Editar
                       </button>
                       {isAdmin && (
                         <button
                           onClick={() => setABorrar(exp)}
-                          className="text-xs px-2 py-1 rounded text-red-600 hover:bg-red-50 transition"
+                          className="text-xs px-2 py-1 rounded text-red-600 hover:bg-red-50 transition-colors font-medium"
                         >
                           Eliminar
                         </button>

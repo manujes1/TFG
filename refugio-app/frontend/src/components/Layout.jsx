@@ -11,17 +11,20 @@ export default function Layout() {
   }
 
   const linkClass = ({ isActive }) =>
-    `px-3 py-2 rounded-lg text-sm font-medium transition ${
+    `px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
       isActive
         ? 'bg-refugio-100 text-refugio-700'
-        : 'text-gray-700 hover:bg-gray-100'
+        : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900'
     }`;
 
   return (
-    <div className="min-h-screen bg-refugio-50 flex flex-col">
-      <header className="bg-white shadow-sm sticky top-0 z-10">
+    <div className="min-h-screen flex flex-col">
+      <header className="bg-white/90 backdrop-blur border-b border-stone-200 shadow-soft sticky top-0 z-10">
         <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <Link to="/" className="text-xl font-bold text-refugio-700 shrink-0">
+          <Link
+            to="/"
+            className="text-xl font-bold text-refugio-700 shrink-0 tracking-tight hover:text-refugio-800 transition-colors"
+          >
             🐾 Refugio
           </Link>
 
@@ -57,29 +60,20 @@ export default function Layout() {
               <>
                 <Link
                   to="/perfil"
-                  className="text-sm text-gray-600 hover:text-refugio-700 hidden sm:inline transition"
+                  className="text-sm text-stone-600 hover:text-refugio-700 hidden sm:inline transition-colors font-medium"
                 >
                   {user.nombre}
                 </Link>
-                <button
-                  onClick={handleLogout}
-                  className="text-sm px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition"
-                >
+                <button onClick={handleLogout} className="btn-ghost text-sm px-3 py-2">
                   Salir
                 </button>
               </>
             ) : (
               <>
-                <Link
-                  to="/login"
-                  className="text-sm px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition"
-                >
+                <Link to="/login" className="btn-ghost text-sm px-3 py-2">
                   Entrar
                 </Link>
-                <Link
-                  to="/registro"
-                  className="text-sm px-3 py-2 rounded-lg bg-refugio-600 hover:bg-refugio-700 text-white font-medium transition"
-                >
+                <Link to="/registro" className="btn-primary text-sm px-3 py-2">
                   Registro
                 </Link>
               </>
@@ -92,8 +86,8 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <footer className="bg-white border-t py-4">
-        <p className="text-center text-xs text-gray-500">
+      <footer className="bg-white border-t border-stone-200 py-4">
+        <p className="text-center text-xs text-stone-400">
           Refugio de Animales · TFG Ingeniería Informática
         </p>
       </footer>

@@ -89,26 +89,23 @@ export default function PerfilPage() {
     mutation.mutate(payload);
   }
 
-  const inputClass =
-    'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-refugio-500';
-  const labelClass = 'block text-sm font-medium text-gray-700 mb-1';
+  const inputClass = 'field-input';
+  const labelClass = 'field-label';
 
   return (
     <div className="max-w-2xl mx-auto space-y-4">
       <div>
-        <h1 className="text-2xl font-bold text-refugio-700 mb-1">
-          Tu perfil de adopción
-        </h1>
-        <p className="text-sm text-gray-600">
+        <h1 className="page-title">Tu perfil de adopción</h1>
+        <p className="page-subtitle">
           Cuéntanos cómo es tu hogar y tu día a día. Con esta información podemos
           sugerirte los animales que mejor encajan contigo.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white shadow rounded-xl p-6 space-y-6">
+      <form onSubmit={handleSubmit} className="card p-6 space-y-6">
         {/* Hogar */}
         <fieldset className="space-y-4">
-          <legend className="text-sm font-semibold text-gray-800 mb-2">
+          <legend className="text-sm font-semibold text-stone-800 mb-2 uppercase tracking-wide">
             Tu hogar
           </legend>
 
@@ -156,8 +153,8 @@ export default function PerfilPage() {
         </fieldset>
 
         {/* Convivencia */}
-        <fieldset className="space-y-3 pt-4 border-t border-gray-100">
-          <legend className="text-sm font-semibold text-gray-800 mb-2 pt-2">
+        <fieldset className="space-y-3 pt-4 border-t border-stone-100">
+          <legend className="text-sm font-semibold text-stone-800 mb-2 pt-2 uppercase tracking-wide">
             Quién vive contigo
           </legend>
 
@@ -182,8 +179,8 @@ export default function PerfilPage() {
         </fieldset>
 
         {/* Disponibilidad */}
-        <fieldset className="space-y-4 pt-4 border-t border-gray-100">
-          <legend className="text-sm font-semibold text-gray-800 mb-2 pt-2">
+        <fieldset className="space-y-4 pt-4 border-t border-stone-100">
+          <legend className="text-sm font-semibold text-stone-800 mb-2 pt-2 uppercase tracking-wide">
             Tu disponibilidad
           </legend>
 
@@ -249,17 +246,13 @@ export default function PerfilPage() {
         )}
 
         {guardado && (
-          <div className="bg-refugio-50 border border-refugio-100 text-refugio-700 text-sm rounded-lg px-3 py-2">
-            Perfil guardado correctamente.
+          <div className="bg-refugio-50 border border-refugio-200 text-refugio-700 text-sm rounded-lg px-3 py-2 animate-fadeIn">
+            ✓ Perfil guardado correctamente.
           </div>
         )}
 
         <div className="flex flex-wrap gap-2 pt-2">
-          <button
-            type="submit"
-            disabled={mutation.isPending}
-            className="bg-refugio-600 hover:bg-refugio-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg px-5 py-2.5 transition"
-          >
+          <button type="submit" disabled={mutation.isPending} className="btn-primary text-sm px-5 py-2.5">
             {mutation.isPending ? 'Guardando…' : 'Guardar perfil'}
           </button>
 
@@ -267,7 +260,7 @@ export default function PerfilPage() {
             <button
               type="button"
               onClick={() => navigate('/recomendaciones')}
-              className="border border-refugio-600 text-refugio-700 hover:bg-refugio-50 text-sm font-medium rounded-lg px-5 py-2.5 transition"
+              className="btn-secondary text-sm px-5 py-2.5"
             >
               Ver mis recomendaciones →
             </button>
@@ -275,7 +268,7 @@ export default function PerfilPage() {
         </div>
       </form>
 
-      <p className="text-xs text-gray-500 text-center">
+      <p className="text-xs text-stone-400 text-center">
         Estos datos se usan únicamente para calcular la compatibilidad y no se
         comparten con terceros.
       </p>
@@ -285,13 +278,13 @@ export default function PerfilPage() {
 
 function Checkbox({ name, checked, onChange, label }) {
   return (
-    <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+    <label className="flex items-center gap-2 text-sm text-stone-700 cursor-pointer">
       <input
         type="checkbox"
         name={name}
         checked={checked}
         onChange={onChange}
-        className="w-4 h-4 rounded border-gray-300 text-refugio-600 focus:ring-refugio-500"
+        className="w-4 h-4 rounded border-stone-300 text-refugio-600 focus:ring-refugio-500"
       />
       {label}
     </label>

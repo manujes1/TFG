@@ -138,38 +138,37 @@ export default function AnimalFormPage() {
   }
 
   if (esEdicion && cargando) {
-    return <p className="text-center text-gray-500 py-12">Cargando…</p>;
+    return <p className="text-center text-stone-500 py-12">Cargando…</p>;
   }
 
-  const inputClass =
-    'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-refugio-500';
-  const labelClass = 'block text-sm font-medium text-gray-700 mb-1';
+  const inputClass = 'field-input';
+  const labelClass = 'field-label';
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-xl font-semibold text-gray-800">
+        <h2 className="text-xl font-semibold text-stone-800 tracking-tight">
           {esEdicion ? `Editar a ${animal?.nombre ?? ''}` : 'Nuevo animal'}
         </h2>
         <div className="flex gap-3 shrink-0">
           {esEdicion && (
             <Link
               to={`/admin/animales/${id}/expedientes`}
-              className="text-sm text-refugio-600 hover:underline"
+              className="text-sm text-refugio-600 hover:underline font-medium"
             >
               Historial médico
             </Link>
           )}
-          <Link to="/admin/animales" className="text-sm text-refugio-600 hover:underline">
+          <Link to="/admin/animales" className="text-sm text-refugio-600 hover:underline font-medium">
             ← Volver al listado
           </Link>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white shadow rounded-xl p-6 space-y-5">
+      <form onSubmit={handleSubmit} className="card p-6 space-y-5">
         {/* Datos básicos */}
         <fieldset className="space-y-4">
-          <legend className="text-sm font-semibold text-gray-800 mb-2">
+          <legend className="text-sm font-semibold text-stone-800 mb-2 uppercase tracking-wide">
             Datos básicos
           </legend>
 
@@ -279,7 +278,7 @@ export default function AnimalFormPage() {
                 maxLength={30}
                 className={inputClass}
               />
-              <p className="text-xs text-gray-500 mt-1">Debe ser único.</p>
+              <p className="text-xs text-stone-500 mt-1">Debe ser único.</p>
             </div>
 
             <div>
@@ -323,7 +322,7 @@ export default function AnimalFormPage() {
                 maxLength={2000}
                 className={inputClass}
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-stone-500 mt-1">
                 {form.descripcionManual.length} / 2000 caracteres
               </p>
             </div>
@@ -342,8 +341,8 @@ export default function AnimalFormPage() {
         </fieldset>
 
         {/* Características para matchmaking */}
-        <fieldset className="space-y-4 pt-2 border-t border-gray-100">
-          <legend className="text-sm font-semibold text-gray-800 mb-2 pt-4">
+        <fieldset className="space-y-4 pt-2 border-t border-stone-100">
+          <legend className="text-sm font-semibold text-stone-800 mb-2 pt-4 uppercase tracking-wide">
             Carácter y convivencia
           </legend>
 
@@ -412,21 +411,14 @@ export default function AnimalFormPage() {
         )}
 
         <div className="flex gap-2 pt-2">
-          <button
-            type="submit"
-            disabled={mutation.isPending}
-            className="bg-refugio-600 hover:bg-refugio-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg px-5 py-2.5 transition"
-          >
+          <button type="submit" disabled={mutation.isPending} className="btn-primary text-sm px-5 py-2.5">
             {mutation.isPending
               ? 'Guardando…'
               : esEdicion
                 ? 'Guardar cambios'
                 : 'Crear animal'}
           </button>
-          <Link
-            to="/admin/animales"
-            className="text-sm text-gray-600 hover:bg-gray-100 rounded-lg px-5 py-2.5 transition"
-          >
+          <Link to="/admin/animales" className="btn-ghost text-sm px-5 py-2.5">
             Cancelar
           </Link>
         </div>
@@ -442,13 +434,13 @@ export default function AnimalFormPage() {
 
 function Checkbox({ name, checked, onChange, label }) {
   return (
-    <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+    <label className="flex items-center gap-2 text-sm text-stone-700 cursor-pointer">
       <input
         type="checkbox"
         name={name}
         checked={checked}
         onChange={onChange}
-        className="w-4 h-4 rounded border-gray-300 text-refugio-600 focus:ring-refugio-500"
+        className="w-4 h-4 rounded border-stone-300 text-refugio-600 focus:ring-refugio-500"
       />
       {label}
     </label>

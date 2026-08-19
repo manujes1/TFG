@@ -6,30 +6,41 @@ export default function HomePage() {
 
   return (
     <div className="space-y-8">
-      <section className="bg-white shadow rounded-xl p-8 text-center">
-        <h1 className="text-3xl font-bold text-refugio-700 mb-3">
-          Encuentra a tu nuevo compañero
-        </h1>
-        <p className="text-gray-600 max-w-xl mx-auto mb-6">
-          Somos un refugio de animales. Aquí puedes conocer a los animales que
-          buscan hogar, solicitar una adopción, apadrinar o colaborar con una
-          donación.
-        </p>
-        <Link
-          to="/animales"
-          className="inline-block bg-refugio-600 hover:bg-refugio-700 text-white font-medium rounded-lg px-6 py-3 transition"
-        >
-          Ver animales disponibles
-        </Link>
+      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-refugio-600 via-refugio-700 to-refugio-800 p-8 sm:p-12 text-center shadow-elevated">
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle at 20% 20%, white 0, transparent 35%), radial-gradient(circle at 80% 60%, white 0, transparent 30%)'
+          }}
+          aria-hidden="true"
+        />
+        <div className="relative">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">
+            Encuentra a tu nuevo compañero
+          </h1>
+          <p className="text-refugio-50 max-w-xl mx-auto mb-6">
+            Somos un refugio de animales. Aquí puedes conocer a los animales que
+            buscan hogar, solicitar una adopción, apadrinar o colaborar con una
+            donación.
+          </p>
+          <Link
+            to="/animales"
+            className="inline-block bg-white text-refugio-700 font-semibold rounded-lg px-6 py-3 shadow-md transition-all duration-150 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98]"
+          >
+            Ver animales disponibles
+          </Link>
+        </div>
       </section>
 
       {user && (
-        <section className="bg-white shadow rounded-xl p-6">
-          <h2 className="font-semibold text-gray-800 mb-1">
+        <section className="card p-6 border-l-4 border-l-refugio-500">
+          <h2 className="font-semibold text-stone-800 mb-1">
             Hola, {user.nombre} 👋
           </h2>
-          <p className="text-sm text-gray-600">
-            Has iniciado sesión como <span className="font-medium">{user.rol}</span>.
+          <p className="text-sm text-stone-600">
+            Has iniciado sesión como{' '}
+            <span className="font-medium text-refugio-700">{user.rol}</span>.
           </p>
         </section>
       )}

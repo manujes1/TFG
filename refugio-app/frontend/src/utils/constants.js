@@ -28,7 +28,7 @@ export const ESTADOS_ANIMAL = {
 export const ESTADO_ANIMAL_COLORES = {
   DISPONIBLE: 'bg-green-100 text-green-800',
   EN_ACOGIDA: 'bg-blue-100 text-blue-800',
-  ADOPTADO: 'bg-gray-100 text-gray-700',
+  ADOPTADO: 'bg-stone-100 text-stone-700',
   EN_TRATAMIENTO: 'bg-amber-100 text-amber-800',
   NO_DISPONIBLE: 'bg-red-100 text-red-800'
 };
@@ -48,7 +48,7 @@ export const ESTADO_ADOPCION_COLORES = {
   APROBADA: 'bg-green-100 text-green-800',
   RECHAZADA: 'bg-red-100 text-red-800',
   COMPLETADA: 'bg-refugio-100 text-refugio-700',
-  CANCELADA: 'bg-gray-100 text-gray-700'
+  CANCELADA: 'bg-stone-100 text-stone-700'
 };
 
 /**
@@ -72,6 +72,6 @@ export const TIPOS_EXPEDIENTE = {
   VACUNA: { etiqueta: 'Vacuna', icono: '💉', color: 'bg-blue-100 text-blue-800' },
   DESPARASITACION: { etiqueta: 'Desparasitación', icono: '🧴', color: 'bg-teal-100 text-teal-800' },
   CIRUGIA: { etiqueta: 'Cirugía', icono: '🩹', color: 'bg-red-100 text-red-800' },
-  REVISION: { etiqueta: 'Revisión', icono: '🔍', color: 'bg-gray-100 text-gray-700' },
+  REVISION: { etiqueta: 'Revisión', icono: '🔍', color: 'bg-stone-100 text-stone-700' },
   TRATAMIENTO: { etiqueta: 'Tratamiento', icono: '💊', color: 'bg-amber-100 text-amber-800' }
 };

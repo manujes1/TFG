@@ -50,16 +50,15 @@ export default function ExpedienteForm({ expediente, onGuardar, onCancelar, carg
     onGuardar(payload);
   }
 
-  const inputClass =
-    'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-refugio-500';
-  const labelClass = 'block text-sm font-medium text-gray-700 mb-1';
+  const inputClass = 'field-input';
+  const labelClass = 'field-label';
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-refugio-50 border border-refugio-100 rounded-xl p-4 space-y-4"
+      className="bg-refugio-50 border border-refugio-200 rounded-xl p-4 space-y-4 shadow-soft"
     >
-      <h3 className="text-sm font-semibold text-refugio-700">
+      <h3 className="text-sm font-semibold text-refugio-700 uppercase tracking-wide">
         {esEdicion ? 'Editar expediente' : 'Nuevo expediente médico'}
       </h3>
 
@@ -136,18 +135,10 @@ export default function ExpedienteForm({ expediente, onGuardar, onCancelar, carg
       </div>
 
       <div className="flex gap-2">
-        <button
-          type="submit"
-          disabled={cargando}
-          className="text-sm bg-refugio-600 hover:bg-refugio-700 disabled:opacity-50 text-white font-medium rounded-lg px-4 py-2 transition"
-        >
+        <button type="submit" disabled={cargando} className="btn-primary text-sm px-4 py-2">
           {cargando ? 'Guardando…' : esEdicion ? 'Guardar cambios' : 'Añadir expediente'}
         </button>
-        <button
-          type="button"
-          onClick={onCancelar}
-          className="text-sm text-gray-600 hover:bg-white rounded-lg px-4 py-2 transition"
-        >
+        <button type="button" onClick={onCancelar} className="btn-ghost text-sm px-4 py-2">
           Cancelar
         </button>
       </div>

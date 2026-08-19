@@ -1,3 +1,89 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-sand-100 text-stone-800;
+    background-image:
+      radial-gradient(ellipse 70% 45% at 15% -10%, theme('colors.refugio.200 / 45%'), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 15%, theme('colors.teal.100 / 40%'), transparent);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    @apply bg-refugio-200 text-refugio-900;
+  }
+}
+
+@layer components {
+  /* Superficies tipo tarjeta: destacan por contraste real sobre el lienzo cálido */
+  .card {
+    @apply bg-white rounded-xl border border-stone-200/80 shadow-card;
+  }
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-card-hover hover:-translate-y-0.5;
+  }
+
+  /* Botones */
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 font-medium rounded-lg
+      transition-all duration-150 ease-out
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white
+      disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100;
+  }
+  .btn-primary {
+    @apply btn bg-refugio-600 text-white shadow-sm
+      hover:bg-refugio-700 hover:shadow-md active:scale-[0.98]
+      focus-visible:ring-refugio-500;
+  }
+  .btn-secondary {
+    @apply btn border border-refugio-300 text-refugio-700 bg-white
+      hover:bg-refugio-50 hover:border-refugio-400 active:scale-[0.98]
+      focus-visible:ring-refugio-500;
+  }
+  .btn-ghost {
+    @apply btn text-stone-600 hover:bg-stone-100 hover:text-stone-900 active:scale-[0.98]
+      focus-visible:ring-stone-400;
+  }
+  .btn-danger {
+    @apply btn bg-red-600 text-white shadow-sm
+      hover:bg-red-700 hover:shadow-md active:scale-[0.98]
+      focus-visible:ring-red-500;
+  }
+  .btn-danger-outline {
+    @apply btn border border-red-200 text-red-700 bg-white
+      hover:bg-red-50 hover:border-red-300 active:scale-[0.98]
+      focus-visible:ring-red-500;
+  }
+  /* Acento frío: reservado para acciones asistidas por IA, para que se
+     distingan visualmente de las acciones "normales" del refugio (terracota). */
+  .btn-accent {
+    @apply btn bg-teal-500 text-white shadow-sm
+      hover:bg-teal-600 hover:shadow-md active:scale-[0.98]
+      focus-visible:ring-teal-400;
+  }
+  .btn-accent-outline {
+    @apply btn border border-teal-300 text-teal-700 bg-white
+      hover:bg-teal-50 hover:border-teal-400 active:scale-[0.98]
+      focus-visible:ring-teal-400;
+  }
+
+  /* Formularios */
+  .field-input {
+    @apply w-full border border-stone-300 rounded-lg px-3 py-2 text-sm bg-white text-stone-900
+      transition-colors duration-150 placeholder:text-stone-400
+      focus:outline-none focus:ring-2 focus:ring-refugio-500 focus:border-refugio-500;
+  }
+  .field-label {
+    @apply block text-sm font-medium text-stone-700 mb-1;
+  }
+
+  /* Encabezados de página */
+  .page-title {
+    @apply text-2xl font-bold text-stone-900 tracking-tight mb-1;
+  }
+  .page-subtitle {
+    @apply text-sm text-stone-500;
+  }
+}

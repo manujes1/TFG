@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { siguientesEstados, ACCIONES } from '../utils/adopcionEstados.js';
 
 const ESTILOS = {
-  primario: 'bg-refugio-600 hover:bg-refugio-700 text-white',
-  peligro: 'bg-white border border-red-300 text-red-700 hover:bg-red-50',
-  neutro: 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+  primario: 'btn-primary',
+  peligro: 'btn-danger-outline',
+  neutro: 'btn-ghost border border-stone-300'
 };
 
 /**
@@ -20,7 +20,7 @@ export default function AccionesAdopcion({ adopcion, onCambiarEstado, cargando }
 
   if (posibles.length === 0) {
     return (
-      <p className="text-xs text-gray-400 italic">
+      <p className="text-xs text-stone-400 italic">
         Esta solicitud está cerrada y no admite más cambios.
       </p>
     );
@@ -48,7 +48,7 @@ export default function AccionesAdopcion({ adopcion, onCambiarEstado, cargando }
   if (motivoAbierto) {
     return (
       <div className="space-y-2 w-full">
-        <label htmlFor={`motivo-${adopcion.id}`} className="block text-xs text-gray-600">
+        <label htmlFor={`motivo-${adopcion.id}`} className="block text-xs text-stone-600">
           Motivo del rechazo (se mostrará al solicitante)
         </label>
         <textarea
@@ -58,20 +58,13 @@ export default function AccionesAdopcion({ adopcion, onCambiarEstado, cargando }
           onChange={(e) => setMotivo(e.target.value)}
           maxLength={1000}
           placeholder="Explica brevemente por qué no se aprueba la solicitud…"
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-refugio-500"
+          className="field-input"
         />
         <div className="flex gap-2">
-          <button
-            onClick={confirmarConMotivo}
-            disabled={cargando}
-            className="text-xs font-medium px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white transition"
-          >
+          <button onClick={confirmarConMotivo} disabled={cargando} className="btn-danger text-xs px-3 py-1.5">
             {cargando ? 'Procesando…' : 'Confirmar rechazo'}
           </button>
-          <button
-            onClick={() => setMotivoAbierto(null)}
-            className="text-xs px-3 py-1.5 rounded-lg text-gray-600 hover:bg-gray-100 transition"
-          >
+          <button onClick={() => setMotivoAbierto(null)} className="btn-ghost text-xs px-3 py-1.5">
             Volver
           </button>
         </div>
@@ -88,7 +81,7 @@ export default function AccionesAdopcion({ adopcion, onCambiarEstado, cargando }
             key={estado}
             onClick={() => handleClick(estado)}
             disabled={cargando}
-            className={`text-xs font-medium px-3 py-1.5 rounded-lg disabled:opacity-50 transition ${ESTILOS[accion.estilo]}`}
+            className={`text-xs px-3 py-1.5 ${ESTILOS[accion.estilo]}`}
           >
             {accion.label}
           </button>

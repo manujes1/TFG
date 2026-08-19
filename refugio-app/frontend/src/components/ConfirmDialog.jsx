@@ -17,34 +17,26 @@ export default function ConfirmDialog({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/50 backdrop-blur-sm animate-fadeIn"
       role="dialog"
       aria-modal="true"
       onClick={onCancelar}
     >
       <div
-        className="bg-white rounded-xl shadow-xl max-w-md w-full p-6"
+        className="card shadow-elevated max-w-md w-full p-6 animate-popIn"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-lg font-semibold text-gray-900 mb-2">{titulo}</h2>
-        <p className="text-sm text-gray-600 mb-6">{mensaje}</p>
+        <h2 className="text-lg font-semibold text-stone-900 mb-2">{titulo}</h2>
+        <p className="text-sm text-stone-600 mb-6">{mensaje}</p>
 
         <div className="flex justify-end gap-2">
-          <button
-            onClick={onCancelar}
-            disabled={cargando}
-            className="px-4 py-2 text-sm rounded-lg text-gray-700 hover:bg-gray-100 transition"
-          >
+          <button onClick={onCancelar} disabled={cargando} className="btn-ghost text-sm px-4 py-2">
             {textoCancelar}
           </button>
           <button
             onClick={onConfirmar}
             disabled={cargando}
-            className={`px-4 py-2 text-sm font-medium rounded-lg text-white disabled:opacity-50 transition ${
-              peligroso
-                ? 'bg-red-600 hover:bg-red-700'
-                : 'bg-refugio-600 hover:bg-refugio-700'
-            }`}
+            className={`text-sm px-4 py-2 ${peligroso ? 'btn-danger' : 'btn-primary'}`}
           >
             {cargando ? 'Procesando…' : textoConfirmar}
           </button>

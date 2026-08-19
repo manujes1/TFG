@@ -14,14 +14,14 @@ export default function AnimalCard({ animal }) {
   return (
     <Link
       to={`/animales/${animal.id}`}
-      className="bg-white rounded-xl shadow hover:shadow-md transition overflow-hidden flex flex-col"
+      className="card card-hover group overflow-hidden flex flex-col"
     >
-      <div className="aspect-[4/3] bg-refugio-100 flex items-center justify-center overflow-hidden">
+      <div className="aspect-[4/3] bg-gradient-to-br from-refugio-100 to-refugio-50 flex items-center justify-center overflow-hidden">
         {foto ? (
           <img
             src={foto}
             alt={animal.nombre}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             loading="lazy"
           />
         ) : (
@@ -33,7 +33,9 @@ export default function AnimalCard({ animal }) {
 
       <div className="p-4 flex-1 flex flex-col gap-2">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-semibold text-gray-900">{animal.nombre}</h3>
+          <h3 className="font-semibold text-stone-900 group-hover:text-refugio-700 transition-colors">
+            {animal.nombre}
+          </h3>
           <EstadoBadge
             estado={animal.estado}
             etiquetas={ESTADOS_ANIMAL}
@@ -41,7 +43,7 @@ export default function AnimalCard({ animal }) {
           />
         </div>
 
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-stone-500">
           {ESPECIES[animal.especie]}
           {animal.raza ? ` · ${animal.raza}` : ''}
           {' · '}
@@ -50,7 +52,7 @@ export default function AnimalCard({ animal }) {
         </p>
 
         {(animal.descripcion || animal.descripcionManual) && (
-          <p className="text-sm text-gray-500 line-clamp-2">
+          <p className="text-sm text-stone-500 line-clamp-2">
             {animal.descripcion || animal.descripcionManual}
           </p>
         )}

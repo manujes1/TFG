@@ -44,13 +44,13 @@ export default function GenerarDescripcionIA({ animalId, onAceptar }) {
   }
 
   return (
-    <div className="bg-refugio-50 border border-refugio-100 rounded-xl p-4 space-y-3">
+    <div className="bg-teal-50 border border-teal-200 rounded-xl p-4 space-y-3 shadow-soft">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-refugio-700">
+          <h3 className="text-sm font-semibold text-teal-700">
             ✨ Generar descripción con IA
           </h3>
-          <p className="text-xs text-gray-600 mt-0.5">
+          <p className="text-xs text-stone-600 mt-0.5">
             Redacta una propuesta a partir de los datos del animal. Revísala antes
             de guardarla.
           </p>
@@ -60,14 +60,14 @@ export default function GenerarDescripcionIA({ animalId, onAceptar }) {
           type="button"
           onClick={() => mutation.mutate()}
           disabled={mutation.isPending}
-          className="text-sm bg-refugio-600 hover:bg-refugio-700 disabled:opacity-50 text-white font-medium rounded-lg px-4 py-2 transition shrink-0"
+          className="btn-accent text-sm px-4 py-2 shrink-0"
         >
           {mutation.isPending ? 'Generando…' : propuesta ? 'Generar otra' : 'Generar'}
         </button>
       </div>
 
       {mutation.isPending && (
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-stone-500">
           El texto se genera en el propio servidor del refugio; puede tardar unos
           segundos.
         </p>
@@ -81,28 +81,28 @@ export default function GenerarDescripcionIA({ animalId, onAceptar }) {
 
       {propuesta && (
         <div className="space-y-2">
-          <div className="bg-white border border-gray-200 rounded-lg p-3">
-            <p className="text-sm text-gray-800 leading-relaxed">{propuesta}</p>
+          <div className="bg-white border border-teal-200 rounded-lg p-3">
+            <p className="text-sm text-stone-800 leading-relaxed">{propuesta}</p>
           </div>
 
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={aceptar}
-              className="text-xs font-medium bg-refugio-600 hover:bg-refugio-700 text-white rounded-lg px-3 py-1.5 transition"
+              className="text-xs font-medium bg-teal-500 hover:bg-teal-600 text-white rounded-lg px-3 py-1.5 transition-all duration-150 active:scale-[0.98]"
             >
               Usar este texto
             </button>
             <button
               type="button"
               onClick={() => setPropuesta(null)}
-              className="text-xs text-gray-600 hover:bg-gray-100 rounded-lg px-3 py-1.5 transition"
+              className="text-xs text-stone-600 hover:bg-stone-100 rounded-lg px-3 py-1.5 transition-colors"
             >
               Descartar
             </button>
           </div>
 
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-stone-500">
             Al usarlo se copiará al campo de descripción, donde podrás editarlo
             antes de guardar el animal.
           </p>

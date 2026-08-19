@@ -89,9 +89,9 @@ export default function App() {
           <Route
             path="*"
             element={
-              <div className="min-h-screen flex flex-col items-center justify-center bg-refugio-50">
-                <h1 className="text-3xl font-bold text-gray-800 mb-2">404</h1>
-                <p className="text-gray-600">Página no encontrada.</p>
+              <div className="min-h-screen flex flex-col items-center justify-center">
+                <h1 className="text-5xl font-extrabold text-refugio-700 tracking-tight mb-2">404</h1>
+                <p className="text-stone-500">Página no encontrada.</p>
               </div>
             }
           />

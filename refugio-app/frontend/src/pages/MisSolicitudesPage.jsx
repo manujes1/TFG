@@ -46,13 +46,13 @@ export default function MisSolicitudesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-refugio-700 mb-1">Mi área</h1>
-        <p className="text-gray-600 text-sm">
+        <h1 className="page-title">Mi área</h1>
+        <p className="page-subtitle">
           Hola {user.nombre}, aquí tienes el seguimiento de tu actividad con el refugio.
         </p>
       </div>
 
-      <div className="bg-white shadow rounded-xl overflow-hidden">
+      <div className="card overflow-hidden">
         <Tabs tabs={tabs} activa={tab} onChange={setTab} />
 
         <div className="p-6">
@@ -87,7 +87,7 @@ function PanelAdopciones({ query }) {
       {query.data.map((adopcion) => (
         <li
           key={adopcion.id}
-          className="border border-gray-200 rounded-xl p-4 flex gap-4 items-start"
+          className="border border-stone-200 rounded-xl p-4 flex gap-4 items-start transition-colors hover:border-refugio-200 hover:bg-refugio-50/30"
         >
           <MiniaturaAnimal animal={adopcion.animal} />
 
@@ -95,7 +95,7 @@ function PanelAdopciones({ query }) {
             <div className="flex flex-wrap items-center gap-2 mb-1">
               <Link
                 to={`/animales/${adopcion.animal.id}`}
-                className="font-semibold text-gray-900 hover:text-refugio-700"
+                className="font-semibold text-stone-900 hover:text-refugio-700 transition-colors"
               >
                 {adopcion.animal.nombre}
               </Link>
@@ -106,13 +106,13 @@ function PanelAdopciones({ query }) {
               />
             </div>
 
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-stone-500">
               {ESPECIES[adopcion.animal.especie]} · Solicitada el{' '}
               {formatFecha(adopcion.fechaSolicitud)}
             </p>
 
             {adopcion.notas && (
-              <p className="text-sm text-gray-600 mt-2">{adopcion.notas}</p>
+              <p className="text-sm text-stone-600 mt-2">{adopcion.notas}</p>
             )}
 
             {adopcion.motivoRechazo && (
@@ -146,7 +146,7 @@ const ESTADOS_APADRINAMIENTO = {
 
 const ESTADO_APADRINAMIENTO_COLORES = {
   ACTIVO: 'bg-green-100 text-green-800',
-  CANCELADO: 'bg-gray-100 text-gray-700',
+  CANCELADO: 'bg-stone-100 text-stone-700',
   FINALIZADO: 'bg-blue-100 text-blue-800'
 };
 
@@ -189,7 +189,7 @@ function PanelApadrinamientos({ query }) {
         {query.data.map((apad) => (
           <li
             key={apad.id}
-            className="border border-gray-200 rounded-xl p-4 flex gap-4 items-start"
+            className="border border-stone-200 rounded-xl p-4 flex gap-4 items-start transition-colors hover:border-refugio-200 hover:bg-refugio-50/30"
           >
             <MiniaturaAnimal animal={apad.animal} />
 
@@ -197,7 +197,7 @@ function PanelApadrinamientos({ query }) {
               <div className="flex flex-wrap items-center gap-2 mb-1">
                 <Link
                   to={`/animales/${apad.animal.id}`}
-                  className="font-semibold text-gray-900 hover:text-refugio-700"
+                  className="font-semibold text-stone-900 hover:text-refugio-700 transition-colors"
                 >
                   {apad.animal.nombre}
                 </Link>
@@ -208,11 +208,11 @@ function PanelApadrinamientos({ query }) {
                 />
               </div>
 
-              <p className="text-sm text-gray-700">
+              <p className="text-sm text-stone-700">
                 {formatEuros(apad.cantidad)}
                 {apad.tipo === 'MENSUAL' ? ' al mes' : ' (aportación puntual)'}
               </p>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-stone-500 mt-1">
                 Desde el {formatFecha(apad.fechaInicio)}
                 {apad.fechaFin && ` · Finalizado el ${formatFecha(apad.fechaFin)}`}
               </p>
@@ -222,7 +222,7 @@ function PanelApadrinamientos({ query }) {
               <button
                 onClick={() => cancelMutation.mutate(apad.id)}
                 disabled={cancelMutation.isPending}
-                className="text-sm text-gray-600 hover:text-red-700 hover:bg-red-50 rounded-lg px-3 py-2 transition shrink-0"
+                className="text-sm text-stone-600 hover:text-red-700 hover:bg-red-50 rounded-lg px-3 py-2 transition-colors shrink-0"
               >
                 Cancelar
               </button>
@@ -250,21 +250,21 @@ function PanelDonaciones({ query }) {
 
   return (
     <div className="space-y-4">
-      <div className="bg-refugio-50 border border-refugio-100 rounded-xl px-4 py-3">
-        <p className="text-sm text-refugio-700">
+      <div className="bg-gradient-to-r from-refugio-500 to-refugio-600 rounded-xl px-4 py-3 shadow-soft">
+        <p className="text-sm text-white">
           Has aportado un total de{' '}
-          <span className="font-semibold">{formatEuros(total)}</span> al refugio. ¡Gracias!
+          <span className="font-bold">{formatEuros(total)}</span> al refugio. ¡Gracias!
         </p>
       </div>
 
-      <ul className="divide-y divide-gray-100">
+      <ul className="divide-y divide-stone-100">
         {query.data.map((donacion) => (
           <li key={donacion.id} className="py-3 flex items-center justify-between gap-4">
             <div className="min-w-0">
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-sm font-medium text-stone-900">
                 {donacion.concepto || 'Donación'}
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-stone-500">
                 {formatFecha(donacion.fecha)}
                 {donacion.metodoPago && ` · ${donacion.metodoPago}`}
               </p>
@@ -288,7 +288,7 @@ function MiniaturaAnimal({ animal }) {
   const emoji = animal?.especie === 'GATO' ? '🐱' : animal?.especie === 'PERRO' ? '🐶' : '🐾';
 
   return (
-    <div className="w-16 h-16 rounded-lg bg-refugio-100 shrink-0 overflow-hidden flex items-center justify-center">
+    <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-refugio-100 to-refugio-50 shrink-0 overflow-hidden flex items-center justify-center ring-1 ring-stone-200/60">
       {foto ? (
         <img src={foto} alt="" className="w-full h-full object-cover" />
       ) : (
@@ -299,7 +299,7 @@ function MiniaturaAnimal({ animal }) {
 }
 
 function Cargando() {
-  return <p className="text-center text-gray-500 py-8">Cargando…</p>;
+  return <p className="text-center text-stone-500 py-8">Cargando…</p>;
 }
 
 function ErrorCarga({ mensaje }) {
@@ -313,12 +313,9 @@ function ErrorCarga({ mensaje }) {
 function Vacio({ texto, accion }) {
   return (
     <div className="text-center py-10">
-      <p className="text-gray-500 mb-4">{texto}</p>
+      <p className="text-stone-500 mb-4">{texto}</p>
       {accion && (
-        <Link
-          to={accion.to}
-          className="inline-block bg-refugio-600 hover:bg-refugio-700 text-white text-sm font-medium rounded-lg px-5 py-2.5 transition"
-        >
+        <Link to={accion.to} className="btn-primary inline-flex text-sm px-5 py-2.5">
           {accion.label}
         </Link>
       )}

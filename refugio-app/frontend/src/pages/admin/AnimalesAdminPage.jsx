@@ -50,17 +50,13 @@ export default function AnimalesAdminPage() {
     setPage(1);
   }
 
-  const inputClass =
-    'border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-refugio-500 bg-white';
+  const inputClass = 'field-input';
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-xl font-semibold text-gray-800">Gestión de animales</h2>
-        <Link
-          to="/admin/animales/nuevo"
-          className="bg-refugio-600 hover:bg-refugio-700 text-white text-sm font-medium rounded-lg px-4 py-2 transition"
-        >
+        <h2 className="text-xl font-semibold text-stone-800 tracking-tight">Gestión de animales</h2>
+        <Link to="/admin/animales/nuevo" className="btn-primary text-sm px-4 py-2">
           + Nuevo animal
         </Link>
       </div>
@@ -72,7 +68,7 @@ export default function AnimalesAdminPage() {
       )}
 
       {/* Filtros */}
-      <div className="bg-white shadow rounded-xl p-4 flex flex-wrap gap-3">
+      <div className="card p-4 flex flex-wrap gap-3">
         <input
           name="search"
           value={filtros.search}
@@ -104,7 +100,7 @@ export default function AnimalesAdminPage() {
         </select>
       </div>
 
-      {isPending && <p className="text-center text-gray-500 py-12">Cargando…</p>}
+      {isPending && <p className="text-center text-stone-500 py-12">Cargando…</p>}
 
       {isError && (
         <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4">
@@ -113,40 +109,40 @@ export default function AnimalesAdminPage() {
       )}
 
       {data && (
-        <div className="bg-white shadow rounded-xl overflow-hidden">
+        <div className="card overflow-hidden">
           {data.data.length === 0 ? (
-            <p className="text-center text-gray-500 py-12">
+            <p className="text-center text-stone-500 py-12">
               No hay animales que coincidan con la búsqueda.
             </p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
+                <thead className="bg-stone-50 text-left text-xs uppercase tracking-wide text-stone-500 border-b border-stone-200">
                   <tr>
-                    <th className="px-4 py-3 font-medium">Animal</th>
-                    <th className="px-4 py-3 font-medium">Especie</th>
-                    <th className="px-4 py-3 font-medium">Estado</th>
-                    <th className="px-4 py-3 font-medium hidden md:table-cell">Ubicación</th>
-                    <th className="px-4 py-3 font-medium hidden lg:table-cell">Ingreso</th>
-                    <th className="px-4 py-3 font-medium text-right">Acciones</th>
+                    <th className="px-4 py-3 font-semibold">Animal</th>
+                    <th className="px-4 py-3 font-semibold">Especie</th>
+                    <th className="px-4 py-3 font-semibold">Estado</th>
+                    <th className="px-4 py-3 font-semibold hidden md:table-cell">Ubicación</th>
+                    <th className="px-4 py-3 font-semibold hidden lg:table-cell">Ingreso</th>
+                    <th className="px-4 py-3 font-semibold text-right">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-stone-100">
                   {data.data.map((animal) => (
-                    <tr key={animal.id} className="hover:bg-gray-50">
+                    <tr key={animal.id} className="hover:bg-refugio-50/40 transition-colors">
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
                           <Miniatura animal={animal} />
                           <div className="min-w-0">
-                            <p className="font-medium text-gray-900">{animal.nombre}</p>
-                            <p className="text-xs text-gray-500">
+                            <p className="font-medium text-stone-900">{animal.nombre}</p>
+                            <p className="text-xs text-stone-500">
                               {SEXOS[animal.sexo]}
                               {animal.raza ? ` · ${animal.raza}` : ''}
                             </p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-gray-700">{ESPECIES[animal.especie]}</td>
+                      <td className="px-4 py-3 text-stone-600">{ESPECIES[animal.especie]}</td>
                       <td className="px-4 py-3">
                         <EstadoBadge
                           estado={animal.estado}
@@ -154,36 +150,36 @@ export default function AnimalesAdminPage() {
                           colores={ESTADO_ANIMAL_COLORES}
                         />
                       </td>
-                      <td className="px-4 py-3 text-gray-600 hidden md:table-cell">
+                      <td className="px-4 py-3 text-stone-600 hidden md:table-cell">
                         {animal.ubicacion || '—'}
                       </td>
-                      <td className="px-4 py-3 text-gray-600 hidden lg:table-cell">
+                      <td className="px-4 py-3 text-stone-600 hidden lg:table-cell">
                         {formatFecha(animal.fechaIngreso)}
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex justify-end gap-1">
                           <Link
                             to={`/animales/${animal.id}`}
-                            className="text-xs px-2 py-1 rounded text-gray-600 hover:bg-gray-100 transition"
+                            className="text-xs px-2 py-1 rounded text-stone-600 hover:bg-stone-100 transition-colors"
                           >
                             Ver
                           </Link>
                           <Link
                             to={`/admin/animales/${animal.id}/editar`}
-                            className="text-xs px-2 py-1 rounded text-refugio-700 hover:bg-refugio-50 transition"
+                            className="text-xs px-2 py-1 rounded text-refugio-700 hover:bg-refugio-50 transition-colors font-medium"
                           >
                             Editar
                           </Link>
                           <Link
                             to={`/admin/animales/${animal.id}/expedientes`}
-                            className="text-xs px-2 py-1 rounded text-refugio-700 hover:bg-refugio-50 transition"
+                            className="text-xs px-2 py-1 rounded text-refugio-700 hover:bg-refugio-50 transition-colors font-medium"
                           >
                             Historial
                           </Link>
                           {isAdmin && (
                             <button
                               onClick={() => setABorrar(animal)}
-                              className="text-xs px-2 py-1 rounded text-red-600 hover:bg-red-50 transition"
+                              className="text-xs px-2 py-1 rounded text-red-600 hover:bg-red-50 transition-colors font-medium"
                             >
                               Eliminar
                             </button>
@@ -198,8 +194,8 @@ export default function AnimalesAdminPage() {
           )}
 
           {data.pagination.totalPages > 1 && (
-            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
-              <span className="text-xs text-gray-500">
+            <div className="flex items-center justify-between px-4 py-3 border-t border-stone-100 bg-stone-50/50">
+              <span className="text-xs text-stone-500">
                 {data.pagination.total} animales · página {data.pagination.page} de{' '}
                 {data.pagination.totalPages}
               </span>
@@ -207,14 +203,14 @@ export default function AnimalesAdminPage() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="px-3 py-1 text-sm rounded-lg border border-gray-300 disabled:opacity-40 hover:bg-gray-50 transition"
+                  className="btn-ghost border border-stone-300 text-sm px-3 py-1"
                 >
                   Anterior
                 </button>
                 <button
                   onClick={() => setPage((p) => p + 1)}
                   disabled={page >= data.pagination.totalPages}
-                  className="px-3 py-1 text-sm rounded-lg border border-gray-300 disabled:opacity-40 hover:bg-gray-50 transition"
+                  className="btn-ghost border border-stone-300 text-sm px-3 py-1"
                 >
                   Siguiente
                 </button>
@@ -243,7 +239,7 @@ function Miniatura({ animal }) {
   const emoji = animal.especie === 'GATO' ? '🐱' : animal.especie === 'PERRO' ? '🐶' : '🐾';
 
   return (
-    <div className="w-10 h-10 rounded-lg bg-refugio-100 shrink-0 overflow-hidden flex items-center justify-center">
+    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-refugio-100 to-refugio-50 shrink-0 overflow-hidden flex items-center justify-center ring-1 ring-stone-200/60">
       {foto ? (
         <img src={foto} alt="" className="w-full h-full object-cover" />
       ) : (

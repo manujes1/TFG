@@ -31,18 +31,19 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-refugio-50 flex items-center justify-center p-4">
-      <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-refugio-700 mb-1">
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="card shadow-elevated p-8 w-full max-w-md">
+        <div className="text-2xl mb-2" aria-hidden="true">🐾</div>
+        <h1 className="text-2xl font-bold text-stone-900 tracking-tight mb-1">
           Iniciar sesión
         </h1>
-        <p className="text-sm text-gray-600 mb-6">
+        <p className="text-sm text-stone-500 mb-6">
           Accede para gestionar el refugio o seguir tus solicitudes.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="field-label">
               Email
             </label>
             <input
@@ -52,12 +53,12 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-refugio-500"
+              className="field-input"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="password" className="field-label">
               Contraseña
             </label>
             <input
@@ -67,7 +68,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-refugio-500"
+              className="field-input"
             />
           </div>
 
@@ -77,16 +78,12 @@ export default function LoginPage() {
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full bg-refugio-600 hover:bg-refugio-700 disabled:opacity-50 text-white font-medium rounded-lg py-2 transition"
-          >
+          <button type="submit" disabled={submitting} className="btn-primary w-full py-2.5">
             {submitting ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
 
-        <p className="text-sm text-gray-600 mt-6 text-center">
+        <p className="text-sm text-stone-500 mt-6 text-center">
           ¿No tienes cuenta?{' '}
           <Link to="/registro" className="text-refugio-600 hover:underline font-medium">
             Regístrate

@@ -8,7 +8,7 @@ import { formatEuros, formatFecha } from '../../utils/format.js';
 const COLOR_ESTADO_ANIMAL = {
   DISPONIBLE: 'bg-green-500',
   EN_ACOGIDA: 'bg-blue-500',
-  ADOPTADO: 'bg-gray-400',
+  ADOPTADO: 'bg-stone-400',
   EN_TRATAMIENTO: 'bg-amber-500',
   NO_DISPONIBLE: 'bg-red-500'
 };
@@ -16,7 +16,7 @@ const COLOR_ESTADO_ANIMAL = {
 const COLOR_ESPECIE = {
   PERRO: 'bg-refugio-500',
   GATO: 'bg-indigo-500',
-  OTRO: 'bg-gray-400'
+  OTRO: 'bg-stone-400'
 };
 
 const COLOR_ESTADO_ADOPCION = {
@@ -25,7 +25,7 @@ const COLOR_ESTADO_ADOPCION = {
   APROBADA: 'bg-green-500',
   RECHAZADA: 'bg-red-500',
   COMPLETADA: 'bg-refugio-600',
-  CANCELADA: 'bg-gray-400'
+  CANCELADA: 'bg-stone-400'
 };
 
 export default function DashboardPage() {
@@ -35,7 +35,7 @@ export default function DashboardPage() {
   });
 
   if (isPending) {
-    return <p className="text-center text-gray-500 py-12">Cargando estadísticas…</p>;
+    return <p className="text-center text-stone-500 py-12">Cargando estadísticas…</p>;
   }
 
   if (isError) {
@@ -131,7 +131,7 @@ export default function DashboardPage() {
         <SeccionCard
           titulo="Animales por estado"
           accion={
-            <Link to="/admin/animales" className="text-sm text-refugio-600 hover:underline">
+            <Link to="/admin/animales" className="text-sm text-refugio-600 hover:underline font-medium">
               Gestionar
             </Link>
           }
@@ -147,7 +147,7 @@ export default function DashboardPage() {
       <SeccionCard
         titulo="Adopciones por estado"
         accion={
-          <Link to="/admin/adopciones" className="text-sm text-refugio-600 hover:underline">
+          <Link to="/admin/adopciones" className="text-sm text-refugio-600 hover:underline font-medium">
             Ver solicitudes
           </Link>
         }
@@ -158,7 +158,7 @@ export default function DashboardPage() {
         />
       </SeccionCard>
 
-      <p className="text-xs text-gray-400 text-center">
+      <p className="text-xs text-stone-400 text-center">
         Datos actualizados a {formatFecha(data.generadoEn, true)}
       </p>
     </div>

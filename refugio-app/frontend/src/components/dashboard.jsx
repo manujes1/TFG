@@ -9,12 +9,14 @@
 export function MetricaCard({ titulo, valor, subtitulo, icono, acento = false }) {
   return (
     <div
-      className={`rounded-xl p-5 shadow ${
-        acento ? 'bg-refugio-600 text-white' : 'bg-white'
+      className={`rounded-xl p-5 transition-all duration-200 hover:-translate-y-0.5 ${
+        acento
+          ? 'bg-gradient-to-br from-teal-500 to-teal-600 text-white shadow-card hover:shadow-card-hover'
+          : 'card card-hover'
       }`}
     >
       <div className="flex items-start justify-between gap-2 mb-2">
-        <p className={`text-sm ${acento ? 'text-refugio-50' : 'text-gray-600'}`}>
+        <p className={`text-sm font-medium ${acento ? 'text-teal-50' : 'text-stone-500'}`}>
           {titulo}
         </p>
         {icono && (
@@ -23,11 +25,11 @@ export function MetricaCard({ titulo, valor, subtitulo, icono, acento = false })
           </span>
         )}
       </div>
-      <p className={`text-3xl font-bold ${acento ? 'text-white' : 'text-gray-900'}`}>
+      <p className={`text-3xl font-bold tracking-tight ${acento ? 'text-white' : 'text-stone-900'}`}>
         {valor}
       </p>
       {subtitulo && (
-        <p className={`text-xs mt-1 ${acento ? 'text-refugio-100' : 'text-gray-500'}`}>
+        <p className={`text-xs mt-1 ${acento ? 'text-teal-100' : 'text-stone-500'}`}>
           {subtitulo}
         </p>
       )}
@@ -45,7 +47,7 @@ export function BarrasHorizontales({ datos, vacio = 'Sin datos' }) {
   const total = datos.reduce((suma, d) => suma + d.valor, 0);
 
   if (total === 0) {
-    return <p className="text-sm text-gray-500 py-4">{vacio}</p>;
+    return <p className="text-sm text-stone-500 py-4">{vacio}</p>;
   }
 
   const maximo = Math.max(...datos.map((d) => d.valor));
@@ -57,12 +59,12 @@ export function BarrasHorizontales({ datos, vacio = 'Sin datos' }) {
         return (
           <li key={dato.etiqueta}>
             <div className="flex items-center justify-between text-sm mb-1">
-              <span className="text-gray-700">{dato.etiqueta}</span>
-              <span className="font-medium text-gray-900">{dato.valor}</span>
+              <span className="text-stone-600">{dato.etiqueta}</span>
+              <span className="font-semibold text-stone-900">{dato.valor}</span>
             </div>
-            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
               <div
-                className={`h-full rounded-full transition-all ${dato.color}`}
+                className={`h-full rounded-full transition-all duration-500 ${dato.color}`}
                 style={{ width: `${porcentaje}%` }}
               />
             </div>
@@ -78,9 +80,9 @@ export function BarrasHorizontales({ datos, vacio = 'Sin datos' }) {
  */
 export function SeccionCard({ titulo, children, accion }) {
   return (
-    <section className="bg-white shadow rounded-xl p-5">
-      <div className="flex items-center justify-between gap-2 mb-4">
-        <h2 className="font-semibold text-gray-800">{titulo}</h2>
+    <section className="card p-5">
+      <div className="flex items-center justify-between gap-2 mb-4 pb-3 border-b border-stone-100">
+        <h2 className="font-semibold text-stone-800">{titulo}</h2>
         {accion}
       </div>
       {children}
