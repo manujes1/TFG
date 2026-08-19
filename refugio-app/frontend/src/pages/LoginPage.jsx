@@ -32,17 +32,17 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-refugio-50 flex items-center justify-center p-4">
-      <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-refugio-700 mb-1">
+      <div className="kennel-tag bg-papel shadow-card rounded-lg p-8 w-full max-w-md border-t-2 border-dashed border-refugio-100">
+        <h1 className="font-display text-2xl font-semibold text-refugio-900 mb-1">
           Iniciar sesión
         </h1>
-        <p className="text-sm text-gray-600 mb-6">
+        <p className="text-sm text-refugio-900/60 mb-6">
           Accede para gestionar el refugio o seguir tus solicitudes.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-refugio-900/80 mb-1">
               Email
             </label>
             <input
@@ -52,12 +52,12 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-refugio-500"
+              className="w-full border border-refugio-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-acento-400 focus:border-acento-400"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-refugio-900/80 mb-1">
               Contraseña
             </label>
             <input
@@ -67,12 +67,12 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-refugio-500"
+              className="w-full border border-refugio-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-acento-400 focus:border-acento-400"
             />
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-3 py-2">
+            <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-md px-3 py-2">
               {error}
             </div>
           )}
@@ -80,15 +80,15 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-refugio-600 hover:bg-refugio-700 disabled:opacity-50 text-white font-medium rounded-lg py-2 transition"
+            className="btn-stamp w-full bg-acento-500 hover:bg-acento-600 disabled:opacity-50 text-white font-semibold rounded-md py-2 transition"
           >
             {submitting ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
 
-        <p className="text-sm text-gray-600 mt-6 text-center">
+        <p className="text-sm text-refugio-900/60 mt-6 text-center">
           ¿No tienes cuenta?{' '}
-          <Link to="/registro" className="text-refugio-600 hover:underline font-medium">
+          <Link to="/registro" className="text-refugio-700 hover:underline font-medium">
             Regístrate
           </Link>
         </p>

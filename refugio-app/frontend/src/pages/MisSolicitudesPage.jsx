@@ -52,7 +52,7 @@ export default function MisSolicitudesPage() {
         </p>
       </div>
 
-      <div className="bg-white shadow rounded-xl overflow-hidden">
+      <div className="bg-papel shadow rounded-xl overflow-hidden">
         <Tabs tabs={tabs} activa={tab} onChange={setTab} />
 
         <div className="p-6">

@@ -9,12 +9,18 @@
 export function MetricaCard({ titulo, valor, subtitulo, icono, acento = false }) {
   return (
     <div
-      className={`rounded-xl p-5 shadow ${
-        acento ? 'bg-refugio-600 text-white' : 'bg-white'
+      className={`rounded-lg p-5 shadow-card border ${
+        acento
+          ? 'bg-refugio-700 text-white border-refugio-900'
+          : 'bg-papel border-refugio-100'
       }`}
     >
       <div className="flex items-start justify-between gap-2 mb-2">
-        <p className={`text-sm ${acento ? 'text-refugio-50' : 'text-gray-600'}`}>
+        <p
+          className={`text-xs font-mono uppercase tracking-wide ${
+            acento ? 'text-refugio-50/70' : 'text-refugio-900/50'
+          }`}
+        >
           {titulo}
         </p>
         {icono && (
@@ -23,11 +29,15 @@ export function MetricaCard({ titulo, valor, subtitulo, icono, acento = false })
           </span>
         )}
       </div>
-      <p className={`text-3xl font-bold ${acento ? 'text-white' : 'text-gray-900'}`}>
+      <p
+        className={`font-display text-3xl font-semibold ${
+          acento ? 'text-white' : 'text-refugio-900'
+        }`}
+      >
         {valor}
       </p>
       {subtitulo && (
-        <p className={`text-xs mt-1 ${acento ? 'text-refugio-100' : 'text-gray-500'}`}>
+        <p className={`text-xs mt-1 ${acento ? 'text-refugio-100' : 'text-refugio-900/50'}`}>
           {subtitulo}
         </p>
       )}
@@ -78,9 +88,9 @@ export function BarrasHorizontales({ datos, vacio = 'Sin datos' }) {
  */
 export function SeccionCard({ titulo, children, accion }) {
   return (
-    <section className="bg-white shadow rounded-xl p-5">
+    <section className="bg-papel shadow-card rounded-lg p-5 border border-refugio-100">
       <div className="flex items-center justify-between gap-2 mb-4">
-        <h2 className="font-semibold text-gray-800">{titulo}</h2>
+        <h2 className="font-display font-semibold text-refugio-900">{titulo}</h2>
         {accion}
       </div>
       {children}

@@ -8,7 +8,9 @@ export default function EstadoBadge({ estado, etiquetas, colores }) {
   const color = colores[estado] ?? 'bg-gray-100 text-gray-700';
 
   return (
-    <span className={`inline-block text-xs font-medium px-2 py-1 rounded-full ${color}`}>
+    <span
+      className={`inline-block text-xs font-medium px-2 py-1 rounded-full border border-current/15 ${color}`}
+    >
       {texto}
     </span>
   );

@@ -72,7 +72,7 @@ export default function AnimalDetallePage() {
 
   if (isError) {
     return (
-      <div className="bg-white shadow rounded-xl p-8 text-center">
+      <div className="bg-papel shadow-card rounded-lg border border-refugio-100 p-8 text-center">
         <p className="text-gray-700 mb-4">
           {error.response?.status === 404
             ? 'Este animal no existe o ha sido eliminado.'
@@ -161,59 +161,59 @@ export default function AnimalDetallePage() {
 
           <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
             <div>
-              <dt className="text-gray-500">Especie</dt>
-              <dd className="font-medium text-gray-900">{ESPECIES[animal.especie]}</dd>
+              <dt className="font-mono text-xs uppercase tracking-wide text-refugio-900/45">Especie</dt>
+              <dd className="font-medium text-refugio-900">{ESPECIES[animal.especie]}</dd>
             </div>
             <div>
-              <dt className="text-gray-500">Sexo</dt>
-              <dd className="font-medium text-gray-900">{SEXOS[animal.sexo]}</dd>
+              <dt className="font-mono text-xs uppercase tracking-wide text-refugio-900/45">Sexo</dt>
+              <dd className="font-medium text-refugio-900">{SEXOS[animal.sexo]}</dd>
             </div>
             {animal.raza && (
               <div>
-                <dt className="text-gray-500">Raza</dt>
-                <dd className="font-medium text-gray-900">{animal.raza}</dd>
+                <dt className="font-mono text-xs uppercase tracking-wide text-refugio-900/45">Raza</dt>
+                <dd className="font-medium text-refugio-900">{animal.raza}</dd>
               </div>
             )}
             {animal.edadEstimada != null && (
               <div>
-                <dt className="text-gray-500">Edad</dt>
-                <dd className="font-medium text-gray-900">{animal.edadEstimada} años</dd>
+                <dt className="font-mono text-xs uppercase tracking-wide text-refugio-900/45">Edad</dt>
+                <dd className="font-medium text-refugio-900">{animal.edadEstimada} años</dd>
               </div>
             )}
             {formatPeso(animal.peso) && (
               <div>
-                <dt className="text-gray-500">Peso</dt>
-                <dd className="font-medium text-gray-900">{formatPeso(animal.peso)}</dd>
+                <dt className="font-mono text-xs uppercase tracking-wide text-refugio-900/45">Peso</dt>
+                <dd className="font-medium text-refugio-900">{formatPeso(animal.peso)}</dd>
               </div>
             )}
             {animal.color && (
               <div>
-                <dt className="text-gray-500">Color</dt>
-                <dd className="font-medium text-gray-900">{animal.color}</dd>
+                <dt className="font-mono text-xs uppercase tracking-wide text-refugio-900/45">Color</dt>
+                <dd className="font-medium text-refugio-900">{animal.color}</dd>
               </div>
             )}
             <div>
-              <dt className="text-gray-500">En el refugio desde</dt>
-              <dd className="font-medium text-gray-900">{formatFecha(animal.fechaIngreso)}</dd>
+              <dt className="font-mono text-xs uppercase tracking-wide text-refugio-900/45">En el refugio desde</dt>
+              <dd className="font-medium text-refugio-900">{formatFecha(animal.fechaIngreso)}</dd>
             </div>
             {isStaff && animal.ubicacion && (
               <div>
-                <dt className="text-gray-500">Ubicación</dt>
-                <dd className="font-medium text-gray-900">{animal.ubicacion}</dd>
+                <dt className="font-mono text-xs uppercase tracking-wide text-refugio-900/45">Ubicación</dt>
+                <dd className="font-medium text-refugio-900">{animal.ubicacion}</dd>
               </div>
             )}
           </dl>
 
           {descripcion && (
             <div>
-              <h2 className="text-sm font-semibold text-gray-800 mb-1">Sobre {animal.nombre}</h2>
+              <h2 className="text-sm font-semibold text-refugio-900 mb-1">Sobre {animal.nombre}</h2>
               <p className="text-sm text-gray-700 leading-relaxed">{descripcion}</p>
             </div>
           )}
 
           {Object.keys(caracteristicas).length > 0 && (
             <div>
-              <h2 className="text-sm font-semibold text-gray-800 mb-2">Características</h2>
+              <h2 className="text-sm font-semibold text-refugio-900 mb-2">Características</h2>
               <div className="flex flex-wrap gap-2">
                 {Object.entries(caracteristicas).map(([clave, valor]) => (
                   <span
@@ -245,7 +245,7 @@ export default function AnimalDetallePage() {
             {puedeAdoptar && !mostrarFormAdopcion && (
               <button
                 onClick={handleSolicitarAdopcion}
-                className="bg-refugio-600 hover:bg-refugio-700 text-white font-medium rounded-lg px-5 py-2.5 transition"
+                className="btn-stamp bg-acento-500 hover:bg-acento-600 text-white font-semibold rounded-md px-5 py-2.5 transition"
               >
                 Solicitar adopción
               </button>
@@ -253,7 +253,7 @@ export default function AnimalDetallePage() {
             {!mostrarFormApadrinar && (
               <button
                 onClick={handleApadrinar}
-                className="border border-refugio-600 text-refugio-700 hover:bg-refugio-50 font-medium rounded-lg px-5 py-2.5 transition"
+                className="border border-refugio-600 text-refugio-700 hover:bg-refugio-50 font-medium rounded-md px-5 py-2.5 transition"
               >
                 Apadrinar
               </button>
@@ -262,8 +262,8 @@ export default function AnimalDetallePage() {
 
           {/* Formulario de adopción */}
           {mostrarFormAdopcion && (
-            <div className="bg-white shadow rounded-xl p-4 space-y-3">
-              <h3 className="font-semibold text-gray-800">Solicitar la adopción de {animal.nombre}</h3>
+            <div className="bg-papel shadow-card rounded-lg border border-refugio-100 p-4 space-y-3">
+              <h3 className="font-semibold text-refugio-900">Solicitar la adopción de {animal.nombre}</h3>
               <label htmlFor="notas" className="block text-sm text-gray-600">
                 Cuéntanos sobre tu situación (tipo de vivienda, experiencia previa, otros animales…)
               </label>
@@ -272,7 +272,7 @@ export default function AnimalDetallePage() {
                 rows={4}
                 value={notasAdopcion}
                 onChange={(e) => setNotasAdopcion(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-refugio-500"
+                className="w-full border border-refugio-100 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-acento-400 focus:border-acento-400"
               />
               <div className="flex gap-2">
                 <button
@@ -286,7 +286,7 @@ export default function AnimalDetallePage() {
                 </button>
                 <button
                   onClick={() => setMostrarFormAdopcion(false)}
-                  className="text-sm text-gray-600 hover:bg-gray-100 rounded-lg px-4 py-2 transition"
+                  className="text-sm text-refugio-900/60 hover:bg-refugio-50 rounded-md px-4 py-2 transition"
                 >
                   Cancelar
                 </button>
@@ -296,8 +296,8 @@ export default function AnimalDetallePage() {
 
           {/* Formulario de apadrinamiento */}
           {mostrarFormApadrinar && (
-            <div className="bg-white shadow rounded-xl p-4 space-y-3">
-              <h3 className="font-semibold text-gray-800">Apadrinar a {animal.nombre}</h3>
+            <div className="bg-papel shadow-card rounded-lg border border-refugio-100 p-4 space-y-3">
+              <h3 className="font-semibold text-refugio-900">Apadrinar a {animal.nombre}</h3>
               <p className="text-sm text-gray-600">
                 Tu aportación cubre alimentación, cuidados veterinarios y mantenimiento.
               </p>
@@ -312,7 +312,7 @@ export default function AnimalDetallePage() {
                   step="1"
                   value={cantidadApadrinamiento}
                   onChange={(e) => setCantidadApadrinamiento(Number(e.target.value))}
-                  className="w-32 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-refugio-500"
+                  className="w-32 border border-refugio-100 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-acento-400 focus:border-acento-400"
                 />
               </div>
               <div className="flex gap-2">
@@ -331,7 +331,7 @@ export default function AnimalDetallePage() {
                 </button>
                 <button
                   onClick={() => setMostrarFormApadrinar(false)}
-                  className="text-sm text-gray-600 hover:bg-gray-100 rounded-lg px-4 py-2 transition"
+                  className="text-sm text-refugio-900/60 hover:bg-refugio-50 rounded-md px-4 py-2 transition"
                 >
                   Cancelar
                 </button>
@@ -348,9 +348,9 @@ export default function AnimalDetallePage() {
 
       {/* Historial médico: solo staff */}
       {isStaff && (
-        <section className="bg-white shadow rounded-xl p-6">
+        <section className="bg-papel shadow-card rounded-lg border border-refugio-100 p-6">
           <div className="flex items-center justify-between gap-3 mb-3">
-            <h2 className="text-lg font-semibold text-gray-800">Historial médico</h2>
+            <h2 className="text-lg font-semibold text-refugio-900">Historial médico</h2>
             <Link
               to={`/admin/animales/${animal.id}/expedientes`}
               className="text-sm text-refugio-600 hover:underline"

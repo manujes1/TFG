@@ -99,7 +99,7 @@ export default function ExpedientesAdminPage() {
 
   if (animal.isError) {
     return (
-      <div className="bg-white shadow rounded-xl p-8 text-center">
+      <div className="bg-papel shadow rounded-xl p-8 text-center">
         <p className="text-gray-700 mb-4">No se pudo cargar el animal.</p>
         <Link to="/admin/animales" className="text-refugio-600 hover:underline">
           ← Volver al listado
@@ -178,7 +178,7 @@ export default function ExpedientesAdminPage() {
 
       {expedientes.data && (
         lista.length === 0 && !formAbierto ? (
-          <div className="bg-white shadow rounded-xl p-12 text-center">
+          <div className="bg-papel shadow rounded-xl p-12 text-center">
             <p className="text-gray-500 mb-4">
               {animal.data.nombre} todavía no tiene expedientes médicos registrados.
             </p>
@@ -214,7 +214,7 @@ export default function ExpedientesAdminPage() {
               }
 
               return (
-                <li key={exp.id} className="bg-white shadow rounded-xl p-4">
+                <li key={exp.id} className="bg-papel shadow rounded-xl p-4">
                   <div className="flex items-start gap-3">
                     <span className="text-xl shrink-0" aria-hidden="true">
                       {tipo.icono}

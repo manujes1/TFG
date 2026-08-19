@@ -11,21 +11,26 @@ export default function Layout() {
   }
 
   const linkClass = ({ isActive }) =>
-    `px-3 py-2 rounded-lg text-sm font-medium transition ${
+    `relative px-1 py-2 text-sm font-medium transition after:absolute after:left-0 after:right-0 after:-bottom-0.5 after:h-0.5 after:rounded-full after:transition-transform after:origin-left ${
       isActive
-        ? 'bg-refugio-100 text-refugio-700'
-        : 'text-gray-700 hover:bg-gray-100'
+        ? 'text-refugio-700 after:bg-acento-500 after:scale-x-100'
+        : 'text-refugio-900/70 hover:text-refugio-700 after:bg-acento-500 after:scale-x-0 hover:after:scale-x-100'
     }`;
 
   return (
     <div className="min-h-screen bg-refugio-50 flex flex-col">
-      <header className="bg-white shadow-sm sticky top-0 z-10">
-        <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <Link to="/" className="text-xl font-bold text-refugio-700 shrink-0">
-            🐾 Refugio
+      <header className="bg-papel/95 backdrop-blur border-b-2 border-dashed border-refugio-200 sticky top-0 z-10">
+        <nav className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-6">
+          <Link to="/" className="flex items-center gap-2 shrink-0 group">
+            <span className="grid place-items-center w-8 h-8 rounded-full bg-refugio-700 text-acento-100 text-sm rotate-[-6deg] group-hover:rotate-0 transition-transform">
+              🐾
+            </span>
+            <span className="font-display text-lg font-semibold tracking-tight text-refugio-900">
+              Refugio
+            </span>
           </Link>
 
-          <div className="flex items-center gap-1 flex-wrap">
+          <div className="flex items-center gap-5 flex-wrap">
             <NavLink to="/" end className={linkClass}>
               Inicio
             </NavLink>
@@ -57,13 +62,13 @@ export default function Layout() {
               <>
                 <Link
                   to="/perfil"
-                  className="text-sm text-gray-600 hover:text-refugio-700 hidden sm:inline transition"
+                  className="text-sm text-refugio-900/70 hover:text-refugio-700 hidden sm:inline transition"
                 >
                   {user.nombre}
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="text-sm px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition"
+                  className="text-sm px-3 py-2 rounded-md text-refugio-900/70 hover:bg-refugio-100 transition"
                 >
                   Salir
                 </button>
@@ -72,13 +77,13 @@ export default function Layout() {
               <>
                 <Link
                   to="/login"
-                  className="text-sm px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition"
+                  className="text-sm px-3 py-2 rounded-md text-refugio-900/70 hover:bg-refugio-100 transition"
                 >
                   Entrar
                 </Link>
                 <Link
                   to="/registro"
-                  className="text-sm px-3 py-2 rounded-lg bg-refugio-600 hover:bg-refugio-700 text-white font-medium transition"
+                  className="text-sm px-4 py-2 rounded-md bg-acento-500 hover:bg-acento-600 text-white font-semibold transition"
                 >
                   Registro
                 </Link>
@@ -92,8 +97,8 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <footer className="bg-white border-t py-4">
-        <p className="text-center text-xs text-gray-500">
+      <footer className="border-t-2 border-dashed border-refugio-200 py-6">
+        <p className="text-center text-xs font-mono tracking-wide text-refugio-900/50 uppercase">
           Refugio de Animales · TFG Ingeniería Informática
         </p>
       </footer>

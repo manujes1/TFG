@@ -68,7 +68,7 @@ export default function AdopcionesAdminPage() {
         <select
           value={estadoFiltro}
           onChange={handleFiltro}
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-refugio-500"
+          className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-papel focus:outline-none focus:ring-2 focus:ring-refugio-500"
         >
           <option value="">Todos los estados</option>
           {Object.entries(ESTADOS_ADOPCION).map(([v, l]) => (
@@ -100,7 +100,7 @@ export default function AdopcionesAdminPage() {
       {data && (
         <>
           {data.data.length === 0 ? (
-            <div className="bg-white shadow rounded-xl p-12 text-center">
+            <div className="bg-papel shadow rounded-xl p-12 text-center">
               <p className="text-gray-500">
                 {estadoFiltro
                   ? 'No hay solicitudes en ese estado.'
@@ -110,7 +110,7 @@ export default function AdopcionesAdminPage() {
           ) : (
             <ul className="space-y-3">
               {data.data.map((adopcion) => (
-                <li key={adopcion.id} className="bg-white shadow rounded-xl p-5">
+                <li key={adopcion.id} className="bg-papel shadow rounded-xl p-5">
                   <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2 mb-1">
@@ -182,7 +182,7 @@ export default function AdopcionesAdminPage() {
           )}
 
           {data.pagination.totalPages > 1 && (
-            <div className="flex items-center justify-between bg-white shadow rounded-xl px-4 py-3">
+            <div className="flex items-center justify-between bg-papel shadow rounded-xl px-4 py-3">
               <span className="text-xs text-gray-500">
                 {data.pagination.total} solicitudes · página {data.pagination.page} de{' '}
                 {data.pagination.totalPages}

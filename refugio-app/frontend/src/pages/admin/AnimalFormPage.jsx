@@ -166,7 +166,7 @@ export default function AnimalFormPage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white shadow rounded-xl p-6 space-y-5">
+      <form onSubmit={handleSubmit} className="bg-papel shadow rounded-xl p-6 space-y-5">
         {/* Datos básicos */}
         <fieldset className="space-y-4">
           <legend className="text-sm font-semibold text-gray-800 mb-2">

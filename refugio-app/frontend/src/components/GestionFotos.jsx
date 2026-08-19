@@ -62,7 +62,7 @@ export default function GestionFotos({ animalId, fotos }) {
   }
 
   return (
-    <section className="bg-white shadow rounded-xl p-6 space-y-4">
+    <section className="bg-papel shadow rounded-xl p-6 space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h3 className="font-semibold text-gray-800">Fotos</h3>
         <label className="cursor-pointer bg-refugio-600 hover:bg-refugio-700 text-white text-sm font-medium rounded-lg px-4 py-2 transition">

@@ -3,8 +3,8 @@ import { siguientesEstados, ACCIONES } from '../utils/adopcionEstados.js';
 
 const ESTILOS = {
   primario: 'bg-refugio-600 hover:bg-refugio-700 text-white',
-  peligro: 'bg-white border border-red-300 text-red-700 hover:bg-red-50',
-  neutro: 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+  peligro: 'bg-papel border border-red-300 text-red-700 hover:bg-red-50',
+  neutro: 'bg-papel border border-gray-300 text-gray-700 hover:bg-gray-50'
 };
 
 /**

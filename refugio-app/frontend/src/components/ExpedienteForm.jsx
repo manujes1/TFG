@@ -146,7 +146,7 @@ export default function ExpedienteForm({ expediente, onGuardar, onCancelar, carg
         <button
           type="button"
           onClick={onCancelar}
-          className="text-sm text-gray-600 hover:bg-white rounded-lg px-4 py-2 transition"
+          className="text-sm text-gray-600 hover:bg-papel rounded-lg px-4 py-2 transition"
         >
           Cancelar
         </button>

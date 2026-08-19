@@ -1,3 +1,79 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply text-tinta font-sans antialiased;
+    background-color: theme('colors.refugio.50');
+    /* Textura de papel: rejilla de puntos + grano, para que el fondo
+       no se lea como un blanco/verde liso de plantilla. */
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(36, 29, 19, 0.12) 1px, transparent 0);
+    background-size: 20px 20px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 40;
+    opacity: 0.05;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  /* Ficha de perrera: el elemento de firma de las tarjetas de animal.
+     El "agujero" perforado y el borde punteado evocan una etiqueta
+     colgada de la jaula, con el color del fondo de página para
+     simular que está recortado. Al pasar el ratón, la ficha se
+     despega ligeramente como si estuviera colgada de una cuerda. */
+  .kennel-tag {
+    position: relative;
+    transition: transform 0.2s ease;
+  }
+
+  .kennel-tag::before {
+    content: '';
+    position: absolute;
+    top: 0.85rem;
+    left: 0.85rem;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 9999px;
+    background: theme('colors.refugio.50');
+    box-shadow: inset 0 0 0 1.5px theme('colors.refugio.100');
+    z-index: 10;
+  }
+
+  .kennel-tag:hover {
+    transform: rotate(-1deg) translateY(-2px);
+  }
+
+  /* Botón "sello": sombra sólida desplazada, como una pegatina o un
+     tique de cartón. Reservado para la acción principal de cada
+     pantalla, para no diluir el efecto. */
+  .btn-stamp {
+    box-shadow: 3px 3px 0 0 theme('colors.refugio.900');
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .btn-stamp:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 0 theme('colors.refugio.900');
+  }
+
+  .btn-stamp:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 0 theme('colors.refugio.900');
+  }
+}

@@ -45,20 +45,20 @@ export default function RegisterPage() {
   }
 
   const inputClass =
-    'w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-refugio-500';
+    'w-full border border-refugio-100 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-acento-400 focus:border-acento-400';
 
   return (
     <div className="min-h-screen bg-refugio-50 flex items-center justify-center p-4">
-      <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-refugio-700 mb-1">Crear cuenta</h1>
-        <p className="text-sm text-gray-600 mb-6">
+      <div className="kennel-tag bg-papel shadow-card rounded-lg p-8 w-full max-w-md border-t-2 border-dashed border-refugio-100">
+        <h1 className="font-display text-2xl font-semibold text-refugio-900 mb-1">Crear cuenta</h1>
+        <p className="text-sm text-refugio-900/60 mb-6">
           Regístrate para solicitar adopciones, apadrinar o donar.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="nombre" className="block text-sm font-medium text-refugio-900/80 mb-1">
                 Nombre *
               </label>
               <input
@@ -71,7 +71,7 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label htmlFor="apellidos" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="apellidos" className="block text-sm font-medium text-refugio-900/80 mb-1">
                 Apellidos
               </label>
               <input
@@ -85,7 +85,7 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-refugio-900/80 mb-1">
               Email *
             </label>
             <input
@@ -101,7 +101,7 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-refugio-900/80 mb-1">
               Contraseña *
             </label>
             <input
@@ -115,11 +115,11 @@ export default function RegisterPage() {
               autoComplete="new-password"
               className={inputClass}
             />
-            <p className="text-xs text-gray-500 mt-1">Mínimo 8 caracteres.</p>
+            <p className="text-xs text-refugio-900/50 mt-1">Mínimo 8 caracteres.</p>
           </div>
 
           <div>
-            <label htmlFor="telefono" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="telefono" className="block text-sm font-medium text-refugio-900/80 mb-1">
               Teléfono
             </label>
             <input
@@ -132,7 +132,7 @@ export default function RegisterPage() {
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-3 py-2">
+            <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-md px-3 py-2">
               {error}
             </div>
           )}
@@ -140,15 +140,15 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-refugio-600 hover:bg-refugio-700 disabled:opacity-50 text-white font-medium rounded-lg py-2 transition"
+            className="btn-stamp w-full bg-acento-500 hover:bg-acento-600 disabled:opacity-50 text-white font-semibold rounded-md py-2 transition"
           >
             {submitting ? 'Creando cuenta...' : 'Crear cuenta'}
           </button>
         </form>
 
-        <p className="text-sm text-gray-600 mt-6 text-center">
+        <p className="text-sm text-refugio-900/60 mt-6 text-center">
           ¿Ya tienes cuenta?{' '}
-          <Link to="/login" className="text-refugio-600 hover:underline font-medium">
+          <Link to="/login" className="text-refugio-700 hover:underline font-medium">
             Inicia sesión
           </Link>
         </p>

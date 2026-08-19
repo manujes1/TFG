@@ -51,7 +51,7 @@ export default function AnimalesAdminPage() {
   }
 
   const inputClass =
-    'border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-refugio-500 bg-white';
+    'border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-refugio-500 bg-papel';
 
   return (
     <div className="space-y-4">
@@ -72,7 +72,7 @@ export default function AnimalesAdminPage() {
       )}
 
       {/* Filtros */}
-      <div className="bg-white shadow rounded-xl p-4 flex flex-wrap gap-3">
+      <div className="bg-papel shadow rounded-xl p-4 flex flex-wrap gap-3">
         <input
           name="search"
           value={filtros.search}
@@ -113,7 +113,7 @@ export default function AnimalesAdminPage() {
       )}
 
       {data && (
-        <div className="bg-white shadow rounded-xl overflow-hidden">
+        <div className="bg-papel shadow rounded-xl overflow-hidden">
           {data.data.length === 0 ? (
             <p className="text-center text-gray-500 py-12">
               No hay animales que coincidan con la búsqueda.

@@ -33,19 +33,19 @@ export default function AnimalesPage() {
 
   const hayFiltrosActivos = Object.values(filtros).some((v) => v !== '');
   const selectClass =
-    'border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-refugio-500 bg-white';
+    'border border-refugio-100 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-acento-400 focus:border-acento-400 bg-papel';
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-refugio-700 mb-1">Animales</h1>
-        <p className="text-gray-600 text-sm">
+        <h1 className="font-display text-2xl font-semibold text-refugio-900 mb-1">Animales</h1>
+        <p className="text-refugio-900/60 text-sm">
           Conoce a los animales del refugio que buscan un hogar.
         </p>
       </div>
 
       {/* Filtros */}
-      <div className="bg-white shadow rounded-xl p-4">
+      <div className="bg-papel shadow-card rounded-lg p-4 border border-refugio-100 border-l-4 border-l-acento-400">
         <div className="flex flex-wrap gap-3 items-end">
           <div className="flex-1 min-w-[200px]">
             <label htmlFor="search" className="block text-xs font-medium text-gray-600 mb-1">
@@ -148,8 +148,8 @@ export default function AnimalesPage() {
           </div>
 
           {data.data.length === 0 ? (
-            <div className="bg-white shadow rounded-xl p-12 text-center">
-              <p className="text-gray-500">
+            <div className="bg-papel shadow-card rounded-lg p-12 text-center border border-refugio-100">
+              <p className="text-refugio-900/60">
                 No hay animales que coincidan con la búsqueda.
               </p>
             </div>
@@ -167,7 +167,7 @@ export default function AnimalesPage() {
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="px-4 py-2 text-sm rounded-lg border border-gray-300 bg-white disabled:opacity-40 hover:bg-gray-50 transition"
+                className="px-4 py-2 text-sm rounded-md border border-refugio-100 bg-papel disabled:opacity-40 hover:bg-refugio-50 transition"
               >
                 Anterior
               </button>
@@ -177,7 +177,7 @@ export default function AnimalesPage() {
               <button
                 onClick={() => setPage((p) => p + 1)}
                 disabled={page >= data.pagination.totalPages}
-                className="px-4 py-2 text-sm rounded-lg border border-gray-300 bg-white disabled:opacity-40 hover:bg-gray-50 transition"
+                className="px-4 py-2 text-sm rounded-md border border-refugio-100 bg-papel disabled:opacity-40 hover:bg-refugio-50 transition"
               >
                 Siguiente
               </button>

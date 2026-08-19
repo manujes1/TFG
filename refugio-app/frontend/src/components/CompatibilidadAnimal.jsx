@@ -74,7 +74,7 @@ export default function CompatibilidadAnimal({ animalId, nombreAnimal }) {
   }
 
   return (
-    <section className="bg-white shadow rounded-xl p-5 space-y-4">
+    <section className="bg-papel shadow rounded-xl p-5 space-y-4">
       <h2 className="font-semibold text-gray-800 text-sm">
         Compatibilidad contigo
       </h2>

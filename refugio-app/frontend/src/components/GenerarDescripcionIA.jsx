@@ -81,7 +81,7 @@ export default function GenerarDescripcionIA({ animalId, onAceptar }) {
 
       {propuesta && (
         <div className="space-y-2">
-          <div className="bg-white border border-gray-200 rounded-lg p-3">
+          <div className="bg-papel border border-gray-200 rounded-lg p-3">
             <p className="text-sm text-gray-800 leading-relaxed">{propuesta}</p>
           </div>
 

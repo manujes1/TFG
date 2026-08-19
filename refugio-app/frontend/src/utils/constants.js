@@ -26,7 +26,7 @@ export const ESTADOS_ANIMAL = {
  * Clases de Tailwind para el badge de cada estado.
  */
 export const ESTADO_ANIMAL_COLORES = {
-  DISPONIBLE: 'bg-green-100 text-green-800',
+  DISPONIBLE: 'bg-acento-100 text-acento-600',
   EN_ACOGIDA: 'bg-blue-100 text-blue-800',
   ADOPTADO: 'bg-gray-100 text-gray-700',
   EN_TRATAMIENTO: 'bg-amber-100 text-amber-800',

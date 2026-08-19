@@ -25,7 +25,7 @@ export default function RecomendacionesPage() {
   // Sin perfil: invitamos a completarlo
   if (!data.perfilCompleto) {
     return (
-      <div className="max-w-lg mx-auto bg-white shadow rounded-xl p-8 text-center">
+      <div className="max-w-lg mx-auto bg-papel shadow rounded-xl p-8 text-center">
         <span className="text-4xl block mb-3" aria-hidden="true">🧭</span>
         <h1 className="text-xl font-bold text-refugio-700 mb-2">
           Completa tu perfil para empezar
@@ -64,7 +64,7 @@ export default function RecomendacionesPage() {
       </div>
 
       {data.recomendaciones.length === 0 ? (
-        <div className="bg-white shadow rounded-xl p-10 text-center">
+        <div className="bg-papel shadow rounded-xl p-10 text-center">
           <p className="text-gray-600 mb-4">
             Ahora mismo no hay animales disponibles que encajen con tu perfil.
           </p>
@@ -86,7 +86,7 @@ export default function RecomendacionesPage() {
       ) : (
         <ul className="space-y-4">
           {data.recomendaciones.map(({ animal, puntuacion, criterios }) => (
-            <li key={animal.id} className="bg-white shadow rounded-xl overflow-hidden">
+            <li key={animal.id} className="bg-papel shadow rounded-xl overflow-hidden">
               <div className="grid sm:grid-cols-[180px_1fr] gap-0">
                 <Link
                   to={`/animales/${animal.id}`}
