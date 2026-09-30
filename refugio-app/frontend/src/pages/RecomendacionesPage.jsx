@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { fetchRecomendaciones } from '../api/recomendaciones.js';
 import { CompatibilidadBarra, CriteriosDesglose } from '../components/Compatibilidad.jsx';
+import PreferenciasTexto from '../components/PreferenciasTexto.jsx';
 import { ESPECIES, SEXOS, fotoUrl } from '../utils/constants.js';
 
 export default function RecomendacionesPage() {
@@ -22,40 +23,39 @@ export default function RecomendacionesPage() {
     );
   }
 
-  // Sin perfil: invitamos a completarlo
-  if (!data.perfilCompleto) {
-    return (
-      <div className="max-w-lg mx-auto card p-8 text-center">
-        <span className="text-4xl block mb-3" aria-hidden="true">🧭</span>
-        <h1 className="text-xl font-bold text-stone-900 tracking-tight mb-2">
-          Completa tu perfil para empezar
-        </h1>
-        <p className="text-sm text-stone-500 mb-6">
-          Necesitamos conocer un poco tu hogar y tu disponibilidad para sugerirte
-          los animales que mejor encajan contigo.
-        </p>
-        <Link to="/perfil" className="btn-primary inline-flex text-sm px-6 py-3">
-          Completar mi perfil
-        </Link>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="page-title">Animales recomendados para ti</h1>
           <p className="page-subtitle">
-            Ordenados según tu perfil. Puedes ver por qué encaja cada uno.
+            {data.perfilCompleto
+              ? 'Ordenados según tu perfil. Puedes ver por qué encaja cada uno.'
+              : 'Cuéntanos qué buscas y te sugerimos los animales más compatibles.'}
           </p>
         </div>
-        <Link to="/perfil" className="text-sm text-refugio-600 hover:underline font-medium shrink-0">
-          Editar mi perfil
-        </Link>
+        {data.perfilCompleto && (
+          <Link to="/perfil" className="text-sm text-refugio-600 hover:underline font-medium shrink-0">
+            Editar mi perfil
+          </Link>
+        )}
       </div>
 
-      {data.recomendaciones.length === 0 ? (
+      <PreferenciasTexto />
+
+      {/* Sin perfil: la vía rápida es el cuadro de texto de arriba; dejamos
+          el formulario detallado como alternativa para quien lo prefiera. */}
+      {!data.perfilCompleto && (
+        <p className="text-sm text-stone-500 text-center">
+          ¿Prefieres un formulario paso a paso?{' '}
+          <Link to="/perfil" className="text-refugio-600 hover:underline font-medium">
+            Completa tu perfil de adopción
+          </Link>
+          .
+        </p>
+      )}
+
+      {!data.perfilCompleto ? null : data.recomendaciones.length === 0 ? (
         <div className="card p-10 text-center">
           <p className="text-stone-600 mb-4">
             Ahora mismo no hay animales disponibles que encajen con tu perfil.

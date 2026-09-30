@@ -185,3 +185,10 @@ export const recomendacionesQuerySchema = z.object({
   limite: z.coerce.number().int().min(1).max(50).default(10),
   minimo: z.coerce.number().int().min(0).max(100).default(0)
 });
+
+export const preferenciasTextoSchema = z.object({
+  texto: z
+    .string()
+    .min(10, 'Cuéntanos un poco más sobre lo que buscas (mínimo 10 caracteres)')
+    .max(1000, 'El texto es demasiado largo (máximo 1000 caracteres)')
+});

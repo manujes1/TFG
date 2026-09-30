@@ -17,6 +17,17 @@ export async function fetchRecomendaciones(params = {}) {
 }
 
 /**
+ * Interpreta una descripción libre de las preferencias del usuario
+ * (con IA), la guarda como su perfil y devuelve las recomendaciones
+ * resultantes. La compatibilidad la sigue calculando el algoritmo
+ * determinista: el modelo solo traduce el texto a los campos del perfil.
+ */
+export async function recomendarDesdeTexto(texto) {
+  const res = await api.post('/api/recomendaciones/desde-texto', { texto });
+  return res.data;
+}
+
+/**
  * Compatibilidad del usuario logueado con un animal concreto.
  * Cálculo determinista, respuesta inmediata.
  */

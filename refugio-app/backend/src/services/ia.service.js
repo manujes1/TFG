@@ -2,6 +2,7 @@ import prisma from '../config/prisma.js';
 import { generarTexto } from '../config/ollama.js';
 import { ESPECIE_ETIQUETAS, SEXO_ETIQUETAS } from '../utils/etiquetas.js';
 import { calcularCompatibilidad } from '../utils/compatibilidad.js';
+import { perfilAdoptanteSchema } from '../utils/validation.js';
 
 /* ================================================================== */
 /* Generación de descripciones                                         */
@@ -83,6 +84,137 @@ export async function generarDescripcionAnimal(animalId, { guardar = false } = {
   }
 
   return { descripcion, guardada: guardar };
+}
+
+/* ================================================================== */
+/* Interpretación de preferencias en texto libre                       */
+/* ================================================================== */
+
+/**
+ * Construye el prompt que traduce una descripción en lenguaje natural
+ * al perfil estructurado que consume el algoritmo de compatibilidad.
+ *
+ * DISEÑO: igual que en el resto del módulo, el modelo no decide nada sobre
+ * qué animal encaja mejor. Su única tarea es traducir texto libre a los
+ * campos estructurados del perfil; la puntuación la sigue calculando
+ * `calcularCompatibilidad`, de forma determinista y explicable.
+ */
+function construirPromptPreferencias(texto) {
+  return `Eres un asistente que traduce lo que cuenta un futuro adoptante a un formulario estructurado, para un refugio de animales en España.
+
+Lee el siguiente texto de la persona interesada y devuelve ÚNICAMENTE un objeto JSON (sin explicaciones, sin markdown, sin comillas envolventes) con estas claves exactas:
+
+{
+  "tipoVivienda": "piso" o "casa",
+  "metrosCuadrados": número entero (metros cuadrados aproximados) u omite la clave si no se menciona,
+  "jardin": true o false (si tiene jardín, patio o terraza amplia),
+  "ninos": true o false (si hay niños en casa),
+  "otrosPerros": true o false (si ya tiene perro),
+  "otrosGatos": true o false (si ya tiene gato),
+  "experiencia": una de "ninguna", "baja", "media", "alta" (experiencia previa con animales),
+  "tiempoDiario": una de "poco", "medio", "mucho" (tiempo diario disponible: poco = menos de 1 hora, medio = entre 1 y 3 horas, mucho = más de 3 horas),
+  "preferenciaEspecie": "PERRO", "GATO" o "indiferente" (especie que busca; "indiferente" si no lo especifica o le da igual)
+}
+
+Texto de la persona:
+"""
+${texto}
+"""
+
+Instrucciones estrictas:
+- Si un dato no se menciona o no se puede deducir con razonable seguridad, usa un valor neutro por defecto en lugar de inventar (jardin/ninos/otrosPerros/otrosGatos: false; experiencia: "ninguna"; tiempoDiario: "medio"; tipoVivienda: "piso"; preferenciaEspecie: "indiferente").
+- No inventes datos que el texto no sugiere.
+- Devuelve solo el objeto JSON, nada más.
+
+JSON:`;
+}
+
+/**
+ * Aplica valores por defecto a los campos ausentes o inválidos del objeto
+ * devuelto por el modelo, para garantizar que siempre cumple el esquema
+ * que espera el algoritmo de compatibilidad.
+ */
+function sanearPerfilExtraido(bruto) {
+  const candidato = {
+    tipoVivienda: bruto.tipoVivienda === 'casa' ? 'casa' : 'piso',
+    jardin: bruto.jardin === true,
+    ninos: bruto.ninos === true,
+    otrosPerros: bruto.otrosPerros === true,
+    otrosGatos: bruto.otrosGatos === true,
+    experiencia: ['ninguna', 'baja', 'media', 'alta'].includes(bruto.experiencia)
+      ? bruto.experiencia
+      : 'ninguna',
+    tiempoDiario: ['poco', 'medio', 'mucho'].includes(bruto.tiempoDiario)
+      ? bruto.tiempoDiario
+      : 'medio',
+    preferenciaEspecie: ['PERRO', 'GATO', 'indiferente'].includes(bruto.preferenciaEspecie)
+      ? bruto.preferenciaEspecie
+      : 'indiferente'
+  };
+
+  const metros = Number(bruto.metrosCuadrados);
+  if (Number.isInteger(metros) && metros >= 10 && metros <= 2000) {
+    candidato.metrosCuadrados = metros;
+  }
+
+  // El saneado ya garantiza que cumple el esquema; parse() no debería fallar
+  // nunca aquí, pero lo mantenemos como red de seguridad explícita.
+  return perfilAdoptanteSchema.parse(candidato);
+}
+
+/**
+ * Extrae el primer objeto JSON de un texto, tolerando que el modelo lo
+ * envuelva en explicaciones o bloques de código markdown pese a las
+ * instrucciones.
+ *
+ * También tolera que el modelo corte la respuesta justo antes de la llave
+ * de cierre (algo que llama3.2:3b hace de forma consistente con este
+ * prompt, con done_reason "stop" pese a no haber cerrado el objeto):
+ * si no hay un '}' que produzca JSON válido, se reintenta añadiéndolo.
+ */
+function extraerJson(texto) {
+  const inicio = texto.indexOf('{');
+  if (inicio === -1) return null;
+
+  const bruto = texto.slice(inicio);
+
+  const fin = bruto.lastIndexOf('}');
+  if (fin !== -1) {
+    try {
+      return JSON.parse(bruto.slice(0, fin + 1));
+    } catch {
+      // Seguimos abajo con el intento de cierre automático.
+    }
+  }
+
+  try {
+    return JSON.parse(`${bruto.replace(/,\s*$/, '').trimEnd()}\n}`);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Traduce una descripción en lenguaje natural de las preferencias de un
+ * adoptante al perfil estructurado del algoritmo de compatibilidad.
+ *
+ * @param {string} texto - Descripción libre escrita por la persona.
+ * @returns {Promise<object>} Perfil validado, listo para persistir.
+ */
+export async function interpretarPreferencias(texto) {
+  const prompt = construirPromptPreferencias(texto);
+  const respuesta = await generarTexto(prompt, { temperature: 0.2, numPredict: 300 });
+
+  const bruto = extraerJson(respuesta);
+  if (!bruto) {
+    const error = new Error(
+      'No se pudo interpretar el texto. Prueba a describir tu situación con otras palabras.'
+    );
+    error.statusCode = 502;
+    throw error;
+  }
+
+  return sanearPerfilExtraido(bruto);
 }
 
 /* ================================================================== */

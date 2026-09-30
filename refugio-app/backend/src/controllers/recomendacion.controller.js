@@ -1,8 +1,9 @@
 import {
   recomendarAnimales,
+  recomendarDesdeTexto,
   compatibilidadConAnimal
 } from '../services/recomendacion.service.js';
-import { recomendacionesQuerySchema } from '../utils/validation.js';
+import { recomendacionesQuerySchema, preferenciasTextoSchema } from '../utils/validation.js';
 
 /**
  * Recomendaciones personalizadas para el usuario logueado.
@@ -11,6 +12,21 @@ export async function recomendaciones(req, res, next) {
   try {
     const opciones = recomendacionesQuerySchema.parse(req.query);
     const resultado = await recomendarAnimales(req.user.id, opciones);
+    res.json(resultado);
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Interpreta una descripción libre de las preferencias del usuario,
+ * la guarda como su perfil y devuelve las recomendaciones resultantes.
+ */
+export async function recomendacionesDesdeTexto(req, res, next) {
+  try {
+    const { texto } = preferenciasTextoSchema.parse(req.body);
+    const opciones = recomendacionesQuerySchema.parse(req.query);
+    const resultado = await recomendarDesdeTexto(req.user.id, texto, opciones);
     res.json(resultado);
   } catch (err) {
     next(err);

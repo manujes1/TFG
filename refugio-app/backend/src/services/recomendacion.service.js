@@ -1,5 +1,7 @@
 import prisma from '../config/prisma.js';
 import { calcularCompatibilidad } from '../utils/compatibilidad.js';
+import { interpretarPreferencias } from './ia.service.js';
+import { updatePreferencias } from './auth.service.js';
 
 /**
  * Devuelve los animales disponibles ordenados por compatibilidad
@@ -39,6 +41,27 @@ export async function recomendarAnimales(usuarioId, { limite = 10, minimo = 0 } 
     .slice(0, limite);
 
   return { recomendaciones: evaluados, perfilCompleto: true };
+}
+
+/**
+ * Interpreta una descripción en lenguaje natural de las preferencias del
+ * usuario, la guarda como su perfil de adopción y devuelve las
+ * recomendaciones resultantes.
+ *
+ * El modelo solo traduce texto libre a los campos estructurados del
+ * perfil (ver `interpretarPreferencias`); quién es compatible con quién lo
+ * sigue decidiendo el algoritmo determinista, igual que con el formulario.
+ *
+ * @param {string} usuarioId
+ * @param {string} texto - Descripción libre escrita por el usuario.
+ * @param {{ limite?: number, minimo?: number }} [opciones]
+ */
+export async function recomendarDesdeTexto(usuarioId, texto, opciones = {}) {
+  const perfilInterpretado = await interpretarPreferencias(texto);
+  await updatePreferencias(usuarioId, perfilInterpretado);
+
+  const resultado = await recomendarAnimales(usuarioId, opciones);
+  return { perfilInterpretado, ...resultado };
 }
 
 /**
