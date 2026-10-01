@@ -28,6 +28,7 @@ app.use(express.json());
 // Servir archivos subidos (fotos de animales)
 app.use('/uploads', express.static(path.resolve(UPLOAD_DIR)));
 
+// Para comprobar que el servidor está vivo
 app.get('/health', async (req, res) => {
   res.json({
     status: 'ok',

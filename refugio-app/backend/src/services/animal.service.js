@@ -8,7 +8,7 @@ import prisma from '../config/prisma.js';
 export async function listAnimales(filters) {
   const { especie, sexo, estado, search, page, pageSize } = filters;
 
-  // Construimos el where dinámicamente
+  // Construimos el where dinámicamente tomando los datos pasados por parametros
   const where = {};
   if (especie) where.especie = especie;
   if (sexo) where.sexo = sexo;

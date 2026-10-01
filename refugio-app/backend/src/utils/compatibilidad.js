@@ -18,6 +18,8 @@
 /**
  * Pesos de cada criterio. Suman 1.
  *
+ * convivencia con animales o niños > energía y espacio > experiencia
+ * 
  * Justificación de la ponderación:
  *  - La convivencia (niños, otros animales) tiene el peso mayor porque un
  *    desajuste aquí puede derivar en una devolución o en un incidente.
@@ -30,7 +32,7 @@ const PESOS = {
   convivenciaAnimales: 0.20,
   energiaEspacio: 0.20,
   energiaTiempo: 0.15,
-  experiencia: 0.20
+  experiencia: 0.10
 };
 
 const NIVEL_ENERGIA = { baja: 1, media: 2, alta: 3 };

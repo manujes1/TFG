@@ -1,9 +1,3 @@
-/**
- * Cliente HTTP mínimo para la API de Ollama.
- *
- * Se usa fetch nativo (Node 18+) en lugar de axios: la superficie de la API
- * que necesitamos es pequeña y así evitamos una dependencia extra.
- */
 
 const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434';
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.2:3b';

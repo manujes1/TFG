@@ -268,10 +268,10 @@ export default function PerfilPage() {
         </div>
       </form>
 
-      <p className="text-xs text-stone-400 text-center">
+      {/* <p className="text-xs text-stone-400 text-center">
         Estos datos se usan únicamente para calcular la compatibilidad y no se
         comparten con terceros.
-      </p>
+      </p> */}
     </div>
   );
 }
