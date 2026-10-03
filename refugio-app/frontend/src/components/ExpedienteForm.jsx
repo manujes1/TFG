@@ -44,8 +44,10 @@ export default function ExpedienteForm({ expediente, onGuardar, onCancelar, carg
       descripcion: form.descripcion.trim(),
       fecha: form.fecha
     };
-    if (form.veterinario.trim()) payload.veterinario = form.veterinario.trim();
-    if (form.proximaRevision) payload.proximaRevision = form.proximaRevision;
+    // En edición enviamos null para poder vaciar un campo; al crear se omite
+    const vacio = esEdicion ? null : undefined;
+    payload.veterinario = form.veterinario.trim() || vacio;
+    payload.proximaRevision = form.proximaRevision || vacio;
 
     onGuardar(payload);
   }

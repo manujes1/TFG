@@ -51,6 +51,13 @@ export function AuthProvider({ children }) {
       .finally(() => setLoading(false));
   }, []);
 
+  // Si el interceptor detecta un 401, cerramos la sesión en el estado de React
+  useEffect(() => {
+    const onExpirada = () => setUser(null);
+    window.addEventListener('auth:expirada', onExpirada);
+    return () => window.removeEventListener('auth:expirada', onExpirada);
+  }, []);
+
   async function login(email, password) {
     const res = await api.post('/api/auth/login', { email, password });
     localStorage.setItem('token', res.data.token);

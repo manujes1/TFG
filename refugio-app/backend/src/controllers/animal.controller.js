@@ -23,7 +23,7 @@ export async function list(req, res, next) {
 
 export async function getById(req, res, next) {
   try {
-    const animal = await getAnimalById(req.params.id);
+    const animal = await getAnimalById(req.params.id, req.user?.rol);
     res.json(animal);
   } catch (err) {
     next(err);

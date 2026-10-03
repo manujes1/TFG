@@ -1,6 +1,6 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import path from 'node:path';
 
 import authRoutes from './routes/auth.routes.js';
@@ -13,15 +13,12 @@ import recomendacionRoutes from './routes/recomendacion.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { comprobarOllama } from './config/ollama.js';
 
-dotenv.config();
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 const UPLOAD_DIR = process.env.UPLOAD_DIR || './uploads';
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173'
 }));
 app.use(express.json());
 

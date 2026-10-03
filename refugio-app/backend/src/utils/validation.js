@@ -37,16 +37,16 @@ const estadoAnimalEnum = z.enum([
 export const createAnimalSchema = z.object({
   nombre: z.string().min(1, 'El nombre es obligatorio').max(50),
   especie: especieEnum,
-  raza: z.string().max(50).optional(),
+  raza: z.string().max(50).nullable().optional(),
   sexo: sexoEnum,
   fechaNacimiento: z.coerce.date().optional(),
-  edadEstimada: z.number().int().min(0).max(40).optional(),
-  peso: z.number().positive().max(200).optional(),
-  color: z.string().max(50).optional(),
-  chip: z.string().max(30).optional(),
+  edadEstimada: z.number().int().min(0).max(40).nullable().optional(),
+  peso: z.number().positive().max(200).nullable().optional(),
+  color: z.string().max(50).nullable().optional(),
+  chip: z.string().max(30).nullable().optional(),
   estado: estadoAnimalEnum.optional(),
-  descripcionManual: z.string().max(2000).optional(),
-  ubicacion: z.string().max(50).optional(),
+  descripcionManual: z.string().max(2000).nullable().optional(),
+  ubicacion: z.string().max(50).nullable().optional(),
   caracteristicas: z.record(z.string(), z.any()).optional()
 });
 
@@ -76,9 +76,9 @@ const tipoExpedienteEnum = z.enum([
 export const createExpedienteSchema = z.object({
   tipo: tipoExpedienteEnum,
   descripcion: z.string().min(1, 'La descripción es obligatoria').max(2000),
-  veterinario: z.string().max(100).optional(),
+  veterinario: z.string().max(100).nullable().optional(),
   fecha: z.coerce.date(),
-  proximaRevision: z.coerce.date().optional(),
+  proximaRevision: z.coerce.date().nullable().optional(),
   documentos: z.array(z.string().url()).optional()
 });
 

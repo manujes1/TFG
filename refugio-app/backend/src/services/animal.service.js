@@ -45,17 +45,14 @@ export async function listAnimales(filters) {
 }
 
 /**
- * Obtiene un animal por ID, incluyendo sus expedientes médicos.
+ * Obtiene un animal por ID. Los expedientes médicos solo se incluyen para el personal.
  * @param {string} id
  */
-export async function getAnimalById(id) {
+export async function getAnimalById(id, rol) {
+  const esStaff = rol === 'ADMIN' || rol === 'VOLUNTARIO';
   const animal = await prisma.animal.findUnique({
     where: { id },
-    include: {
-      expedientes: {
-        orderBy: { fecha: 'desc' }
-      }
-    }
+    include: esStaff ? { expedientes: { orderBy: { fecha: 'desc' } } } : undefined
   });
 
   if (!animal) {
@@ -124,6 +121,18 @@ export async function deleteAnimal(id) {
   if (!existing) {
     const error = new Error('Animal no encontrado');
     error.statusCode = 404;
+    throw error;
+  }
+
+  const [adopciones, apadrinamientos] = await Promise.all([
+    prisma.adopcion.count({ where: { animalId: id } }),
+    prisma.apadrinamiento.count({ where: { animalId: id } })
+  ]);
+  if (adopciones > 0 || apadrinamientos > 0) {
+    const error = new Error(
+      'No se puede eliminar un animal con adopciones o apadrinamientos asociados'
+    );
+    error.statusCode = 409;
     throw error;
   }
 

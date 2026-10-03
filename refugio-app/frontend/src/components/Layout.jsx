@@ -43,6 +43,12 @@ export default function Layout() {
             )}
 
             {user && (
+              <NavLink to="/donar" className={linkClass}>
+                Donar
+              </NavLink>
+            )}
+
+            {user && (
               <NavLink to="/mis-solicitudes" className={linkClass}>
                 Mis solicitudes
               </NavLink>

@@ -119,15 +119,14 @@ export default function AnimalFormPage() {
       }
     };
 
-    if (form.raza.trim()) payload.raza = form.raza.trim();
-    if (form.color.trim()) payload.color = form.color.trim();
-    if (form.chip.trim()) payload.chip = form.chip.trim();
-    if (form.ubicacion.trim()) payload.ubicacion = form.ubicacion.trim();
-    if (form.descripcionManual.trim()) {
-      payload.descripcionManual = form.descripcionManual.trim();
+    // En edición enviamos null para poder vaciar un campo; al crear se omite
+    const vacio = esEdicion ? null : undefined;
+    for (const campo of ['raza', 'color', 'chip', 'ubicacion', 'descripcionManual']) {
+      payload[campo] = form[campo].trim() || vacio;
     }
-    if (form.edadEstimada !== '') payload.edadEstimada = Number(form.edadEstimada);
-    if (form.peso !== '') payload.peso = Number(form.peso);
+    for (const campo of ['edadEstimada', 'peso']) {
+      payload[campo] = form[campo] !== '' ? Number(form[campo]) : vacio;
+    }
 
     // Limpiamos claves undefined dentro de caracteristicas
     payload.caracteristicas = Object.fromEntries(

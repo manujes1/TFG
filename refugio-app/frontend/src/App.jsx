@@ -12,6 +12,7 @@ import AnimalDetallePage from './pages/AnimalDetallePage.jsx';
 import MisSolicitudesPage from './pages/MisSolicitudesPage.jsx';
 import PerfilPage from './pages/PerfilPage.jsx';
 import RecomendacionesPage from './pages/RecomendacionesPage.jsx';
+import DonarPage from './pages/DonarPage.jsx';
 
 import DashboardPage from './pages/admin/DashboardPage.jsx';
 import AnimalesAdminPage from './pages/admin/AnimalesAdminPage.jsx';
@@ -51,6 +52,15 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <RecomendacionesPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/donar"
+              element={
+                <ProtectedRoute>
+                  <DonarPage />
                 </ProtectedRoute>
               }
             />

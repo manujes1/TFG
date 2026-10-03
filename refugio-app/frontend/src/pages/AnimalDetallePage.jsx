@@ -42,6 +42,8 @@ export default function AnimalDetallePage() {
       setNotasAdopcion('');
       setFeedback({ tipo: 'ok', texto: 'Solicitud enviada. El refugio la revisará pronto.' });
       queryClient.invalidateQueries({ queryKey: ['misAdopciones'] });
+      queryClient.invalidateQueries({ queryKey: ['adopciones'] });
+      queryClient.invalidateQueries({ queryKey: ['estadisticas'] });
     },
     onError: (err) => {
       setFeedback({

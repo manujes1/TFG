@@ -159,6 +159,7 @@ function PanelApadrinamientos({ query }) {
     onSuccess: () => {
       setError(null);
       queryClient.invalidateQueries({ queryKey: ['misApadrinamientos'] });
+      queryClient.invalidateQueries({ queryKey: ['estadisticas'] });
     },
     onError: (err) => {
       setError(err.response?.data?.error || 'No se pudo cancelar el apadrinamiento');

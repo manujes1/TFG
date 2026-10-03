@@ -140,6 +140,19 @@ export async function updateEstadoAdopcion(adopcionId, data) {
     throw error;
   }
 
+  // No se puede aprobar ni completar si el animal ya no está disponible
+  if (nuevoEstado === 'APROBADA' || nuevoEstado === 'COMPLETADA') {
+    const animal = await prisma.animal.findUnique({
+      where: { id: adopcion.animalId },
+      select: { estado: true }
+    });
+    if (animal?.estado === 'ADOPTADO' || animal?.estado === 'NO_DISPONIBLE') {
+      const error = new Error('El animal ya no está disponible para adopción');
+      error.statusCode = 409;
+      throw error;
+    }
+  }
+
   // Datos que se actualizan siempre
   const dataToUpdate = {
     estado: nuevoEstado,

@@ -51,6 +51,17 @@ export async function authenticate(req, res, next) {
 }
 
 /**
+ * Autenticación opcional: si hay un token válido rellena `req.user`;
+ * si no hay token o no es válido, continúa como visitante anónimo.
+ */
+export async function authenticateOptional(req, res, next) {
+  if (!req.headers.authorization) return next();
+  return authenticate(req, {
+    status: () => ({ json: () => next() })
+  }, next);
+}
+
+/**
  * Middleware de autorización por rol.
  * Debe usarse SIEMPRE después de `authenticate`.
  *
