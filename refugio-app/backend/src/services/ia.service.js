@@ -1,5 +1,5 @@
 import prisma from '../config/prisma.js';
-import { generarTexto } from '../config/ollama.js';
+import { generarTexto } from '../config/ia/index.js';
 import { ESPECIE_ETIQUETAS, SEXO_ETIQUETAS } from '../utils/etiquetas.js';
 import { calcularCompatibilidad } from '../utils/compatibilidad.js';
 import { perfilAdoptanteSchema } from '../utils/validation.js';
@@ -203,7 +203,7 @@ function extraerJson(texto) {
  */
 export async function interpretarPreferencias(texto) {
   const prompt = construirPromptPreferencias(texto);
-  const respuesta = await generarTexto(prompt, { temperature: 0.2, numPredict: 300 });
+  const respuesta = await generarTexto(prompt, { temperature: 0.2, numPredict: 300, json: true });
 
   const bruto = extraerJson(respuesta);
   if (!bruto) {

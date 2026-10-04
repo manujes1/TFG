@@ -11,7 +11,7 @@ import donacionRoutes from './routes/donacion.routes.js';
 import estadisticasRoutes from './routes/estadisticas.routes.js';
 import recomendacionRoutes from './routes/recomendacion.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
-import { comprobarOllama } from './config/ollama.js';
+import { comprobarIA } from './config/ia/index.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,8 +30,7 @@ app.get('/health', async (req, res) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
-    env: process.env.NODE_ENV,
-    ia: await comprobarOllama()
+    ia: await comprobarIA()
   });
 });
 

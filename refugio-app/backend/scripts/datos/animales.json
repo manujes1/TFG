@@ -1,0 +1,160 @@
+[
+  {
+    "id": "a1",
+    "nombre": "Rocky",
+    "especie": "PERRO",
+    "raza": "Pastor alemán",
+    "peso": 32,
+    "caracteristicas": {
+      "energia": "alta",
+      "temperamento": "sociable",
+      "aptoNinos": true,
+      "aptoOtrosPerros": true,
+      "aptoGatos": false
+    }
+  },
+  {
+    "id": "a2",
+    "nombre": "Luna",
+    "especie": "PERRO",
+    "raza": "Mestiza",
+    "peso": 12,
+    "caracteristicas": {
+      "energia": "media",
+      "temperamento": "sociable",
+      "aptoNinos": true,
+      "aptoOtrosPerros": true,
+      "aptoGatos": true
+    }
+  },
+  {
+    "id": "a3",
+    "nombre": "Thor",
+    "especie": "PERRO",
+    "raza": "Husky",
+    "peso": 25,
+    "caracteristicas": {
+      "energia": "alta",
+      "temperamento": "independiente",
+      "aptoNinos": false,
+      "aptoOtrosPerros": true,
+      "aptoGatos": false
+    }
+  },
+  {
+    "id": "a4",
+    "nombre": "Miel",
+    "especie": "PERRO",
+    "raza": "Labrador",
+    "peso": 28,
+    "caracteristicas": {
+      "energia": "media",
+      "temperamento": "sociable",
+      "aptoNinos": true,
+      "aptoOtrosPerros": true,
+      "aptoGatos": true
+    }
+  },
+  {
+    "id": "a5",
+    "nombre": "Coco",
+    "especie": "PERRO",
+    "raza": "Chihuahua",
+    "peso": 3,
+    "caracteristicas": {
+      "energia": "baja",
+      "temperamento": "tímido",
+      "aptoNinos": false,
+      "aptoOtrosPerros": false
+    }
+  },
+  {
+    "id": "a6",
+    "nombre": "Nala",
+    "especie": "GATO",
+    "raza": "Europeo",
+    "peso": 4,
+    "caracteristicas": {
+      "energia": "media",
+      "temperamento": "sociable",
+      "aptoNinos": true,
+      "aptoGatos": true
+    }
+  },
+  {
+    "id": "a7",
+    "nombre": "Simba",
+    "especie": "GATO",
+    "raza": "Siamés",
+    "peso": 5,
+    "caracteristicas": {
+      "energia": "alta",
+      "temperamento": "independiente",
+      "aptoOtrosPerros": false,
+      "aptoGatos": false
+    }
+  },
+  {
+    "id": "a8",
+    "nombre": "Kira",
+    "especie": "GATO",
+    "raza": "Mestiza",
+    "peso": 3.5,
+    "caracteristicas": {
+      "energia": "baja",
+      "temperamento": "tímido",
+      "aptoNinos": false
+    }
+  },
+  {
+    "id": "a9",
+    "nombre": "Bruno",
+    "especie": "PERRO",
+    "raza": "Bulldog",
+    "peso": 22,
+    "caracteristicas": {
+      "energia": "baja",
+      "temperamento": "sociable",
+      "aptoNinos": true,
+      "aptoGatos": true
+    }
+  },
+  {
+    "id": "a10",
+    "nombre": "Lola",
+    "especie": "PERRO",
+    "raza": "Podenco",
+    "peso": 18,
+    "caracteristicas": {
+      "energia": "alta",
+      "temperamento": "independiente",
+      "aptoOtrosPerros": true,
+      "aptoGatos": false
+    }
+  },
+  {
+    "id": "a11",
+    "nombre": "Mía",
+    "especie": "GATO",
+    "raza": "Persa",
+    "peso": 4.5,
+    "caracteristicas": {
+      "energia": "baja",
+      "temperamento": "sociable",
+      "aptoNinos": true,
+      "aptoOtrosPerros": true,
+      "aptoGatos": true
+    }
+  },
+  {
+    "id": "a12",
+    "nombre": "Max",
+    "especie": "OTRO",
+    "raza": "Conejo",
+    "peso": 2,
+    "caracteristicas": {
+      "energia": "baja",
+      "temperamento": "tímido"
+    }
+  }
+]

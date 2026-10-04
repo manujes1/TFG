@@ -5,7 +5,7 @@ import {
 import { generarDescripcionSchema } from '../utils/validation.js';
 
 /**
- * Genera una descripción para un animal mediante el modelo local.
+ * Genera una descripción para un animal mediante el proveedor de IA configurado.
  * Si `guardar` es true, la persiste en el campo `descripcion`.
  */
 export async function generarDescripcion(req, res, next) {
