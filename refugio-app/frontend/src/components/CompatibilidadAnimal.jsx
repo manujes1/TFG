@@ -7,7 +7,7 @@ import { CompatibilidadBarra, CriteriosDesglose } from './Compatibilidad.jsx';
 /**
  * Bloque de compatibilidad personalizada dentro de la ficha del animal.
  *
- * La puntuación se obtiene del cálculo determinista (instantáneo).
+ * La puntuación la calcula el backend (reglas, o IA si está activada).
  * La explicación en lenguaje natural se genera bajo demanda, porque
  * requiere inferencia del modelo local y puede tardar varios segundos.
  */
@@ -76,7 +76,7 @@ export default function CompatibilidadAnimal({ animalId, nombreAnimal }) {
         Compatibilidad contigo
       </h2>
 
-      <CompatibilidadBarra puntuacion={data.puntuacion} />
+      <CompatibilidadBarra puntuacion={data.puntuacion} origen={data.origen} />
 
       <CriteriosDesglose criterios={data.criterios} />
 

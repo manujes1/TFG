@@ -32,7 +32,9 @@ El proveedor se elige en `backend/.env` con `IA_PROVIDER` (`ollama` por defecto 
 
 **Fallback.** Con `IA_FALLBACK_PROVIDER` se define un proveedor de respaldo: si el principal no está disponible, tarda demasiado o no devuelve contenido, la petición se repite con el de respaldo. Por ejemplo, `IA_PROVIDER="gemini"` y `IA_FALLBACK_PROVIDER="ollama"` usan Gemini y, si falla, Ollama local. `/health` muestra el estado de ambos. En el peor caso, la respuesta tarda lo que dure el timeout de Gemini más lo que tarde Ollama.
 
-La puntuación de compatibilidad la calcula siempre el algoritmo determinista (`backend/src/utils/compatibilidad.js`); el LLM solo redacta textos y traduce texto libre a un perfil estructurado.
+Por defecto, la puntuación de compatibilidad la calcula el algoritmo determinista (`backend/src/utils/compatibilidad.js`) y el LLM solo redacta textos y traduce texto libre a un perfil estructurado.
+
+**Matchmaking con Gemini (experimental).** Con `MATCHMAKING_MODE="llm"` e `IA_PROVIDER="gemini"`, Gemini puntúa los pares perfil-animal (`backend/src/services/matchmaking.service.js`). Si Gemini falla, o el proveedor activo es Ollama, se usa siempre el algoritmo determinista, nunca Ollama. Las respuestas se guardan en una caché en memoria durante una hora. Cada resultado indica su origen (`llm` o `determinista`) y la interfaz lo muestra junto a la puntuación. Este modo no es reproducible: la misma consulta puede dar puntuaciones distintas.
 
 ### Evaluación del emparejamiento
 

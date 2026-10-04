@@ -36,7 +36,7 @@ export function CompatibilidadBadge({ puntuacion }) {
 /**
  * Barra de progreso con la puntuación y su etiqueta.
  */
-export function CompatibilidadBarra({ puntuacion }) {
+export function CompatibilidadBarra({ puntuacion, origen }) {
   const t = tramo(puntuacion);
   return (
     <div>
@@ -50,6 +50,11 @@ export function CompatibilidadBarra({ puntuacion }) {
           style={{ width: `${puntuacion}%` }}
         />
       </div>
+      {origen && (
+        <p className="text-xs text-stone-400 mt-1.5">
+          {origen === 'llm' ? '✨ Calculado por IA' : 'Calculado por reglas'}
+        </p>
+      )}
     </div>
   );
 }

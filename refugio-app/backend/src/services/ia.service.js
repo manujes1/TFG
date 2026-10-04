@@ -1,7 +1,7 @@
 import prisma from '../config/prisma.js';
 import { generarTexto } from '../config/ia/index.js';
 import { ESPECIE_ETIQUETAS, SEXO_ETIQUETAS } from '../utils/etiquetas.js';
-import { calcularCompatibilidad } from '../utils/compatibilidad.js';
+import { evaluarAnimal } from './matchmaking.service.js';
 import { perfilAdoptanteSchema } from '../utils/validation.js';
 
 /* ================================================================== */
@@ -56,7 +56,7 @@ Descripción:`;
 }
 
 /**
- * Genera una descripción para un animal y, opcionalmente, la persiste.
+ * Genera una descripción para un animal y, opcionalmente, la guarda.
  */
 export async function generarDescripcionAnimal(animalId, { guardar = false } = {}) {
   const animal = await prisma.animal.findUnique({ where: { id: animalId } });
@@ -268,7 +268,7 @@ Explicación:`;
  * Genera una explicación en lenguaje natural de la compatibilidad entre
  * un usuario y un animal.
  *
- * El cálculo lo hace el algoritmo determinista; el modelo solo redacta.
+ * La evaluación la hace el servicio de matchmaking; el modelo solo redacta.
  *
  * @param {string} usuarioId
  * @param {string} animalId
@@ -300,8 +300,8 @@ export async function explicarCompatibilidad(usuarioId, animalId) {
     throw error;
   }
 
-  // 1. Cálculo determinista
-  const resultado = calcularCompatibilidad(perfil, animal);
+  // 1. Evaluación (algoritmo determinista, o Gemini si MATCHMAKING_MODE=llm)
+  const resultado = await evaluarAnimal(perfil, animal);
 
   if (resultado.descartado) {
     // No llamamos al modelo: el motivo del descarte ya es claro por sí mismo
@@ -330,6 +330,7 @@ export async function explicarCompatibilidad(usuarioId, animalId) {
     puntuacion: resultado.puntuacion,
     criterios: resultado.criterios,
     descartado: false,
+    origen: resultado.origen,
     explicacion,
     generadaPorIA: true
   };

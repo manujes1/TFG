@@ -1,5 +1,5 @@
 import prisma from '../config/prisma.js';
-import { calcularCompatibilidad } from '../utils/compatibilidad.js';
+import { evaluarAnimales, evaluarAnimal } from './matchmaking.service.js';
 import { interpretarPreferencias } from './ia.service.js';
 import { updatePreferencias } from './auth.service.js';
 
@@ -31,11 +31,7 @@ export async function recomendarAnimales(usuarioId, { limite = 10, minimo = 0 } 
     where: { estado: 'DISPONIBLE' }
   });
 
-  const evaluados = animales
-    .map((animal) => {
-      const resultado = calcularCompatibilidad(perfil, animal);
-      return { animal, ...resultado };
-    })
+  const evaluados = (await evaluarAnimales(perfil, animales))
     .filter((r) => !r.descartado && r.puntuacion >= minimo)
     .sort((a, b) => b.puntuacion - a.puntuacion)
     .slice(0, limite);
@@ -90,6 +86,6 @@ export async function compatibilidadConAnimal(usuarioId, animalId) {
     return { perfilCompleto: false };
   }
 
-  const resultado = calcularCompatibilidad(perfil, animal);
+  const resultado = await evaluarAnimal(perfil, animal);
   return { perfilCompleto: true, ...resultado };
 }

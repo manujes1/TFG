@@ -71,7 +71,7 @@ export default function RecomendacionesPage() {
         </div>
       ) : (
         <ul className="space-y-4">
-          {data.recomendaciones.map(({ animal, puntuacion, criterios }) => (
+          {data.recomendaciones.map(({ animal, puntuacion, criterios, origen }) => (
             <li key={animal.id} className="card card-hover overflow-hidden">
               <div className="grid sm:grid-cols-[180px_1fr] gap-0">
                 <Link
@@ -111,7 +111,7 @@ export default function RecomendacionesPage() {
                     </div>
                   </div>
 
-                  <CompatibilidadBarra puntuacion={puntuacion} />
+                  <CompatibilidadBarra puntuacion={puntuacion} origen={origen} />
 
                   <details className="group">
                     <summary className="text-sm text-refugio-600 hover:underline cursor-pointer list-none font-medium">
