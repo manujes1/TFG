@@ -30,6 +30,8 @@ const args = Object.fromEntries(
 );
 
 if (args.provider) process.env.IA_PROVIDER = args.provider;
+// La evaluación mide un único proveedor: el fallback falsearía los resultados
+process.env.IA_FALLBACK_PROVIDER = '';
 const PROVEEDOR = process.env.IA_PROVIDER || 'ollama';
 const REPETICIONES = Number(args.repeticiones) || 3;
 const N_PARES = Number(args.pares) || 30;

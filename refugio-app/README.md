@@ -30,6 +30,8 @@ El proveedor se elige en `backend/.env` con `IA_PROVIDER` (`ollama` por defecto 
 - **Ollama** (local, sin que los datos salgan de la máquina): `docker compose --profile ia up -d` y descargar el modelo indicado en `OLLAMA_MODEL`.
 - **Gemini**: definir `GEMINI_API_KEY` (y opcionalmente `GEMINI_MODEL`). Con este proveedor, el texto de preferencias y los datos del animal se envían a un servicio externo.
 
+**Fallback.** Con `IA_FALLBACK_PROVIDER` se define un proveedor de respaldo: si el principal no está disponible, tarda demasiado o no devuelve contenido, la petición se repite con el de respaldo. Por ejemplo, `IA_PROVIDER="gemini"` y `IA_FALLBACK_PROVIDER="ollama"` usan Gemini y, si falla, Ollama local. `/health` muestra el estado de ambos. En el peor caso, la respuesta tarda lo que dure el timeout de Gemini más lo que tarde Ollama.
+
 La puntuación de compatibilidad la calcula siempre el algoritmo determinista (`backend/src/utils/compatibilidad.js`); el LLM solo redacta textos y traduce texto libre a un perfil estructurado.
 
 ### Evaluación del emparejamiento
