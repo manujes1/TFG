@@ -5,7 +5,7 @@ import api from './client.js';
  * @param {{ animalId: string, notas?: string }} data
  */
 export async function createAdopcion(data) {
-  const res = await api.post('/api/adopciones', data);
+  const res = await api.post('http://localhost:3005/api/adopciones', data);
   return res.data;
 }
 
@@ -13,7 +13,7 @@ export async function createAdopcion(data) {
  * Devuelve las solicitudes del usuario logueado.
  */
 export async function fetchMisAdopciones() {
-  const res = await api.get('/api/adopciones/mis-adopciones');
+  const res = await api.get('http://localhost:3005/api/adopciones/mis-adopciones');
   return res.data;
 }
 
@@ -24,7 +24,7 @@ export async function fetchAdopciones(params = {}) {
   const clean = Object.fromEntries(
     Object.entries(params).filter(([, v]) => v !== '' && v != null)
   );
-  const res = await api.get('/api/adopciones', { params: clean });
+  const res = await api.get('http://localhost:3005/api/adopciones', { params: clean });
   return res.data;
 }
 
@@ -32,6 +32,6 @@ export async function fetchAdopciones(params = {}) {
  * Cambia el estado de una adopción (staff).
  */
 export async function updateEstadoAdopcion(id, data) {
-  const res = await api.patch(`/api/adopciones/${id}/estado`, data);
+  const res = await api.patch(`http://localhost:3005/api/adopciones/${id}/estado`, data);
   return res.data;
 }

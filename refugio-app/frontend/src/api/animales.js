@@ -13,7 +13,7 @@ function limpiar(obj) {
  * Lista animales con filtros y paginación.
  */
 export async function fetchAnimales(params = {}) {
-  const res = await api.get('/api/animales', { params: limpiar(params) });
+  const res = await api.get('http://localhost:3002/api/animales', { params: limpiar(params) });
   return res.data;
 }
 
@@ -21,7 +21,7 @@ export async function fetchAnimales(params = {}) {
  * Detalle de un animal, con sus expedientes médicos.
  */
 export async function fetchAnimalById(id) {
-  const res = await api.get(`/api/animales/${id}`);
+  const res = await api.get(`http://localhost:3002/api/animales/${id}`);
   return res.data;
 }
 
@@ -29,7 +29,7 @@ export async function fetchAnimalById(id) {
  * Crea un animal (staff).
  */
 export async function createAnimal(data) {
-  const res = await api.post('/api/animales', data);
+  const res = await api.post('http://localhost:3002/api/animales', data);
   return res.data;
 }
 
@@ -37,7 +37,7 @@ export async function createAnimal(data) {
  * Actualiza parcialmente un animal (staff).
  */
 export async function updateAnimal(id, data) {
-  const res = await api.patch(`/api/animales/${id}`, data);
+  const res = await api.patch(`http://localhost:3002/api/animales/${id}`, data);
   return res.data;
 }
 
@@ -45,7 +45,7 @@ export async function updateAnimal(id, data) {
  * Elimina un animal (solo admin).
  */
 export async function deleteAnimal(id) {
-  await api.delete(`/api/animales/${id}`);
+  await api.delete(`http://localhost:3002/api/animales/${id}`);
 }
 
 /**
@@ -56,7 +56,7 @@ export async function deleteAnimal(id) {
 export async function uploadFotoAnimal(animalId, file) {
   const formData = new FormData();
   formData.append('foto', file);
-  const res = await api.post(`/api/animales/${animalId}/fotos`, formData);
+  const res = await api.post(`http://localhost:3004/api/animales/${animalId}/fotos`, formData);
   return res.data;
 }
 
@@ -65,7 +65,7 @@ export async function uploadFotoAnimal(animalId, file) {
  * El endpoint espera la URL en el body, de ahí el uso de `data` en DELETE.
  */
 export async function deleteFotoAnimal(animalId, url) {
-  const res = await api.delete(`/api/animales/${animalId}/fotos`, {
+  const res = await api.delete(`http://localhost:3004/api/animales/${animalId}/fotos`, {
     data: { url }
   });
   return res.data;

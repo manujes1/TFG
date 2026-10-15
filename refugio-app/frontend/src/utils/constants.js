@@ -52,9 +52,9 @@ export const ESTADO_ADOPCION_COLORES = {
 };
 
 /**
- * URL base del backend, para construir rutas de imágenes.
+ * Servicio de fotos, que sirve las imágenes subidas (/uploads).
  */
-export const API_URL = import.meta.env.VITE_API_URL;
+export const FOTOS_URL = 'http://localhost:3004';
 
 /**
  * Construye la URL completa de una foto a partir de la ruta relativa
@@ -62,7 +62,7 @@ export const API_URL = import.meta.env.VITE_API_URL;
  */
 export function fotoUrl(rutaRelativa) {
   if (!rutaRelativa) return null;
-  return `${API_URL}${rutaRelativa}`;
+  return `${FOTOS_URL}${rutaRelativa}`;
 }
 
 /**

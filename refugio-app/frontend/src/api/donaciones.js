@@ -5,7 +5,7 @@ import api from './client.js';
  * @param {{ cantidad: number, concepto?: string, metodoPago?: string }} data
  */
 export async function createDonacion(data) {
-  const res = await api.post('/api/donaciones', data);
+  const res = await api.post('http://localhost:3007/api/donaciones', data);
   return res.data;
 }
 
@@ -13,7 +13,7 @@ export async function createDonacion(data) {
  * Donaciones del usuario logueado.
  */
 export async function fetchMisDonaciones() {
-  const res = await api.get('/api/donaciones/mis-donaciones');
+  const res = await api.get('http://localhost:3007/api/donaciones/mis-donaciones');
   return res.data;
 }
 
@@ -24,6 +24,6 @@ export async function fetchDonaciones(params = {}) {
   const clean = Object.fromEntries(
     Object.entries(params).filter(([, v]) => v !== '' && v != null)
   );
-  const res = await api.get('/api/donaciones', { params: clean });
+  const res = await api.get('http://localhost:3007/api/donaciones', { params: clean });
   return res.data;
 }

@@ -20,7 +20,7 @@ export function AuthProvider({ children }) {
     const token = localStorage.getItem('token');
     if (!token) return null;
     try {
-      const res = await api.get('/api/auth/me');
+      const res = await api.get('http://localhost:3001/api/auth/me');
       setUser(res.data.user);
       localStorage.setItem('user', JSON.stringify(res.data.user));
       return res.data.user;
@@ -38,7 +38,7 @@ export function AuthProvider({ children }) {
       return;
     }
 
-    api.get('/api/auth/me')
+    api.get('http://localhost:3001/api/auth/me')
       .then((res) => {
         setUser(res.data.user);
         localStorage.setItem('user', JSON.stringify(res.data.user));
@@ -59,7 +59,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function login(email, password) {
-    const res = await api.post('/api/auth/login', { email, password });
+    const res = await api.post('http://localhost:3001/api/auth/login', { email, password });
     localStorage.setItem('token', res.data.token);
     localStorage.setItem('user', JSON.stringify(res.data.user));
     setUser(res.data.user);
@@ -67,7 +67,7 @@ export function AuthProvider({ children }) {
   }
 
   async function register(data) {
-    const res = await api.post('/api/auth/register', data);
+    const res = await api.post('http://localhost:3001/api/auth/register', data);
     localStorage.setItem('token', res.data.token);
     localStorage.setItem('user', JSON.stringify(res.data.user));
     setUser(res.data.user);
