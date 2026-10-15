@@ -1,0 +1,13 @@
+import { Router } from 'express';
+import { list, create, misDonaciones } from './donacion.controller.js';
+import { authenticate, authorize } from '../../shared/auth.js';
+
+const router = Router();
+
+router.use(authenticate);
+
+router.get('/mis-donaciones', misDonaciones);
+router.get('/', authorize('ADMIN'), list);
+router.post('/', create);
+
+export default router;

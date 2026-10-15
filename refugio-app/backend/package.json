@@ -1,12 +1,11 @@
 {
   "name": "refugio-backend",
   "version": "1.0.0",
-  "description": "API REST del refugio de animales",
+  "description": "API del refugio de animales, dividida en microservicios (services/)",
   "type": "module",
-  "main": "src/server.js",
   "scripts": {
-    "dev": "node --watch src/server.js",
-    "start": "node src/server.js",
+    "dev": "concurrently -n auth,animales,expedientes,fotos,adopciones,apadrinamientos,donaciones,estadisticas,ia,recomendaciones,matchmaking \"node --watch services/auth/server.js\" \"node --watch services/animales/server.js\" \"node --watch services/expedientes/server.js\" \"node --watch services/fotos/server.js\" \"node --watch services/adopciones/server.js\" \"node --watch services/apadrinamientos/server.js\" \"node --watch services/donaciones/server.js\" \"node --watch services/estadisticas/server.js\" \"node --watch services/ia/server.js\" \"node --watch services/recomendaciones/server.js\" \"node --watch services/matchmaking/server.js\"",
+    "start": "concurrently -n auth,animales,expedientes,fotos,adopciones,apadrinamientos,donaciones,estadisticas,ia,recomendaciones,matchmaking \"node services/auth/server.js\" \"node services/animales/server.js\" \"node services/expedientes/server.js\" \"node services/fotos/server.js\" \"node services/adopciones/server.js\" \"node services/apadrinamientos/server.js\" \"node services/donaciones/server.js\" \"node services/estadisticas/server.js\" \"node services/ia/server.js\" \"node services/recomendaciones/server.js\" \"node services/matchmaking/server.js\"",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
     "db:seed": "node prisma/seed.js"
@@ -25,6 +24,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "concurrently": "^10.0.6",
     "nodemon": "^3.1.14",
     "prisma": "^6.19.3"
   }
