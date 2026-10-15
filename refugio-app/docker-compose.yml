@@ -38,6 +38,200 @@ services:
       retries: 10
       start_period: 30s
 
+  # =================================================================
+  # Aplicación en microservicios (perfil "app"):
+  #   docker compose --profile app up -d --build
+  # Sin el perfil, "docker compose up -d" sigue levantando solo Postgres,
+  # para desarrollar con "npm run dev".
+  # =================================================================
+
+  # Servicio auth: usuarios: registro, login y perfil
+  auth:
+    build:
+      context: ./backend
+      dockerfile: services/auth/Dockerfile
+    container_name: refugio-auth
+    profiles: ["app"]
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://refugio:refugio_dev_password@postgres:5432/refugio_db?schema=public
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Servicio animales: fichas de los animales
+  animales:
+    build:
+      context: ./backend
+      dockerfile: services/animales/Dockerfile
+    container_name: refugio-animales
+    profiles: ["app"]
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://refugio:refugio_dev_password@postgres:5432/refugio_db?schema=public
+    ports:
+      - "3002:3002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Servicio expedientes: expedientes médicos
+  expedientes:
+    build:
+      context: ./backend
+      dockerfile: services/expedientes/Dockerfile
+    container_name: refugio-expedientes
+    profiles: ["app"]
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://refugio:refugio_dev_password@postgres:5432/refugio_db?schema=public
+    ports:
+      - "3003:3003"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Servicio fotos: fotos de los animales
+  fotos:
+    build:
+      context: ./backend
+      dockerfile: services/fotos/Dockerfile
+    container_name: refugio-fotos
+    profiles: ["app"]
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://refugio:refugio_dev_password@postgres:5432/refugio_db?schema=public
+    ports:
+      - "3004:3004"
+    volumes:
+      - ./backend/uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Servicio adopciones: solicitudes de adopción
+  adopciones:
+    build:
+      context: ./backend
+      dockerfile: services/adopciones/Dockerfile
+    container_name: refugio-adopciones
+    profiles: ["app"]
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://refugio:refugio_dev_password@postgres:5432/refugio_db?schema=public
+    ports:
+      - "3005:3005"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Servicio apadrinamientos: apadrinamientos
+  apadrinamientos:
+    build:
+      context: ./backend
+      dockerfile: services/apadrinamientos/Dockerfile
+    container_name: refugio-apadrinamientos
+    profiles: ["app"]
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://refugio:refugio_dev_password@postgres:5432/refugio_db?schema=public
+    ports:
+      - "3006:3006"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Servicio donaciones: donaciones
+  donaciones:
+    build:
+      context: ./backend
+      dockerfile: services/donaciones/Dockerfile
+    container_name: refugio-donaciones
+    profiles: ["app"]
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://refugio:refugio_dev_password@postgres:5432/refugio_db?schema=public
+    ports:
+      - "3007:3007"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Servicio estadisticas: estadísticas del panel
+  estadisticas:
+    build:
+      context: ./backend
+      dockerfile: services/estadisticas/Dockerfile
+    container_name: refugio-estadisticas
+    profiles: ["app"]
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://refugio:refugio_dev_password@postgres:5432/refugio_db?schema=public
+    ports:
+      - "3008:3008"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Servicio ia: descripciones y explicaciones con IA
+  ia:
+    build:
+      context: ./backend
+      dockerfile: services/ia/Dockerfile
+    container_name: refugio-ia
+    profiles: ["app"]
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://refugio:refugio_dev_password@postgres:5432/refugio_db?schema=public
+      OLLAMA_URL: http://ollama:11434
+      MATCHMAKING_URL: http://matchmaking:3011
+    ports:
+      - "3009:3009"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Servicio recomendaciones: recomendaciones para cada adoptante
+  recomendaciones:
+    build:
+      context: ./backend
+      dockerfile: services/recomendaciones/Dockerfile
+    container_name: refugio-recomendaciones
+    profiles: ["app"]
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://refugio:refugio_dev_password@postgres:5432/refugio_db?schema=public
+      OLLAMA_URL: http://ollama:11434
+      MATCHMAKING_URL: http://matchmaking:3011
+    ports:
+      - "3010:3010"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Servicio matchmaking: cálculo de compatibilidad
+  matchmaking:
+    build:
+      context: ./backend
+      dockerfile: services/matchmaking/Dockerfile
+    container_name: refugio-matchmaking
+    profiles: ["app"]
+    env_file: ./backend/.env
+    environment:
+      OLLAMA_URL: http://ollama:11434
+    ports:
+      - "3011:3011"
+
+  # Frontend (React + Vite)
+  frontend:
+    build: ./frontend
+    container_name: refugio-frontend
+    profiles: ["app"]
+    ports:
+      - "5173:5173"
+
 volumes:
   postgres-data:
   ollama-data:
