@@ -8,7 +8,7 @@ import {
 import {
   createApadrinamientoSchema,
   listApadrinamientosQuerySchema
-} from '../utils/validation.js';
+} from '../../shared/validation.js';
 
 /**
  * Lista todos los apadrinamientos. Solo admin/voluntario.

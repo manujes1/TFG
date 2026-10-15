@@ -10,8 +10,8 @@ import apadrinamientoRoutes from './routes/apadrinamiento.routes.js';
 import donacionRoutes from './routes/donacion.routes.js';
 import estadisticasRoutes from './routes/estadisticas.routes.js';
 import recomendacionRoutes from './routes/recomendacion.routes.js';
-import { errorHandler } from './middleware/errorHandler.js';
-import { comprobarIA } from './config/ia/index.js';
+import { errorHandler } from '../shared/errorHandler.js';
+import { comprobarIA } from '../shared/ia/index.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;

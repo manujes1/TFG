@@ -1,4 +1,4 @@
-import prisma from '../config/prisma.js';
+import prisma from '../../shared/prisma.js';
 
 /**
  * Lanza un error 404 si el animal no existe.

@@ -1,8 +1,8 @@
-import prisma from '../config/prisma.js';
-import { generarTexto } from '../config/ia/index.js';
+import prisma from '../../shared/prisma.js';
+import { generarTexto } from '../../shared/ia/index.js';
 import { ESPECIE_ETIQUETAS, SEXO_ETIQUETAS } from '../utils/etiquetas.js';
 import { evaluarAnimal } from './matchmaking.service.js';
-import { perfilAdoptanteSchema } from '../utils/validation.js';
+import { perfilAdoptanteSchema } from '../../shared/validation.js';
 
 /* ================================================================== */
 /* Generación de descripciones                                         */

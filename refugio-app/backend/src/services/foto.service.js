@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import prisma from '../config/prisma.js';
+import prisma from '../../shared/prisma.js';
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR || './uploads';
 

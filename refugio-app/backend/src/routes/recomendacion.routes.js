@@ -4,7 +4,7 @@ import {
   recomendacionesDesdeTexto,
   compatibilidad
 } from '../controllers/recomendacion.controller.js';
-import { authenticate } from '../middleware/auth.js';
+import { authenticate } from '../../shared/auth.js';
 
 const router = Router();
 

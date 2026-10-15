@@ -6,7 +6,7 @@ import {
   updateEstado,
   misAdopciones
 } from '../controllers/adopcion.controller.js';
-import { authenticate, authorize } from '../middleware/auth.js';
+import { authenticate, authorize } from '../../shared/auth.js';
 
 const router = Router();
 

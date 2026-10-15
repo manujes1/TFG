@@ -3,7 +3,7 @@ import {
   recomendarDesdeTexto,
   compatibilidadConAnimal
 } from '../services/recomendacion.service.js';
-import { recomendacionesQuerySchema, preferenciasTextoSchema } from '../utils/validation.js';
+import { recomendacionesQuerySchema, preferenciasTextoSchema } from '../../shared/validation.js';
 
 /**
  * Recomendaciones personalizadas para el usuario logueado.

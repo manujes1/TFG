@@ -1,5 +1,5 @@
-import { verifyToken } from '../utils/jwt.js';
-import prisma from '../config/prisma.js';
+import { verifyToken } from './jwt.js';
+import prisma from './prisma.js';
 
 /**
  * Middleware de autenticación.

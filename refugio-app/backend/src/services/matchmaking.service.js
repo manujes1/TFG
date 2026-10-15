@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 import { z } from 'zod';
 import { calcularCompatibilidad } from '../utils/compatibilidad.js';
-import { generarTexto } from '../config/ia/gemini.provider.js';
+import { generarTexto } from '../../shared/ia/gemini.provider.js';
 
 /**
  * Evaluación de compatibilidad entre un adoptante y los animales.

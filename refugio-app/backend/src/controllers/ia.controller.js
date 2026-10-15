@@ -2,7 +2,7 @@ import {
   generarDescripcionAnimal,
   explicarCompatibilidad
 } from '../services/ia.service.js';
-import { generarDescripcionSchema } from '../utils/validation.js';
+import { generarDescripcionSchema } from '../../shared/validation.js';
 
 /**
  * Genera una descripción para un animal mediante el proveedor de IA configurado.

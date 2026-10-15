@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { list, create, misDonaciones } from '../controllers/donacion.controller.js';
-import { authenticate, authorize } from '../middleware/auth.js';
+import { authenticate, authorize } from '../../shared/auth.js';
 
 const router = Router();
 

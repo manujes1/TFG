@@ -1,4 +1,4 @@
-import prisma from '../config/prisma.js';
+import prisma from '../../shared/prisma.js';
 
 /**
  * Devuelve un snapshot con las métricas clave del refugio.

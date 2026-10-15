@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { list, getById, create, update, remove } from '../controllers/expediente.controller.js';
-import { authenticate, authorize } from '../middleware/auth.js';
+import { authenticate, authorize } from '../../shared/auth.js';
 
 // mergeParams: true permite acceder a :animalId de la ruta padre
 const router = Router({ mergeParams: true });

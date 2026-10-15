@@ -9,7 +9,7 @@ import {
   createAnimalSchema,
   updateAnimalSchema,
   listAnimalesQuerySchema
-} from '../utils/validation.js';
+} from '../../shared/validation.js';
 
 export async function list(req, res, next) {
   try {

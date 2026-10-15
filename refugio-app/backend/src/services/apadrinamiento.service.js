@@ -1,4 +1,4 @@
-import prisma from '../config/prisma.js';
+import prisma from '../../shared/prisma.js';
 
 /**
  * Lista apadrinamientos con filtros y paginación.

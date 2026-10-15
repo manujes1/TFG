@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { list, getById, create, update, remove } from '../controllers/animal.controller.js';
-import { authenticate, authenticateOptional, authorize } from '../middleware/auth.js';
+import { authenticate, authenticateOptional, authorize } from '../../shared/auth.js';
 import expedienteRoutes from './expediente.routes.js';
 import fotoRoutes from './foto.routes.js';
 import iaRoutes from './ia.routes.js';

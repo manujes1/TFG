@@ -8,7 +8,7 @@ import {
   registerSchema,
   loginSchema,
   perfilAdoptanteSchema
-} from '../utils/validation.js';
+} from '../../shared/validation.js';
 
 export async function register(req, res, next) {
   try {

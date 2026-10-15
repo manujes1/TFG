@@ -8,7 +8,7 @@ import {
 import {
   createExpedienteSchema,
   updateExpedienteSchema
-} from '../utils/validation.js';
+} from '../../shared/validation.js';
 
 export async function list(req, res, next) {
   try {

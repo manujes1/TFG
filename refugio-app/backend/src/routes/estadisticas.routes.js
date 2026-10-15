@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { generales } from '../controllers/estadisticas.controller.js';
-import { authenticate, authorize } from '../middleware/auth.js';
+import { authenticate, authorize } from '../../shared/auth.js';
 
 const router = Router();
 

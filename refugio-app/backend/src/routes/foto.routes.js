@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { subir, eliminar } from '../controllers/foto.controller.js';
-import { authenticate, authorize } from '../middleware/auth.js';
+import { authenticate, authorize } from '../../shared/auth.js';
 import { uploadImage } from '../config/multer.js';
 
 // mergeParams para acceder al :animalId de la ruta padre

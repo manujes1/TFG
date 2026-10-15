@@ -1,4 +1,4 @@
-import prisma from '../config/prisma.js';
+import prisma from '../../shared/prisma.js';
 import { evaluarAnimales, evaluarAnimal } from './matchmaking.service.js';
 import { interpretarPreferencias } from './ia.service.js';
 import { updatePreferencias } from './auth.service.js';

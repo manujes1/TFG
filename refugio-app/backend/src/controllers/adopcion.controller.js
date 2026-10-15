@@ -9,7 +9,7 @@ import {
   createAdopcionSchema,
   updateEstadoAdopcionSchema,
   listAdopcionesQuerySchema
-} from '../utils/validation.js';
+} from '../../shared/validation.js';
 
 /**
  * Lista todas las adopciones. Solo admin/voluntario.

@@ -1,6 +1,6 @@
-import prisma from '../config/prisma.js';
+import prisma from '../../shared/prisma.js';
 import { hashPassword, verifyPassword } from '../utils/password.js';
-import { signToken } from '../utils/jwt.js';
+import { signToken } from '../../shared/jwt.js';
 
 /**
  * Registra un nuevo usuario en el sistema.

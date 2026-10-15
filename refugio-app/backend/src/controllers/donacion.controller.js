@@ -6,7 +6,7 @@ import {
 import {
   createDonacionSchema,
   listDonacionesQuerySchema
-} from '../utils/validation.js';
+} from '../../shared/validation.js';
 
 /**
  * Listado global de donaciones. Solo admin.

@@ -41,7 +41,7 @@ const aqui = path.dirname(fileURLToPath(import.meta.url));
 const SALIDA = path.resolve(args.salida || path.join(aqui, 'resultados'));
 
 // Import dinámico: el proveedor se lee de process.env al cargar el módulo.
-const { generarTexto } = await import('../src/config/ia/index.js');
+const { generarTexto } = await import('../shared/ia/index.js');
 const { calcularCompatibilidad } = await import('../src/utils/compatibilidad.js');
 
 const animales = JSON.parse(fs.readFileSync(path.join(aqui, 'datos/animales.json'), 'utf8'));
