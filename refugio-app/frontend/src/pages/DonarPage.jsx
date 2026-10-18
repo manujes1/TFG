@@ -48,11 +48,14 @@ export default function DonarPage() {
           Hemos registrado tu aportación de{' '}
           <span className="font-bold">{formatEuros(donada.cantidad)}</span>.
         </p>
-        <div className="flex justify-center gap-2">
-          <Link to="/mis-solicitudes" className="btn-primary">
+        <div className="flex flex-wrap justify-center gap-3 pt-2">
+          <Link to="/mis-solicitudes" className="btn-primary px-5 py-2.5 border border-transparent">
             Ver mis donaciones
           </Link>
-          <button className="btn-ghost" onClick={() => setDonada(null)}>
+          <button
+            className="btn-ghost px-5 py-2.5 border border-stone-200"
+            onClick={() => setDonada(null)}
+          >
             Donar de nuevo
           </button>
         </div>
@@ -73,13 +76,17 @@ export default function DonarPage() {
       <form onSubmit={handleSubmit} className="card p-6 space-y-5">
         <div>
           <span className="field-label">Importe</span>
-          <div className="flex flex-wrap gap-2 mb-3">
+          <div className="flex flex-wrap gap-3 mb-4">
             {IMPORTES.map((i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => setCantidad(String(i))}
-                className={Number(cantidad) === i ? 'btn-primary' : 'btn-ghost'}
+                className={`px-5 py-2.5 border ${
+                  Number(cantidad) === i
+                    ? 'btn-primary border-transparent'
+                    : 'btn-ghost border-stone-200'
+                }`}
               >
                 {i} €
               </button>
@@ -89,7 +96,7 @@ export default function DonarPage() {
             type="number"
             min="1"
             max="100000"
-            step="0.01"
+            step="any"
             required
             value={cantidad}
             onChange={(e) => setCantidad(e.target.value)}
