@@ -10,6 +10,12 @@ import { generarTexto } from '../../shared/ia/gemini.provider.js';
  *   - determinista: reglas ponderadas (`calcularCompatibilidad`). Reproducible.
  *   - llm: Gemini puntúa los pares. No es reproducible; sirve para comparar.
  *
+ * Los descartes (especie distinta, o no apto para niños si hay niños en
+ * casa) los decide SIEMPRE el algoritmo determinista, también en modo `llm`:
+ * Gemini solo puntúa los animales que pasan esos filtros. Así un error del
+ * modelo al leer el perfil nunca descarta un animal que sí encaja, ni
+ * recomienda uno incompatible.
+ *
  * El método se elige con MATCHMAKING_MODE (determinista | llm). El modo `llm`
  * solo se usa si el proveedor de IA activo es Gemini: así, si la aplicación
  * está configurada con Ollama local, los datos del usuario no salen hacia
@@ -63,8 +69,6 @@ const respuestaSchema = z.array(
   z.object({
     animalId: z.string(),
     puntuacion: z.number().min(0).max(100),
-    descartado: z.boolean().optional().default(false),
-    motivoDescarte: z.string().nullish(),
     criterios: z
       .array(
         z.object({
@@ -93,14 +97,7 @@ function construirPrompt(perfil, animales) {
 
 Valora de 0 a 100 la compatibilidad entre la persona interesada y cada animal de la lista. 0 es incompatible y 100 encaja perfectamente.
 
-Marca un animal como descartado SOLO en estos casos:
-- Su especie no coincide con la que busca la persona (si busca "indiferente", nunca se descarta por especie).
-- La persona tiene niños y el animal tiene "aptoNinos": false.
-- La persona tiene perros y el animal tiene "aptoOtrosPerros": false, o tiene gatos y el animal tiene "aptoGatos": false.
-
-Nunca descartes por falta de información: si un dato no aparece, puntúalo con un valor intermedio y menciónalo en el detalle.
-
-Si lo descartas, "motivoDescarte" es UNA sola frase de 15 palabras como máximo, con el motivo concreto (por ejemplo: "No convive bien con gatos y tú tienes uno").
+Todos los animales de la lista ya han pasado los filtros básicos (especie y convivencia con niños): no descartes ninguno, puntúalos todos. Si un dato no aparece, puntúa ese criterio con un valor intermedio y menciónalo en el detalle.
 
 Para cada animal, desglosa la valoración en estos criterios, cada uno con un valor de 0 a 1 y una frase breve de detalle en español, dirigida a la persona:
 ${Object.entries(ETIQUETAS_CRITERIOS).map(([id, e]) => `- ${id}: ${e}`).join('\n')}
@@ -114,13 +111,7 @@ ANIMALES:
 ${JSON.stringify(datos)}
 
 Responde ÚNICAMENTE con un array JSON, con un objeto por animal y este formato exacto:
-[{"animalId": "<id>", "puntuacion": <0-100>, "descartado": <true|false>, "motivoDescarte": "<solo si descartado>", "criterios": [{"id": "<id del criterio>", "valor": <0-1>, "detalle": "<frase>"}]}]`;
-}
-
-// Aunque el prompt pide una sola frase, el modelo a veces escribe más:
-// nos quedamos con la primera para que quepa en la interfaz.
-function primeraFrase(texto) {
-  return (texto ?? '').trim().split(/(?<=[.!?])\s+/)[0];
+[{"animalId": "<id>", "puntuacion": <0-100>, "criterios": [{"id": "<id del criterio>", "valor": <0-1>, "detalle": "<frase>"}]}]`;
 }
 
 function extraerArray(texto) {
@@ -153,26 +144,16 @@ async function puntuarLote(perfil, animales) {
   const resultados = new Map();
   for (const r of analizado.data) {
     if (!idsValidos.has(r.animalId)) continue;
-    resultados.set(
-      r.animalId,
-      r.descartado
-        ? {
-            puntuacion: 0,
-            criterios: [],
-            descartado: true,
-            motivoDescarte: primeraFrase(r.motivoDescarte) || 'No encaja con tu situación'
-          }
-        : {
-            puntuacion: Math.round(r.puntuacion),
-            criterios: r.criterios.map((c) => ({
-              id: c.id,
-              etiqueta: ETIQUETAS_CRITERIOS[c.id],
-              valor: c.valor,
-              detalle: c.detalle
-            })),
-            descartado: false
-          }
-    );
+    resultados.set(r.animalId, {
+      puntuacion: Math.round(r.puntuacion),
+      criterios: r.criterios.map((c) => ({
+        id: c.id,
+        etiqueta: ETIQUETAS_CRITERIOS[c.id],
+        valor: c.valor,
+        detalle: c.detalle
+      })),
+      descartado: false
+    });
   }
   return resultados;
 }
@@ -191,13 +172,17 @@ async function puntuarLote(perfil, animales) {
  *   En el mismo orden que `animales`.
  */
 export async function evaluarAnimales(perfil, animales) {
+  // Las reglas evalúan siempre todos los animales: deciden los descartes y
+  // son el resultado de respaldo si Gemini no puntúa alguno.
+  const reglas = new Map(animales.map((a) => [a.id, calcularCompatibilidad(perfil, a)]));
+  const candidatos = animales.filter((a) => !reglas.get(a.id).descartado);
   const porId = new Map();
 
-  if (usaLLM() && animales.length > 0) {
+  if (usaLLM() && candidatos.length > 0) {
     const ahora = Date.now();
     const pendientes = [];
 
-    for (const animal of animales) {
+    for (const animal of candidatos) {
       const guardado = cache.get(claveCache(perfil, animal));
       if (guardado && guardado.expira > ahora) porId.set(animal.id, guardado.resultado);
       else pendientes.push(animal);
@@ -224,6 +209,6 @@ export async function evaluarAnimales(perfil, animales) {
 
   return animales.map((animal) => ({
     animal,
-    ...(porId.get(animal.id) ?? conOrigen(calcularCompatibilidad(perfil, animal), 'determinista'))
+    ...(porId.get(animal.id) ?? conOrigen(reglas.get(animal.id), 'determinista'))
   }));
 }
