@@ -20,6 +20,7 @@ import AnimalesAdminPage from './pages/admin/AnimalesAdminPage.jsx';
 import AnimalFormPage from './pages/admin/AnimalFormPage.jsx';
 import ExpedientesAdminPage from './pages/admin/ExpedientesAdminPage.jsx';
 import AdopcionesAdminPage from './pages/admin/AdopcionesAdminPage.jsx';
+import UsuariosAdminPage from './pages/admin/UsuariosAdminPage.jsx';
 
 const STAFF = ['ADMIN', 'VOLUNTARIO'];
 
@@ -100,6 +101,14 @@ export default function App() {
                 element={<ExpedientesAdminPage />}
               />
               <Route path="adopciones" element={<AdopcionesAdminPage />} />
+              <Route
+                path="usuarios"
+                element={
+                  <ProtectedRoute roles={['ADMIN']}>
+                    <UsuariosAdminPage />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
           </Route>
 

@@ -2,12 +2,17 @@ import {
   registerUser,
   loginUser,
   getUserById,
-  updatePreferencias
+  updatePreferencias,
+  listUsuarios,
+  updateUsuario
 } from './auth.service.js';
+import { z } from 'zod';
 import {
   registerSchema,
   loginSchema,
-  perfilAdoptanteSchema
+  perfilAdoptanteSchema,
+  listUsuariosQuerySchema,
+  updateUsuarioSchema
 } from '../../shared/validation.js';
 
 export async function register(req, res, next) {
@@ -48,6 +53,31 @@ export async function updatePerfil(req, res, next) {
     const preferencias = perfilAdoptanteSchema.parse(req.body);
     const user = await updatePreferencias(req.user.id, preferencias);
     res.json({ user });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Listado de usuarios para el panel de administración.
+ */
+export async function usuarios(req, res, next) {
+  try {
+    const filtros = listUsuariosQuerySchema.parse(req.query);
+    res.json(await listUsuarios(filtros));
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * Cambia el rol o el estado de la cuenta de un usuario.
+ */
+export async function actualizarUsuario(req, res, next) {
+  try {
+    const id = z.string().uuid().parse(req.params.id);
+    const datos = updateUsuarioSchema.parse(req.body);
+    res.json(await updateUsuario(req.user.id, id, datos));
   } catch (err) {
     next(err);
   }

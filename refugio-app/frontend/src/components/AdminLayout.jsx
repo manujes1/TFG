@@ -5,11 +5,13 @@ import { ROLES } from '../utils/constants.js';
 const SECCIONES = [
   { to: '/admin', end: true, label: 'Resumen', icono: '📊' },
   { to: '/admin/animales', label: 'Animales', icono: '🐾' },
-  { to: '/admin/adopciones', label: 'Adopciones', icono: '📋' }
+  { to: '/admin/adopciones', label: 'Adopciones', icono: '📋' },
+  { to: '/admin/usuarios', label: 'Usuarios', icono: '👥', soloAdmin: true }
 ];
 
 export default function AdminLayout() {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
+  const secciones = SECCIONES.filter((s) => !s.soloAdmin || isAdmin);
 
   const linkClass = ({ isActive }) =>
     `flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
@@ -33,7 +35,7 @@ export default function AdminLayout() {
       <div className="grid gap-6 lg:grid-cols-[200px_1fr]">
         <aside>
           <nav className="card p-2 flex lg:flex-col gap-1 overflow-x-auto">
-            {SECCIONES.map((seccion) => (
+            {secciones.map((seccion) => (
               <NavLink
                 key={seccion.to}
                 to={seccion.to}

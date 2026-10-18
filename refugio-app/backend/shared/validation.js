@@ -20,6 +20,25 @@ export const loginSchema = z.object({
   password: z.string().min(1, 'La contraseña es obligatoria')
 });
 
+// Gestión de usuarios (solo administradores)
+const rolEnum = z.enum(['ADMIN', 'VOLUNTARIO', 'ADOPTANTE']);
+
+export const listUsuariosQuerySchema = z.object({
+  rol: rolEnum.optional(),
+  search: z.string().max(100).optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(20)
+});
+
+export const updateUsuarioSchema = z
+  .object({
+    rol: rolEnum.optional(),
+    activo: z.boolean().optional()
+  })
+  .refine((d) => d.rol !== undefined || d.activo !== undefined, {
+    message: 'Indica el nuevo rol o si la cuenta queda activa'
+  });
+
 // =========================================
 // Animales
 // =========================================
