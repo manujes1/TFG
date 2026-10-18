@@ -1,8 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import ResumenUsuario from '../components/ResumenUsuario.jsx';
 
 export default function HomePage() {
   const { user } = useAuth();
+
+  // Un adoptante con sesión ve su resumen; los visitantes, la bienvenida.
+  // (El personal del refugio no llega aquí: InicioRedirect lo lleva al panel.)
+  if (user) return <ResumenUsuario />;
 
   return (
     <div className="space-y-8">
@@ -32,18 +37,6 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
-
-      {user && (
-        <section className="card p-6 border-l-4 border-l-refugio-500">
-          <h2 className="font-semibold text-stone-800 mb-1">
-            Hola, {user.nombre} 👋
-          </h2>
-          <p className="text-sm text-stone-600">
-            Has iniciado sesión como{' '}
-            <span className="font-medium text-refugio-700">{user.rol}</span>.
-          </p>
-        </section>
-      )}
     </div>
   );
 }

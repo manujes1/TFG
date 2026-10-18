@@ -10,11 +10,11 @@ import { fetchMisDonaciones } from '../api/donaciones.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import Tabs from '../components/Tabs.jsx';
 import EstadoBadge from '../components/EstadoBadge.jsx';
+import MiniaturaAnimal from '../components/MiniaturaAnimal.jsx';
 import {
   ESPECIES,
   ESTADOS_ADOPCION,
-  ESTADO_ADOPCION_COLORES,
-  fotoUrl
+  ESTADO_ADOPCION_COLORES
 } from '../utils/constants.js';
 import { formatFecha, formatEuros } from '../utils/format.js';
 
@@ -283,21 +283,6 @@ function PanelDonaciones({ query }) {
 /* ------------------------------------------------------------------ */
 /* Componentes auxiliares                                              */
 /* ------------------------------------------------------------------ */
-
-function MiniaturaAnimal({ animal }) {
-  const foto = animal?.fotos?.[0] ? fotoUrl(animal.fotos[0]) : null;
-  const emoji = animal?.especie === 'GATO' ? '🐱' : animal?.especie === 'PERRO' ? '🐶' : '🐾';
-
-  return (
-    <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-refugio-100 to-refugio-50 shrink-0 overflow-hidden flex items-center justify-center ring-1 ring-stone-200/60">
-      {foto ? (
-        <img src={foto} alt="" className="w-full h-full object-cover" />
-      ) : (
-        <span className="text-2xl" aria-hidden="true">{emoji}</span>
-      )}
-    </div>
-  );
-}
 
 function Cargando() {
   return <p className="text-center text-stone-500 py-8">Cargando…</p>;
