@@ -57,8 +57,8 @@ export default function CompatibilidadAnimal({ animalId, nombreAnimal }) {
           Compatibilidad contigo
         </h2>
         <p className="text-sm text-amber-800">
-          Según tu perfil, {nombreAnimal} no sería la mejor opción:{' '}
-          {data.motivoDescarte.toLowerCase()}.
+          Según tu perfil, {nombreAnimal} no sería la mejor opción.{' '}
+          {data.motivoDescarte.replace(/\.?$/, '.')}
         </p>
         <Link
           to="/recomendaciones"

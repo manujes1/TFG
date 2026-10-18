@@ -64,7 +64,7 @@ const respuestaSchema = z.array(
     animalId: z.string(),
     puntuacion: z.number().min(0).max(100),
     descartado: z.boolean().optional().default(false),
-    motivoDescarte: z.string().optional(),
+    motivoDescarte: z.string().nullish(),
     criterios: z
       .array(
         z.object({
@@ -91,7 +91,16 @@ function construirPrompt(perfil, animales) {
 
   return `Eres un asesor de adopciones de un refugio de animales en España.
 
-Valora de 0 a 100 la compatibilidad entre la persona interesada y cada animal de la lista. 0 es incompatible y 100 encaja perfectamente. Si un animal no es adecuado de forma clara (por ejemplo, no es de la especie que busca, o no es apto para niños y hay niños en casa), márcalo como descartado.
+Valora de 0 a 100 la compatibilidad entre la persona interesada y cada animal de la lista. 0 es incompatible y 100 encaja perfectamente.
+
+Marca un animal como descartado SOLO en estos casos:
+- Su especie no coincide con la que busca la persona (si busca "indiferente", nunca se descarta por especie).
+- La persona tiene niños y el animal tiene "aptoNinos": false.
+- La persona tiene perros y el animal tiene "aptoOtrosPerros": false, o tiene gatos y el animal tiene "aptoGatos": false.
+
+Nunca descartes por falta de información: si un dato no aparece, puntúalo con un valor intermedio y menciónalo en el detalle.
+
+Si lo descartas, "motivoDescarte" es UNA sola frase de 15 palabras como máximo, con el motivo concreto (por ejemplo: "No convive bien con gatos y tú tienes uno").
 
 Para cada animal, desglosa la valoración en estos criterios, cada uno con un valor de 0 a 1 y una frase breve de detalle en español, dirigida a la persona:
 ${Object.entries(ETIQUETAS_CRITERIOS).map(([id, e]) => `- ${id}: ${e}`).join('\n')}
@@ -106,6 +115,12 @@ ${JSON.stringify(datos)}
 
 Responde ÚNICAMENTE con un array JSON, con un objeto por animal y este formato exacto:
 [{"animalId": "<id>", "puntuacion": <0-100>, "descartado": <true|false>, "motivoDescarte": "<solo si descartado>", "criterios": [{"id": "<id del criterio>", "valor": <0-1>, "detalle": "<frase>"}]}]`;
+}
+
+// Aunque el prompt pide una sola frase, el modelo a veces escribe más:
+// nos quedamos con la primera para que quepa en la interfaz.
+function primeraFrase(texto) {
+  return (texto ?? '').trim().split(/(?<=[.!?])\s+/)[0];
 }
 
 function extraerArray(texto) {
@@ -145,7 +160,7 @@ async function puntuarLote(perfil, animales) {
             puntuacion: 0,
             criterios: [],
             descartado: true,
-            motivoDescarte: r.motivoDescarte || 'No encaja con tu situación'
+            motivoDescarte: primeraFrase(r.motivoDescarte) || 'No encaja con tu situación'
           }
         : {
             puntuacion: Math.round(r.puntuacion),
