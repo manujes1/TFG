@@ -22,7 +22,8 @@ router.get('/', authorize('ADMIN', 'VOLUNTARIO'), list);
 router.get('/:id', getById);
 
 // Crear: cualquier autenticado
-router.post('/', create);
+// Solo los adoptantes apadrinan: el personal del refugio no
+router.post('/', authorize('ADOPTANTE'), create);
 
 // Cancelar: el padrino o admin (control fino en el controller)
 router.patch('/:id/cancelar', cancel);

@@ -5,6 +5,7 @@ import AdminLayout from './components/AdminLayout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 import HomePage from './pages/HomePage.jsx';
+import InicioRedirect from './components/InicioRedirect.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import AnimalesPage from './pages/AnimalesPage.jsx';
@@ -33,7 +34,14 @@ export default function App() {
 
           {/* Rutas con layout compartido */}
           <Route element={<Layout />}>
-            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/"
+              element={
+                <InicioRedirect>
+                  <HomePage />
+                </InicioRedirect>
+              }
+            />
             <Route path="/animales" element={<AnimalesPage />} />
             <Route path="/animales/:id" element={<AnimalDetallePage />} />
 
@@ -59,7 +67,7 @@ export default function App() {
             <Route
               path="/donar"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute roles={['ADOPTANTE']}>
                   <DonarPage />
                 </ProtectedRoute>
               }
@@ -68,7 +76,7 @@ export default function App() {
             <Route
               path="/mis-solicitudes"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute roles={['ADOPTANTE']}>
                   <MisSolicitudesPage />
                 </ProtectedRoute>
               }

@@ -29,9 +29,11 @@ export default function Layout() {
           </Link>
 
           <div className="flex items-center gap-1 flex-wrap">
-            <NavLink to="/" end className={linkClass}>
-              Inicio
-            </NavLink>
+            {!isStaff && (
+              <NavLink to="/" end className={linkClass}>
+                Inicio
+              </NavLink>
+            )}
             <NavLink to="/animales" className={linkClass}>
               Animales
             </NavLink>
@@ -42,13 +44,13 @@ export default function Layout() {
               </NavLink>
             )}
 
-            {user && (
+            {user && !isStaff && (
               <NavLink to="/donar" className={linkClass}>
                 Donar
               </NavLink>
             )}
 
-            {user && (
+            {user && !isStaff && (
               <NavLink to="/mis-solicitudes" className={linkClass}>
                 Mis solicitudes
               </NavLink>
@@ -65,10 +67,15 @@ export default function Layout() {
             {user ? (
               <>
                 <Link
-                  to="/perfil"
+                  to={isStaff ? '/admin' : '/perfil'}
                   className="text-sm text-stone-600 hover:text-refugio-700 hidden sm:inline transition-colors font-medium"
                 >
                   {user.nombre}
+                  {isStaff && (
+                    <span className="ml-1.5 text-xs text-stone-400 font-normal">
+                      ({user.rol === 'ADMIN' ? 'Administrador' : 'Voluntario'})
+                    </span>
+                  )}
                 </Link>
                 <button onClick={handleLogout} className="btn-ghost text-sm px-3 py-2">
                   Salir

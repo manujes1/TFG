@@ -8,6 +8,7 @@ router.use(authenticate);
 
 router.get('/mis-donaciones', misDonaciones);
 router.get('/', authorize('ADMIN'), list);
-router.post('/', create);
+// Solo los adoptantes donan: el personal del refugio no
+router.post('/', authorize('ADOPTANTE'), create);
 
 export default router;

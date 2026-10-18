@@ -244,19 +244,21 @@ export default function AnimalDetallePage() {
             </div>
           )}
 
-          {/* Acciones */}
-          <div className="flex flex-wrap gap-3 pt-2">
-            {puedeAdoptar && !mostrarFormAdopcion && (
-              <button onClick={handleSolicitarAdopcion} className="btn-primary px-5 py-2.5">
-                Solicitar adopción
-              </button>
-            )}
-            {!mostrarFormApadrinar && (
-              <button onClick={handleApadrinar} className="btn-secondary px-5 py-2.5">
-                Apadrinar
-              </button>
-            )}
-          </div>
+          {/* Acciones (no para el personal del refugio) */}
+          {!isStaff && (
+            <div className="flex flex-wrap gap-3 pt-2">
+              {puedeAdoptar && !mostrarFormAdopcion && (
+                <button onClick={handleSolicitarAdopcion} className="btn-primary px-5 py-2.5">
+                  Solicitar adopción
+                </button>
+              )}
+              {!mostrarFormApadrinar && (
+                <button onClick={handleApadrinar} className="btn-secondary px-5 py-2.5">
+                  Apadrinar
+                </button>
+              )}
+            </div>
+          )}
 
           {/* Formulario de adopción */}
           {mostrarFormAdopcion && (

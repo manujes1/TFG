@@ -23,7 +23,8 @@ router.get('/', authorize('ADMIN', 'VOLUNTARIO'), list);
 router.get('/:id', getById);
 
 // Crear solicitud: cualquier usuario autenticado (típicamente adoptante)
-router.post('/', create);
+// Solo los adoptantes solicitan adopciones: el personal del refugio no
+router.post('/', authorize('ADOPTANTE'), create);
 
 // Cambiar estado: solo admin/voluntario
 router.patch('/:id/estado', authorize('ADMIN', 'VOLUNTARIO'), updateEstado);
