@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { fetchAnimales, deleteAnimal } from '../../api/animales.js';
-import { useAuth } from '../../context/AuthContext.jsx';
 import EstadoBadge from '../../components/EstadoBadge.jsx';
 import ConfirmDialog from '../../components/ConfirmDialog.jsx';
 import {
@@ -17,7 +16,6 @@ import { formatFecha } from '../../utils/format.js';
 const PAGE_SIZE = 15;
 
 export default function AnimalesAdminPage() {
-  const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
 
   const [filtros, setFiltros] = useState({ especie: '', estado: '', search: '' });
@@ -176,14 +174,12 @@ export default function AnimalesAdminPage() {
                           >
                             Historial
                           </Link>
-                          {isAdmin && (
-                            <button
-                              onClick={() => setABorrar(animal)}
-                              className="text-xs px-2 py-1 rounded text-red-600 hover:bg-red-50 transition-colors font-medium"
-                            >
-                              Eliminar
-                            </button>
-                          )}
+                          <button
+                            onClick={() => setABorrar(animal)}
+                            className="text-xs px-2 py-1 rounded text-red-600 hover:bg-red-50 transition-colors font-medium"
+                          >
+                            Eliminar
+                          </button>
                         </div>
                       </td>
                     </tr>

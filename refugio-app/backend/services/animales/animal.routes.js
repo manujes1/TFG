@@ -9,7 +9,7 @@ router.get('/', list);
 router.get('/:id', authenticateOptional, getById);
 router.post('/', authenticate, authorize('ADMIN', 'VOLUNTARIO'), create);
 router.patch('/:id', authenticate, authorize('ADMIN', 'VOLUNTARIO'), update);
-router.delete('/:id', authenticate, authorize('ADMIN'), remove);
+router.delete('/:id', authenticate, authorize('ADMIN', 'VOLUNTARIO'), remove);
 
 // Las rutas anidadas (/:animalId/expedientes, /fotos, /ia) son servicios aparte
 

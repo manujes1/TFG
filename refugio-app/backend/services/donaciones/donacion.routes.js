@@ -7,7 +7,7 @@ const router = Router();
 router.use(authenticate);
 
 router.get('/mis-donaciones', misDonaciones);
-router.get('/', authorize('ADMIN'), list);
+router.get('/', authorize('ADMIN', 'VOLUNTARIO'), list);
 // Solo los adoptantes donan: el personal del refugio no
 router.post('/', authorize('ADOPTANTE'), create);
 

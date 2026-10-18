@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { generarDescripcionIA } from '../api/recomendaciones.js';
 
 /**
- * Genera una descripción con el modelo local y la propone al voluntario.
+ * Genera una descripción con el modelo local y la propone al trabajador.
  *
  * DISEÑO: el texto nunca se publica automáticamente. Se muestra como
  * propuesta y es la persona quien decide aceptarla, editarla o descartarla.

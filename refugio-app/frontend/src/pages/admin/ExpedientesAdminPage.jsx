@@ -8,7 +8,6 @@ import {
   updateExpediente,
   deleteExpediente
 } from '../../api/expedientes.js';
-import { useAuth } from '../../context/AuthContext.jsx';
 import ExpedienteForm from '../../components/ExpedienteForm.jsx';
 import ConfirmDialog from '../../components/ConfirmDialog.jsx';
 import { TIPOS_EXPEDIENTE, ESPECIES } from '../../utils/constants.js';
@@ -16,7 +15,6 @@ import { formatFecha } from '../../utils/format.js';
 
 export default function ExpedientesAdminPage() {
   const { animalId } = useParams();
-  const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
 
   const [formAbierto, setFormAbierto] = useState(false);
@@ -248,14 +246,12 @@ export default function ExpedientesAdminPage() {
                       >
                         Editar
                       </button>
-                      {isAdmin && (
-                        <button
-                          onClick={() => setABorrar(exp)}
-                          className="text-xs px-2 py-1 rounded text-red-600 hover:bg-red-50 transition-colors font-medium"
-                        >
-                          Eliminar
-                        </button>
-                      )}
+                      <button
+                        onClick={() => setABorrar(exp)}
+                        className="text-xs px-2 py-1 rounded text-red-600 hover:bg-red-50 transition-colors font-medium"
+                      >
+                        Eliminar
+                      </button>
                     </div>
                   </div>
                 </li>

@@ -52,6 +52,16 @@ export const ESTADO_ADOPCION_COLORES = {
 };
 
 /**
+ * Nombre de cada rol en la interfaz. Internamente, el rol del personal del
+ * refugio se sigue llamando VOLUNTARIO; en la app se muestra como "Trabajador".
+ */
+export const ROLES = {
+  ADMIN: 'Administrador',
+  VOLUNTARIO: 'Trabajador',
+  ADOPTANTE: 'Adoptante'
+};
+
+/**
  * Servicio de fotos, que sirve las imágenes subidas (/uploads).
  */
 export const FOTOS_URL = 'http://localhost:3004';

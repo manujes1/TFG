@@ -15,6 +15,6 @@ router.get('/:expedienteId', getById);
 // Crear/editar/borrar: solo admin o voluntario
 router.post('/', authorize('ADMIN', 'VOLUNTARIO'), create);
 router.patch('/:expedienteId', authorize('ADMIN', 'VOLUNTARIO'), update);
-router.delete('/:expedienteId', authorize('ADMIN'), remove);
+router.delete('/:expedienteId', authorize('ADMIN', 'VOLUNTARIO'), remove);
 
 export default router;

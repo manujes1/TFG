@@ -1,5 +1,6 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { ROLES } from '../utils/constants.js';
 
 export default function Layout() {
   const { user, isStaff, logout } = useAuth();
@@ -73,7 +74,7 @@ export default function Layout() {
                   {user.nombre}
                   {isStaff && (
                     <span className="ml-1.5 text-xs text-stone-400 font-normal">
-                      ({user.rol === 'ADMIN' ? 'Administrador' : 'Voluntario'})
+                      ({ROLES[user.rol]})
                     </span>
                   )}
                 </Link>

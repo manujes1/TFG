@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { ROLES } from '../utils/constants.js';
 
 const SECCIONES = [
   { to: '/admin', end: true, label: 'Resumen', icono: '📊' },
@@ -24,7 +25,7 @@ export default function AdminLayout() {
         <p className="page-subtitle">
           Sesión de <span className="font-medium text-stone-700">{user.nombre}</span> ·{' '}
           <span className="font-medium text-refugio-700">
-            {user.rol === 'ADMIN' ? 'Administrador' : 'Voluntario'}
+            {ROLES[user.rol]}
           </span>
         </p>
       </div>
