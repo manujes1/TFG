@@ -44,3 +44,16 @@ export async function compatibilidad(req, res, next) {
     next(err);
   }
 }
+
+/**
+ * Compatibilidad de un usuario cualquiera con un animal (solo personal).
+ * Se usa al revisar una solicitud de adopción.
+ */
+export async function compatibilidadSolicitante(req, res, next) {
+  try {
+    const resultado = await compatibilidadConAnimal(req.params.usuarioId, req.params.animalId);
+    res.json(resultado);
+  } catch (err) {
+    next(err);
+  }
+}

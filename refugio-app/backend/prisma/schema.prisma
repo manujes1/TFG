@@ -152,6 +152,9 @@ model Adopcion {
   fechaCompletada          DateTime?
   notas                    String?        @db.Text
   puntuacionCompatibilidad Float?         // Calculada por IA/algoritmo
+  // Foto de la compatibilidad al enviar la solicitud (nota, criterios,
+  // descarte, origen y fecha), para que el personal vea lo mismo que el usuario
+  compatibilidad           Json?
   motivoRechazo            String?        @db.Text
   createdAt                DateTime       @default(now())
   updatedAt                DateTime       @updatedAt

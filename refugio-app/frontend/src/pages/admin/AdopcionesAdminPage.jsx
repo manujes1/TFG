@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tansta
 import { fetchAdopciones, updateEstadoAdopcion } from '../../api/adopciones.js';
 import EstadoBadge from '../../components/EstadoBadge.jsx';
 import AccionesAdopcion from '../../components/AccionesAdopcion.jsx';
+import CompatibilidadSolicitud from '../../components/CompatibilidadSolicitud.jsx';
 import {
   ESPECIES,
   ESTADOS_ADOPCION,
@@ -141,6 +142,8 @@ export default function AdopcionesAdminPage() {
                       )}
                     </div>
                   </div>
+
+                  <CompatibilidadSolicitud adopcion={adopcion} />
 
                   {adopcion.notas && (
                     <div className="bg-stone-50 border border-stone-100 rounded-lg px-3 py-2 mb-3">

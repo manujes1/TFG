@@ -121,6 +121,7 @@ services:
     env_file: ./backend/.env
     environment:
       DATABASE_URL: postgresql://refugio:refugio_dev_password@postgres:5432/refugio_db?schema=public
+      MATCHMAKING_URL: http://matchmaking:3011
     ports:
       - "3005:3005"
     depends_on:

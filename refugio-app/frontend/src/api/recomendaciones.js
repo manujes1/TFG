@@ -37,6 +37,16 @@ export async function fetchCompatibilidad(animalId) {
 }
 
 /**
+ * Compatibilidad de quien solicita una adopción con el animal (personal).
+ */
+export async function fetchCompatibilidadSolicitante(usuarioId, animalId) {
+  const res = await api.get(
+    `http://localhost:3010/api/recomendaciones/usuario/${usuarioId}/animal/${animalId}`
+  );
+  return res.data;
+}
+
+/**
  * Explicación en lenguaje natural de la compatibilidad.
  * Requiere inferencia del modelo local: puede tardar varios segundos.
  */

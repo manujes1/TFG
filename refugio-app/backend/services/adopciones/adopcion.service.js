@@ -1,4 +1,5 @@
 import prisma from '../../shared/prisma.js';
+import { evaluarAnimal } from '../../shared/matchmaking.js';
 import { transicionValida } from './adopcionEstados.js';
 
 /**
@@ -102,9 +103,49 @@ export async function createAdopcion(usuarioId, data) {
     throw error;
   }
 
+  // 3. Foto de la compatibilidad en el momento de solicitar
+  const compatibilidad = await fotoCompatibilidad(usuarioId, animal);
+
   return prisma.adopcion.create({
-    data: { animalId, usuarioId, notas, estado: 'SOLICITADA' }
+    data: {
+      animalId,
+      usuarioId,
+      notas,
+      estado: 'SOLICITADA',
+      puntuacionCompatibilidad: compatibilidad?.puntuacion ?? null,
+      compatibilidad
+    }
   });
+}
+
+/**
+ * Calcula la compatibilidad del solicitante con el animal para guardarla
+ * junto a la solicitud. Así el personal ve la misma nota y los mismos
+ * motivos que vio la persona, aunque después cambien los datos o Gemini
+ * diera otra respuesta. Usa la misma evaluación que la ficha del animal,
+ * así que normalmente sale de la caché del matchmaking.
+ *
+ * Si el matchmaking no responde, devuelve null: la solicitud se crea
+ * igualmente y el personal verá la compatibilidad calculada en ese momento.
+ */
+async function fotoCompatibilidad(usuarioId, animal) {
+  const usuario = await prisma.user.findUnique({
+    where: { id: usuarioId },
+    select: { preferencias: true }
+  });
+  const perfil = usuario?.preferencias;
+  const calculadaEn = new Date().toISOString();
+
+  if (!perfil || Object.keys(perfil).length === 0) {
+    return { perfilCompleto: false, calculadaEn };
+  }
+
+  try {
+    const resultado = await evaluarAnimal(perfil, animal);
+    return { perfilCompleto: true, ...resultado, calculadaEn };
+  } catch {
+    return null;
+  }
 }
 
 /**
