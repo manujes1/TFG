@@ -18,21 +18,21 @@
 /**
  * Pesos de cada criterio. Suman 1.
  *
- * convivencia con animales o niños > energía y espacio > experiencia
- * 
  * Justificación de la ponderación:
- *  - La convivencia (niños, otros animales) tiene el peso mayor porque un
- *    desajuste aquí puede derivar en una devolución o en un incidente.
- *  - La energía frente al espacio y tiempo disponibles es el segundo factor:
- *    es la causa habitual de abandono por "no poder atenderlo".
- *  - La experiencia pesa menos porque es adquirible con acompañamiento.
+ *  - La convivencia con niños tiene el peso mayor porque un desajuste aquí
+ *    puede derivar en un incidente o en una devolución.
+ *  - La convivencia con otros animales, la energía frente al espacio y la
+ *    experiencia pesan lo mismo: un fallo en cualquiera de ellas complica
+ *    la adaptación del animal al hogar.
+ *  - La energía frente al tiempo disponible pesa algo menos porque la rutina
+ *    del hogar suele poder ajustarse más que el espacio o la convivencia.
  */
 const PESOS = {
   convivenciaNinos: 0.25,
   convivenciaAnimales: 0.20,
   energiaEspacio: 0.20,
   energiaTiempo: 0.15,
-  experiencia: 0.10
+  experiencia: 0.20
 };
 
 const NIVEL_ENERGIA = { baja: 1, media: 2, alta: 3 };
