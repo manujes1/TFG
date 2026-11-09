@@ -129,11 +129,13 @@ function evaluarEnergiaEspacio(perfil, c) {
   // Espacio en escala de 1 a 3, para compararlo con la energía
   let espacio = perfil.tipoVivienda === 'casa' ? 2 : 1;
   if (perfil.jardin) espacio += 1;
+  // 120 m² o más cuentan como un nivel más de espacio
   if (perfil.metrosCuadrados >= 120) espacio = Math.min(3, espacio + 1);
 
   let valor;
   let detalle;
 
+  // 1: encaja, 0.55: algo justo, 0.2: no encaja
   if (espacio >= energia) {
     valor = 1;
     detalle = 'El espacio disponible es adecuado para su nivel de energía';
@@ -185,6 +187,7 @@ function evaluarExperiencia(perfil, c, animal) {
   let exigencia = 1;
   if (c.temperamento === 'tímido') exigencia = 3;
   else if (c.temperamento === 'independiente') exigencia = 2;
+  // Un animal de 25 kg o más exige al menos experiencia media
   if (animal.peso != null && Number(animal.peso) >= 25) {
     exigencia = Math.max(exigencia, 2);
   }

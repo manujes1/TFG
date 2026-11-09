@@ -39,6 +39,7 @@ export async function authenticate(req, res, next) {
 // Con token válido rellena req.user; si no, sigue como visitante.
 export async function authenticateOptional(req, res, next) {
   if (!req.headers.authorization) return next();
+  // Si el token no es válido, authenticate respondería con un error; aquí se ignora y se sigue como visitante
   return authenticate(req, {
     status: () => ({ json: () => next() })
   }, next);

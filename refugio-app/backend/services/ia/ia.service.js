@@ -53,6 +53,7 @@ export async function generarDescripcionAnimal(animalId, { guardar = false } = {
   }
 
   const prompt = construirPromptDescripcion(animal);
+  // Temperatura algo más alta para que el texto suene natural
   const texto = await generarTexto(prompt, { temperature: 0.7, numPredict: 220 });
   const descripcion = limpiarSalida(texto);
 

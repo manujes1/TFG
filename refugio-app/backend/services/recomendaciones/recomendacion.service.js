@@ -120,6 +120,7 @@ function sanearPerfilExtraido(bruto) {
   };
 
   const metros = Number(bruto.metrosCuadrados);
+  // Mismo rango que admite el esquema del perfil
   if (Number.isInteger(metros) && metros >= 10 && metros <= 2000) {
     candidato.metrosCuadrados = metros;
   }
@@ -151,6 +152,7 @@ function extraerJson(texto) {
 
 export async function interpretarPreferencias(texto) {
   const prompt = construirPromptPreferencias(texto);
+  // Temperatura baja: se pide JSON y conviene una respuesta estable
   const respuesta = await generarTexto(prompt, { temperature: 0.2, numPredict: 300, json: true });
 
   const bruto = extraerJson(respuesta);

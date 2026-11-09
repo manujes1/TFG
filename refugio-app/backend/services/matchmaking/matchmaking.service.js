@@ -13,6 +13,7 @@ const ETIQUETAS_CRITERIOS = {
   experiencia: 'Experiencia previa'
 };
 
+// Animales por llamada a Gemini, duración de la caché (1 h) y tamaño máximo
 const TAMANO_LOTE = 15;
 const CACHE_TTL_MS = 60 * 60 * 1000;
 const CACHE_MAX = 500;
@@ -98,6 +99,7 @@ function extraerArray(texto) {
 
 // También la usa scripts/evaluar-matchmaking.js.
 export async function puntuarLote(perfil, animales) {
+  // Temperatura baja para que la puntuación sea estable; margen de tokens según el número de animales
   const texto = await generarTexto(construirPrompt(perfil, animales), {
     temperature: 0.2,
     numPredict: 600 + 300 * animales.length,
@@ -156,6 +158,7 @@ export async function evaluarAnimales(perfil, animales) {
           if (!resultado) continue;
           const conMarca = conOrigen(resultado, 'llm');
           porId.set(animal.id, conMarca);
+          // Llena: se descarta la entrada más antigua
           if (cache.size >= CACHE_MAX) cache.delete(cache.keys().next().value);
           cache.set(claveCache(perfil, animal), { resultado: conMarca, expira: ahora + CACHE_TTL_MS });
         }
