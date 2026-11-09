@@ -4,9 +4,6 @@ import cors from 'cors';
 import { errorHandler } from '../../shared/errorHandler.js';
 import routes from './apadrinamiento.routes.js';
 
-/**
- * Servicio de apadrinamientos.
- */
 const app = express();
 const PORT = process.env.APADRINAMIENTOS_PORT || 3006;
 

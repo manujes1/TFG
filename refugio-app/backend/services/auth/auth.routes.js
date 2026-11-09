@@ -16,7 +16,6 @@ router.post('/login', login);
 router.get('/me', authenticate, me);
 router.put('/perfil', authenticate, updatePerfil);
 
-// Gestión de usuarios: solo administradores
 router.get('/usuarios', authenticate, authorize('ADMIN'), usuarios);
 router.patch('/usuarios/:id', authenticate, authorize('ADMIN'), actualizarUsuario);
 

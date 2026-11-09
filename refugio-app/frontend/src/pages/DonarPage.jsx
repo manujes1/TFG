@@ -4,7 +4,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createDonacion } from '../api/donaciones.js';
 import { formatEuros } from '../utils/format.js';
 
+// Importes rápidos; también se puede escribir otra cantidad
 const IMPORTES = [5, 10, 25, 50];
+// Solo se registra el método: no hay pasarela de pago
 const METODOS = ['Tarjeta', 'Bizum', 'Transferencia'];
 
 export default function DonarPage() {

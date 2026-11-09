@@ -1,10 +1,5 @@
-/**
- * Componentes de presentación del resultado de compatibilidad.
- */
 
-/**
- * Devuelve el color y la etiqueta según el tramo de puntuación.
- */
+// Etiqueta y colores según la puntuación
 function tramo(puntuacion) {
   if (puntuacion >= 80) {
     return { etiqueta: 'Muy compatible', barra: 'bg-refugio-600', texto: 'text-refugio-700', fondo: 'bg-refugio-50' };
@@ -18,9 +13,6 @@ function tramo(puntuacion) {
   return { etiqueta: 'Poca compatibilidad', barra: 'bg-red-500', texto: 'text-red-700', fondo: 'bg-red-50' };
 }
 
-/**
- * Indicador circular compacto de compatibilidad.
- */
 export function CompatibilidadBadge({ puntuacion }) {
   const t = tramo(puntuacion);
   return (
@@ -33,9 +25,6 @@ export function CompatibilidadBadge({ puntuacion }) {
   );
 }
 
-/**
- * Barra de progreso con la puntuación y su etiqueta.
- */
 export function CompatibilidadBarra({ puntuacion, origen }) {
   const t = tramo(puntuacion);
   return (
@@ -59,10 +48,6 @@ export function CompatibilidadBarra({ puntuacion, origen }) {
   );
 }
 
-/**
- * Desglose de los criterios que componen la puntuación.
- * Es lo que hace explicable la recomendación.
- */
 export function CriteriosDesglose({ criterios }) {
   if (!criterios || criterios.length === 0) return null;
 

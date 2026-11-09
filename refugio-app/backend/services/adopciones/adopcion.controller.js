@@ -11,9 +11,6 @@ import {
   listAdopcionesQuerySchema
 } from '../../shared/validation.js';
 
-/**
- * Lista todas las adopciones. Solo admin/voluntario.
- */
 export async function list(req, res, next) {
   try {
     const filters = listAdopcionesQuerySchema.parse(req.query);
@@ -24,14 +21,11 @@ export async function list(req, res, next) {
   }
 }
 
-/**
- * Devuelve el detalle de una adopción.
- * Regla: admin/voluntario pueden verla siempre; un adoptante solo la suya.
- */
 export async function getById(req, res, next) {
   try {
     const adopcion = await getAdopcionById(req.params.id);
 
+    // Un adoptante solo puede ver sus propias solicitudes
     const esPropia = adopcion.usuarioId === req.user.id;
     const esStaff = req.user.rol === 'ADMIN' || req.user.rol === 'VOLUNTARIO';
     if (!esPropia && !esStaff) {
@@ -44,10 +38,6 @@ export async function getById(req, res, next) {
   }
 }
 
-/**
- * El adoptante solicita adoptar un animal.
- * El usuario se obtiene del token, no del body (más seguro).
- */
 export async function create(req, res, next) {
   try {
     const data = createAdopcionSchema.parse(req.body);
@@ -58,9 +48,6 @@ export async function create(req, res, next) {
   }
 }
 
-/**
- * Cambia el estado de una adopción. Solo admin/voluntario.
- */
 export async function updateEstado(req, res, next) {
   try {
     const data = updateEstadoAdopcionSchema.parse(req.body);
@@ -71,10 +58,6 @@ export async function updateEstado(req, res, next) {
   }
 }
 
-/**
- * Devuelve las adopciones del usuario logueado.
- * Endpoint independiente para que el adoptante vea "mis solicitudes".
- */
 export async function misAdopciones(req, res, next) {
   try {
     const adopciones = await listAdopcionesUsuario(req.user.id);

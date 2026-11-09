@@ -1,11 +1,7 @@
 import { ZodError } from 'zod';
 
-/**
- * Middleware global de manejo de errores.
- * Debe registrarse al final de todos los demás middlewares y rutas.
- */
+// Se registra después de todas las rutas del servicio.
 export function errorHandler(err, req, res, next) {
-  // Errores de validación de Zod
   if (err instanceof ZodError) {
     return res.status(400).json({
       error: 'Datos no válidos',
@@ -16,7 +12,7 @@ export function errorHandler(err, req, res, next) {
     });
   }
 
-  // Errores de Prisma frecuentes
+  // Códigos de Prisma: P2002 duplicado, P2025 no existe, P2003 clave ajena
   if (err.code === 'P2002') {
     return res.status(409).json({ error: 'Ya existe un registro con esos datos' });
   }
@@ -27,17 +23,15 @@ export function errorHandler(err, req, res, next) {
     return res.status(409).json({ error: 'El recurso tiene datos relacionados' });
   }
 
-  // JSON mal formado o errores de subida de ficheros
+  // JSON mal formado o error de multer
   if (err.type === 'entity.parse.failed' || err.name === 'MulterError') {
     return res.status(400).json({ error: err.message });
   }
 
-  // Errores de negocio con statusCode personalizado
   if (err.statusCode) {
     return res.status(err.statusCode).json({ error: err.message });
   }
 
-  // Errores no controlados
   console.error('[ERROR NO CONTROLADO]', err);
   res.status(500).json({ error: 'Error interno del servidor' });
 }

@@ -1,17 +1,7 @@
-/**
- * Cliente del servicio de matchmaking.
- *
- * Los servicios de ia y recomendaciones no calculan la compatibilidad: se la
- * piden por HTTP al servicio de matchmaking, enviándole el perfil del
- * adoptante y los animales a evaluar.
- */
+// Cliente HTTP del servicio de matchmaking (lo usan ia, recomendaciones y adopciones).
 const MATCHMAKING_URL = process.env.MATCHMAKING_URL || 'http://localhost:3011';
 
-/**
- * Evalúa la compatibilidad del perfil con una lista de animales.
- * @returns {Promise<object[]>} Un resultado por animal, en el mismo orden,
- *   con el animal incluido (`{ animal, puntuacion, criterios, ... }`).
- */
+// Devuelve un resultado por animal, en el mismo orden y con el animal incluido.
 export async function evaluarAnimales(perfil, animales) {
   let respuesta;
   try {
@@ -36,9 +26,6 @@ export async function evaluarAnimales(perfil, animales) {
   return animales.map((animal, i) => ({ animal, ...resultados[i] }));
 }
 
-/**
- * Evalúa la compatibilidad del perfil con un único animal.
- */
 export async function evaluarAnimal(perfil, animal) {
   const [{ animal: _, ...resultado }] = await evaluarAnimales(perfil, [animal]);
   return resultado;

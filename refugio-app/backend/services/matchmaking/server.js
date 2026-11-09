@@ -4,9 +4,6 @@ import cors from 'cors';
 import { errorHandler } from '../../shared/errorHandler.js';
 import routes from './matchmaking.routes.js';
 
-/**
- * Servicio de matchmaking: cálculo de compatibilidad entre un perfil y unos animales.
- */
 const app = express();
 const PORT = process.env.MATCHMAKING_PORT || 3011;
 

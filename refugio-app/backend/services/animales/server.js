@@ -4,9 +4,7 @@ import cors from 'cors';
 import { errorHandler } from '../../shared/errorHandler.js';
 import routes from './animal.routes.js';
 
-/**
- * Servicio de animales: fichas de los animales.
- */
+// Servicio de animales: fichas de los animales.
 const app = express();
 const PORT = process.env.ANIMALES_PORT || 3002;
 

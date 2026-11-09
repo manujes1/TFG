@@ -1,10 +1,5 @@
 import api from './client.js';
 
-/**
- * Funciones de acceso a los endpoints de autenticación.
- * El AuthContext las consume; los componentes no llaman aquí directamente.
- */
-
 export async function loginRequest(email, password) {
   const res = await api.post('http://localhost:3001/api/auth/login', { email, password });
   return res.data;

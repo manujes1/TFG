@@ -1,8 +1,5 @@
-/**
- * Espejo de los enums definidos en el schema de Prisma.
- * Se mantienen sincronizados manualmente con el backend.
- */
 
+// Deben coincidir con los enums del esquema de Prisma
 export const ESPECIES = {
   PERRO: 'Perro',
   GATO: 'Gato',
@@ -22,9 +19,6 @@ export const ESTADOS_ANIMAL = {
   NO_DISPONIBLE: 'No disponible'
 };
 
-/**
- * Clases de Tailwind para el badge de cada estado.
- */
 export const ESTADO_ANIMAL_COLORES = {
   DISPONIBLE: 'bg-green-100 text-green-800',
   EN_ACOGIDA: 'bg-blue-100 text-blue-800',
@@ -51,33 +45,20 @@ export const ESTADO_ADOPCION_COLORES = {
   CANCELADA: 'bg-stone-100 text-stone-700'
 };
 
-/**
- * Nombre de cada rol en la interfaz. Internamente, el rol del personal del
- * refugio se sigue llamando VOLUNTARIO; en la app se muestra como "Trabajador".
- */
+// En la base de datos el rol del personal se llama VOLUNTARIO
 export const ROLES = {
   ADMIN: 'Administrador',
   VOLUNTARIO: 'Trabajador',
   ADOPTANTE: 'Adoptante'
 };
 
-/**
- * Servicio de fotos, que sirve las imágenes subidas (/uploads).
- */
 export const FOTOS_URL = 'http://localhost:3004';
 
-/**
- * Construye la URL completa de una foto a partir de la ruta relativa
- * que guarda el backend (/uploads/xxx.jpg).
- */
 export function fotoUrl(rutaRelativa) {
   if (!rutaRelativa) return null;
   return `${FOTOS_URL}${rutaRelativa}`;
 }
 
-/**
- * Tipos de expediente médico, con su etiqueta, icono y color.
- */
 export const TIPOS_EXPEDIENTE = {
   VACUNA: { etiqueta: 'Vacuna', icono: '💉', color: 'bg-blue-100 text-blue-800' },
   DESPARASITACION: { etiqueta: 'Desparasitación', icono: '🧴', color: 'bg-teal-100 text-teal-800' },

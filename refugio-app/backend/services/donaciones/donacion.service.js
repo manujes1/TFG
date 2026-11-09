@@ -1,9 +1,5 @@
 import prisma from '../../shared/prisma.js';
 
-/**
- * Lista donaciones con filtros y paginación.
- * Se usa desde el panel admin (los adoptantes solo ven las suyas).
- */
 export async function listDonaciones(filters) {
   const { usuarioId, desde, hasta, page, pageSize } = filters;
 
@@ -46,17 +42,11 @@ export async function listDonaciones(filters) {
   };
 }
 
-/**
- * Registra una donación.
- * Regla: si el llamante es adoptante, el usuarioId se toma del token (no puede
- * registrar donaciones a nombre de otro). Si es admin, se acepta usuarioId del body
- * (para registrar donaciones puntuales de terceros) o vacío (anónima).
- */
 export async function createDonacion({ callerId, callerRol }, data) {
+  // Un adoptante dona siempre a su nombre
   const donanteId =
     callerRol === 'ADMIN' ? data.usuarioId ?? null : callerId;
 
-  // Si se especifica un usuario, verificar que existe
   if (donanteId) {
     const user = await prisma.user.findUnique({ where: { id: donanteId } });
     if (!user) {
@@ -76,9 +66,6 @@ export async function createDonacion({ callerId, callerRol }, data) {
   });
 }
 
-/**
- * Devuelve las donaciones del usuario logueado.
- */
 export async function listDonacionesUsuario(usuarioId) {
   return prisma.donacion.findMany({
     where: { usuarioId },

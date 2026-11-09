@@ -3,17 +3,7 @@ import { generarTexto } from '../../shared/ia/index.js';
 import { ESPECIE_ETIQUETAS, SEXO_ETIQUETAS } from './etiquetas.js';
 import { evaluarAnimal } from '../../shared/matchmaking.js';
 
-/* ================================================================== */
-/* Generación de descripciones                                         */
-/* ================================================================== */
-
-/**
- * Construye el prompt para generar la descripción de un animal.
- *
- * Se incluyen únicamente los campos que existen realmente, y se dan
- * instrucciones explícitas de no inventar información, para minimizar
- * alucinaciones en un contenido que se publicará de cara al público.
- */
+// Solo se pasan al modelo los datos que existen, para que no invente
 function construirPromptDescripcion(animal) {
   const datos = [];
 
@@ -54,9 +44,6 @@ Instrucciones estrictas:
 Descripción:`;
 }
 
-/**
- * Genera una descripción para un animal y, opcionalmente, la guarda.
- */
 export async function generarDescripcionAnimal(animalId, { guardar = false } = {}) {
   const animal = await prisma.animal.findUnique({ where: { id: animalId } });
   if (!animal) {
@@ -85,17 +72,7 @@ export async function generarDescripcionAnimal(animalId, { guardar = false } = {
   return { descripcion, guardada: guardar };
 }
 
-/* ================================================================== */
-/* Explicación de compatibilidad                                       */
-/* ================================================================== */
-
-/**
- * Construye el prompt para explicar un resultado de compatibilidad.
- *
- * IMPORTANTE: el modelo NO calcula ni cuestiona la puntuación. Recibe el
- * resultado ya computado por el algoritmo determinista y su única tarea es
- * redactarlo en lenguaje natural. Esto mantiene la decisión fuera del LLM.
- */
+// El modelo solo redacta el resultado; la puntuación no la cambia
 function construirPromptExplicacion(animal, resultado, perfil) {
   const evaluacion = resultado.criterios
     .map((c) => `- ${c.etiqueta}: ${c.detalle}`)
@@ -132,16 +109,6 @@ Instrucciones estrictas:
 Explicación:`;
 }
 
-/**
- * Genera una explicación en lenguaje natural de la compatibilidad entre
- * un usuario y un animal.
- *
- * La evaluación la hace el servicio de matchmaking; el modelo solo redacta.
- *
- * @param {string} usuarioId
- * @param {string} animalId
- * @returns {Promise<{ puntuacion: number, criterios: object[], explicacion: string }>}
- */
 export async function explicarCompatibilidad(usuarioId, animalId) {
   const [usuario, animal] = await Promise.all([
     prisma.user.findUnique({ where: { id: usuarioId } }),
@@ -168,11 +135,10 @@ export async function explicarCompatibilidad(usuarioId, animalId) {
     throw error;
   }
 
-  // 1. Evaluación (algoritmo determinista, o Gemini si MATCHMAKING_MODE=llm)
   const resultado = await evaluarAnimal(perfil, animal);
 
+  // Si el animal está descartado no hace falta llamar al modelo
   if (resultado.descartado) {
-    // No llamamos al modelo: el motivo del descarte ya es claro por sí mismo
     return {
       puntuacion: 0,
       criterios: [],
@@ -183,7 +149,6 @@ export async function explicarCompatibilidad(usuarioId, animalId) {
     };
   }
 
-  // 2. Redacción con el modelo
   const prompt = construirPromptExplicacion(animal, resultado, perfil);
   const texto = await generarTexto(prompt, { temperature: 0.6, numPredict: 240 });
   const explicacion = limpiarSalida(texto);
@@ -204,14 +169,7 @@ export async function explicarCompatibilidad(usuarioId, animalId) {
   };
 }
 
-/* ================================================================== */
-/* Utilidades                                                          */
-/* ================================================================== */
-
-/**
- * Normaliza la salida del modelo: elimina prefijos residuales y comillas
- * envolventes que los modelos tienden a añadir pese a las instrucciones.
- */
+// Quita prefijos y comillas que a veces añade el modelo
 function limpiarSalida(texto) {
   let limpio = texto.trim();
 

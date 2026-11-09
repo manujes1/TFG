@@ -5,9 +5,6 @@ import {
 } from './recomendacion.service.js';
 import { recomendacionesQuerySchema, preferenciasTextoSchema } from '../../shared/validation.js';
 
-/**
- * Recomendaciones personalizadas para el usuario logueado.
- */
 export async function recomendaciones(req, res, next) {
   try {
     const opciones = recomendacionesQuerySchema.parse(req.query);
@@ -18,10 +15,6 @@ export async function recomendaciones(req, res, next) {
   }
 }
 
-/**
- * Interpreta una descripción libre de las preferencias del usuario,
- * la guarda como su perfil y devuelve las recomendaciones resultantes.
- */
 export async function recomendacionesDesdeTexto(req, res, next) {
   try {
     const { texto } = preferenciasTextoSchema.parse(req.body);
@@ -33,9 +26,6 @@ export async function recomendacionesDesdeTexto(req, res, next) {
   }
 }
 
-/**
- * Compatibilidad del usuario logueado con un animal concreto.
- */
 export async function compatibilidad(req, res, next) {
   try {
     const resultado = await compatibilidadConAnimal(req.user.id, req.params.animalId);
@@ -45,10 +35,6 @@ export async function compatibilidad(req, res, next) {
   }
 }
 
-/**
- * Compatibilidad de un usuario cualquiera con un animal (solo personal).
- * Se usa al revisar una solicitud de adopción.
- */
 export async function compatibilidadSolicitante(req, res, next) {
   try {
     const resultado = await compatibilidadConAnimal(req.params.usuarioId, req.params.animalId);

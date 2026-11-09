@@ -1,14 +1,8 @@
 import prisma from '../../shared/prisma.js';
 
-/**
- * Lista animales con filtros y paginación.
- * @param {object} filters - Filtros validados.
- * @returns {Promise<{ data: Animal[], pagination: object }>}
- */
 export async function listAnimales(filters) {
   const { especie, sexo, estado, search, page, pageSize } = filters;
 
-  // Construimos el where dinámicamente tomando los datos pasados por parametros
   const where = {};
   if (especie) where.especie = especie;
   if (sexo) where.sexo = sexo;
@@ -22,7 +16,6 @@ export async function listAnimales(filters) {
 
   const skip = (page - 1) * pageSize;
 
-  // Hacemos las dos queries en paralelo (datos + total)
   const [data, total] = await Promise.all([
     prisma.animal.findMany({
       where,
@@ -44,10 +37,7 @@ export async function listAnimales(filters) {
   };
 }
 
-/**
- * Obtiene un animal por ID. Los expedientes médicos solo se incluyen para el personal.
- * @param {string} id
- */
+// Los expedientes médicos solo se incluyen para el personal.
 export async function getAnimalById(id, rol) {
   const esStaff = rol === 'ADMIN' || rol === 'VOLUNTARIO';
   const animal = await prisma.animal.findUnique({
@@ -64,12 +54,8 @@ export async function getAnimalById(id, rol) {
   return animal;
 }
 
-/**
- * Crea un nuevo animal.
- * @param {object} data - Datos validados.
- */
 export async function createAnimal(data) {
-  // Si nos pasan chip, comprobar que no esté ya en uso
+  // El chip es único
   if (data.chip) {
     const existing = await prisma.animal.findUnique({ where: { chip: data.chip } });
     if (existing) {
@@ -82,13 +68,7 @@ export async function createAnimal(data) {
   return prisma.animal.create({ data });
 }
 
-/**
- * Actualiza un animal existente.
- * @param {string} id
- * @param {object} data - Datos validados (parciales).
- */
 export async function updateAnimal(id, data) {
-  // Verificar que existe
   const existing = await prisma.animal.findUnique({ where: { id } });
   if (!existing) {
     const error = new Error('Animal no encontrado');
@@ -96,7 +76,6 @@ export async function updateAnimal(id, data) {
     throw error;
   }
 
-  // Si se cambia el chip, comprobar unicidad
   if (data.chip && data.chip !== existing.chip) {
     const chipUsed = await prisma.animal.findUnique({ where: { chip: data.chip } });
     if (chipUsed) {
@@ -112,10 +91,6 @@ export async function updateAnimal(id, data) {
   });
 }
 
-/**
- * Elimina un animal.
- * @param {string} id
- */
 export async function deleteAnimal(id) {
   const existing = await prisma.animal.findUnique({ where: { id } });
   if (!existing) {

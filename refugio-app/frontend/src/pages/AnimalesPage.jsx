@@ -22,8 +22,9 @@ export default function AnimalesPage() {
   });
 
   function handleFiltroChange(e) {
+    // Al cambiar un filtro se vuelve a la primera página
     setFiltros({ ...filtros, [e.target.name]: e.target.value });
-    setPage(1); // al cambiar filtros volvemos a la primera página
+    setPage(1);
   }
 
   function limpiarFiltros() {

@@ -65,10 +65,7 @@ export default function MisSolicitudesPage() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* Adopciones                                                          */
-/* ------------------------------------------------------------------ */
-
+// Adopciones
 function PanelAdopciones({ query }) {
   if (query.isPending) return <Cargando />;
   if (query.isError) return <ErrorCarga mensaje={query.error.message} />;
@@ -134,10 +131,7 @@ function PanelAdopciones({ query }) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* Apadrinamientos                                                     */
-/* ------------------------------------------------------------------ */
-
+// Apadrinamientos
 const ESTADOS_APADRINAMIENTO = {
   ACTIVO: 'Activo',
   CANCELADO: 'Cancelado',
@@ -235,10 +229,7 @@ function PanelApadrinamientos({ query }) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* Donaciones                                                          */
-/* ------------------------------------------------------------------ */
-
+// Donaciones
 function PanelDonaciones({ query }) {
   if (query.isPending) return <Cargando />;
   if (query.isError) return <ErrorCarga mensaje={query.error.message} />;
@@ -279,10 +270,6 @@ function PanelDonaciones({ query }) {
     </div>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/* Componentes auxiliares                                              */
-/* ------------------------------------------------------------------ */
 
 function Cargando() {
   return <p className="text-center text-stone-500 py-8">Cargando…</p>;

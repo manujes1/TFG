@@ -4,9 +4,6 @@ import cors from 'cors';
 import { errorHandler } from '../../shared/errorHandler.js';
 import routes from './recomendacion.routes.js';
 
-/**
- * Servicio de recomendaciones: animales compatibles con el perfil del usuario.
- */
 const app = express();
 const PORT = process.env.RECOMENDACIONES_PORT || 3010;
 

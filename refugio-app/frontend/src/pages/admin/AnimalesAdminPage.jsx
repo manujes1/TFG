@@ -65,7 +65,6 @@ export default function AnimalesAdminPage() {
         </div>
       )}
 
-      {/* Filtros */}
       <div className="card p-4 flex flex-wrap gap-3">
         <input
           name="search"
@@ -216,6 +215,7 @@ export default function AnimalesAdminPage() {
         </div>
       )}
 
+      {/* Confirmación antes de borrar */}
       <ConfirmDialog
         abierto={aBorrar !== null}
         titulo={`Eliminar a ${aBorrar?.nombre}`}

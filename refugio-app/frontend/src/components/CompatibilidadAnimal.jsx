@@ -4,13 +4,6 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { fetchCompatibilidad, explicarMatch } from '../api/recomendaciones.js';
 import { CompatibilidadBarra, CriteriosDesglose } from './Compatibilidad.jsx';
 
-/**
- * Bloque de compatibilidad personalizada dentro de la ficha del animal.
- *
- * La puntuación la calcula el backend (reglas, o IA si está activada).
- * La explicación en lenguaje natural se genera bajo demanda, porque
- * requiere inferencia del modelo local y puede tardar varios segundos.
- */
 export default function CompatibilidadAnimal({ animalId, nombreAnimal }) {
   const [explicacion, setExplicacion] = useState(null);
 
@@ -19,6 +12,7 @@ export default function CompatibilidadAnimal({ animalId, nombreAnimal }) {
     queryFn: () => fetchCompatibilidad(animalId)
   });
 
+  // La explicación se pide al pulsar el botón, porque tarda unos segundos
   const explicarMutation = useMutation({
     mutationFn: () => explicarMatch(animalId),
     onSuccess: (res) => setExplicacion(res.explicacion),
@@ -32,7 +26,7 @@ export default function CompatibilidadAnimal({ animalId, nombreAnimal }) {
 
   if (isPending || isError) return null;
 
-  // Sin perfil: invitamos a completarlo
+  // Sin perfil, se invita a completarlo
   if (!data.perfilCompleto) {
     return (
       <section className="bg-refugio-50 border border-refugio-200 rounded-xl p-5">
@@ -49,7 +43,7 @@ export default function CompatibilidadAnimal({ animalId, nombreAnimal }) {
     );
   }
 
-  // Descartado por filtro duro
+  // Descartado por las reglas
   if (data.descartado) {
     return (
       <section className="bg-amber-50 border border-amber-200 rounded-xl p-5">

@@ -1,7 +1,6 @@
 const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta';
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
-// Mínimo de tokens de salida: si el modelo razona, esos tokens pueden contar
-// dentro del límite y cortar la respuesta con presupuestos muy ajustados.
+// Con razonamiento activado, esos tokens cuentan en el límite y cortaban la respuesta.
 const MIN_TOKENS_SALIDA = 1024;
 const GEMINI_TIMEOUT_MS = Number(process.env.IA_TIMEOUT_MS) || 30000;
 
@@ -13,18 +12,7 @@ function errorIA(mensaje, statusCode) {
   return error;
 }
 
-/**
- * Genera texto con la API de Gemini (REST, sin SDK).
- * Misma interfaz que el proveedor de Ollama.
- *
- * @param {string} prompt
- * @param {object} [opciones]
- * @param {number} [opciones.temperature=0.7]
- * @param {number} [opciones.numPredict=200] - Se traduce a maxOutputTokens (con un mínimo).
- * @param {boolean} [opciones.json=false] - Fuerza salida application/json.
- * @returns {Promise<string>}
- * @throws Error con statusCode 502 (respuesta vacía/bloqueada), 503 (no disponible o cuota) o 504 (timeout).
- */
+// Misma interfaz que ollama.provider.js. Llamada REST, sin SDK.
 export async function generarTexto(prompt, opciones = {}) {
   const { temperature = 0.7, numPredict = 200, json = false } = opciones;
 
@@ -47,7 +35,6 @@ export async function generarTexto(prompt, opciones = {}) {
           generationConfig: {
             temperature,
             maxOutputTokens: Math.max(numPredict, MIN_TOKENS_SALIDA),
-            // Opcional: nivel de razonamiento (los valores válidos dependen del modelo)
             ...(process.env.GEMINI_THINKING_LEVEL && {
               thinkingConfig: { thinkingLevel: process.env.GEMINI_THINKING_LEVEL }
             }),
@@ -59,7 +46,7 @@ export async function generarTexto(prompt, opciones = {}) {
     );
 
     if (!respuesta.ok) {
-      // Se registra el detalle de Google en el servidor; al cliente solo le llega un mensaje genérico
+      // El detalle de Google solo se registra en el servidor
       const detalle = await respuesta.text().catch(() => '');
       console.error(`[IA] Gemini respondió ${respuesta.status}: ${detalle.slice(0, 500)}`);
       if (respuesta.status === 429) {
@@ -71,7 +58,7 @@ export async function generarTexto(prompt, opciones = {}) {
     const datos = await respuesta.json();
     const partes = datos.candidates?.[0]?.content?.parts;
     if (!partes?.length) {
-      // Respuesta bloqueada por filtros de seguridad o sin contenido
+      // Bloqueada por los filtros de seguridad o vacía
       throw errorIA('El servicio de IA no devolvió contenido', 502);
     }
     return partes.map((p) => p.text ?? '').join('').trim();
@@ -89,10 +76,7 @@ export async function generarTexto(prompt, opciones = {}) {
   }
 }
 
-/**
- * Comprueba la configuración sin consumir cuota de generación:
- * solo valida que la API key permite consultar el modelo.
- */
+// Para /health: consulta el modelo, que no gasta cuota.
 export async function comprobar() {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {

@@ -4,14 +4,6 @@ import { fetchCompatibilidadSolicitante } from '../api/recomendaciones.js';
 import { CompatibilidadBarra, CriteriosDesglose } from './Compatibilidad.jsx';
 import { formatFecha } from '../utils/format.js';
 
-/**
- * Compatibilidad entre quien solicita una adopción y el animal, para el
- * personal que revisa la solicitud.
- *
- * Se muestra la foto guardada al enviar la solicitud, que es lo mismo que vio
- * la persona. Las solicitudes anteriores a ese cambio no la tienen: para
- * ellas se calcula con los datos actuales y se indica así.
- */
 export default function CompatibilidadSolicitud({ adopcion }) {
   const foto = adopcion.compatibilidad;
 
@@ -21,6 +13,7 @@ export default function CompatibilidadSolicitud({ adopcion }) {
     enabled: !foto
   });
 
+  // Si la solicitud guardó la compatibilidad se muestra esa; si no, se calcula ahora
   if (foto) {
     return (
       <ResultadoCompatibilidad
@@ -65,7 +58,7 @@ function ResultadoCompatibilidad({ resultado, nota }) {
     );
   }
 
-  // Descartado por un filtro duro
+  // Descartado por las reglas
   if (resultado.descartado) {
     return (
       <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">

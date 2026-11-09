@@ -1,8 +1,3 @@
-/**
- * Etiqueta de color para representar un estado.
- * Genérico: sirve para estados de animal y de adopción pasándole
- * el diccionario de etiquetas y el de colores.
- */
 export default function EstadoBadge({ estado, etiquetas, colores }) {
   const texto = etiquetas[estado] ?? estado;
   const color = colores[estado] ?? 'bg-stone-100 text-stone-700';

@@ -1,7 +1,3 @@
-/**
- * Diálogo modal de confirmación para acciones destructivas.
- * Se renderiza solo cuando `abierto` es true.
- */
 export default function ConfirmDialog({
   abierto,
   titulo,

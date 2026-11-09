@@ -1,12 +1,4 @@
-/**
- * Helpers de formato para presentación.
- */
 
-/**
- * Formatea una fecha ISO a formato español legible.
- * @param {string|Date|null} fecha
- * @param {boolean} conHora
- */
 export function formatFecha(fecha, conHora = false) {
   if (!fecha) return '—';
   const d = new Date(fecha);
@@ -20,11 +12,7 @@ export function formatFecha(fecha, conHora = false) {
   return d.toLocaleDateString('es-ES', opciones);
 }
 
-/**
- * Formatea un importe como euros.
- * El backend devuelve Decimal serializado como string, así que aceptamos ambos.
- * @param {string|number|null} cantidad
- */
+// Prisma devuelve los Decimal como string
 export function formatEuros(cantidad) {
   if (cantidad == null) return '—';
   const num = typeof cantidad === 'string' ? parseFloat(cantidad) : cantidad;
@@ -35,9 +23,6 @@ export function formatEuros(cantidad) {
   }).format(num);
 }
 
-/**
- * Formatea el peso en kilos.
- */
 export function formatPeso(peso) {
   if (peso == null) return null;
   const num = typeof peso === 'string' ? parseFloat(peso) : peso;

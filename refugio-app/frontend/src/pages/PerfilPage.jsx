@@ -25,7 +25,6 @@ export default function PerfilPage() {
   const [error, setError] = useState(null);
   const [guardado, setGuardado] = useState(false);
 
-  // Precargamos el perfil existente si lo hay
   useEffect(() => {
     const p = user?.preferencias;
     if (!p || Object.keys(p).length === 0) return;
@@ -268,10 +267,6 @@ export default function PerfilPage() {
         </div>
       </form>
 
-      {/* <p className="text-xs text-stone-400 text-center">
-        Estos datos se usan únicamente para calcular la compatibilidad y no se
-        comparten con terceros.
-      </p> */}
     </div>
   );
 }

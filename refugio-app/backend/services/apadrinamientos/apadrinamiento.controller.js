@@ -10,9 +10,6 @@ import {
   listApadrinamientosQuerySchema
 } from '../../shared/validation.js';
 
-/**
- * Lista todos los apadrinamientos. Solo admin/voluntario.
- */
 export async function list(req, res, next) {
   try {
     const filters = listApadrinamientosQuerySchema.parse(req.query);
@@ -23,13 +20,11 @@ export async function list(req, res, next) {
   }
 }
 
-/**
- * Detalle: el propio padrino o staff.
- */
 export async function getById(req, res, next) {
   try {
     const apadrinamiento = await getApadrinamientoById(req.params.id);
 
+    // Lo pueden ver el padrino y el personal
     const esPropio = apadrinamiento.usuarioId === req.user.id;
     const esStaff = req.user.rol === 'ADMIN' || req.user.rol === 'VOLUNTARIO';
     if (!esPropio && !esStaff) {
@@ -42,10 +37,6 @@ export async function getById(req, res, next) {
   }
 }
 
-/**
- * Crear apadrinamiento. Cualquier usuario autenticado.
- * El usuario se obtiene del token, no del body.
- */
 export async function create(req, res, next) {
   try {
     const data = createApadrinamientoSchema.parse(req.body);
@@ -56,15 +47,13 @@ export async function create(req, res, next) {
   }
 }
 
-/**
- * Cancelar: el propio padrino o un admin.
- */
 export async function cancel(req, res, next) {
   try {
     const existente = await getApadrinamientoById(req.params.id);
 
     const esPropio = existente.usuarioId === req.user.id;
     const esAdmin = req.user.rol === 'ADMIN';
+    // Solo lo puede cancelar el padrino o un administrador
     if (!esPropio && !esAdmin) {
       return res.status(403).json({ error: 'No puedes cancelar este apadrinamiento' });
     }
@@ -76,9 +65,6 @@ export async function cancel(req, res, next) {
   }
 }
 
-/**
- * Apadrinamientos del usuario logueado.
- */
 export async function misApadrinamientos(req, res, next) {
   try {
     const apadrinamientos = await listApadrinamientosUsuario(req.user.id);

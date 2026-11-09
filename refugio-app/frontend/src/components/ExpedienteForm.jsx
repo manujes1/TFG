@@ -1,15 +1,6 @@
 import { useState, useEffect } from 'react';
 import { TIPOS_EXPEDIENTE } from '../utils/constants.js';
 
-/**
- * Formulario de alta y edición de expedientes médicos.
- * Se usa en modo inline dentro de la página de gestión.
- *
- * @param {object|null} expediente - Si viene, el formulario edita; si no, crea.
- * @param {(data: object) => void} onGuardar
- * @param {() => void} onCancelar
- * @param {boolean} cargando
- */
 export default function ExpedienteForm({ expediente, onGuardar, onCancelar, cargando }) {
   const esEdicion = Boolean(expediente);
 
@@ -44,7 +35,7 @@ export default function ExpedienteForm({ expediente, onGuardar, onCancelar, carg
       descripcion: form.descripcion.trim(),
       fecha: form.fecha
     };
-    // En edición enviamos null para poder vaciar un campo; al crear se omite
+    // En edición se envía null para poder vaciar un campo; al crear se omite
     const vacio = esEdicion ? null : undefined;
     payload.veterinario = form.veterinario.trim() || vacio;
     payload.proximaRevision = form.proximaRevision || vacio;
@@ -147,8 +138,6 @@ export default function ExpedienteForm({ expediente, onGuardar, onCancelar, carg
     </form>
   );
 }
-
-/* Utilidades de fecha para los inputs type="date" (formato YYYY-MM-DD) */
 
 function hoy() {
   return new Date().toISOString().slice(0, 10);

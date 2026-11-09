@@ -26,7 +26,7 @@ export default function RegisterPage() {
     setSubmitting(true);
 
     try {
-      // Quitamos campos opcionales vacíos para no enviarlos como ""
+      // Los campos opcionales vacíos no se envían
       const payload = Object.fromEntries(
         Object.entries(form).filter(([, v]) => v !== '')
       );

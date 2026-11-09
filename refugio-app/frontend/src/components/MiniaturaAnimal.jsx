@@ -1,8 +1,5 @@
 import { fotoUrl } from '../utils/constants.js';
 
-/**
- * Foto pequeña y cuadrada de un animal (o un emoji si no tiene foto).
- */
 export default function MiniaturaAnimal({ animal }) {
   const foto = animal?.fotos?.[0] ? fotoUrl(animal.fotos[0]) : null;
   const emoji = animal?.especie === 'GATO' ? '🐱' : animal?.especie === 'PERRO' ? '🐶' : '🐾';

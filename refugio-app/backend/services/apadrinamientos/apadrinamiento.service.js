@@ -1,8 +1,5 @@
 import prisma from '../../shared/prisma.js';
 
-/**
- * Lista apadrinamientos con filtros y paginación.
- */
 export async function listApadrinamientos(filters) {
   const { estado, animalId, usuarioId, page, pageSize } = filters;
 
@@ -38,9 +35,6 @@ export async function listApadrinamientos(filters) {
   };
 }
 
-/**
- * Obtiene un apadrinamiento por ID.
- */
 export async function getApadrinamientoById(id) {
   const apadrinamiento = await prisma.apadrinamiento.findUnique({
     where: { id },
@@ -61,14 +55,6 @@ export async function getApadrinamientoById(id) {
   return apadrinamiento;
 }
 
-/**
- * Crea un apadrinamiento.
- * Reglas:
- *  - El animal debe existir.
- *  - El usuario no puede tener otro apadrinamiento ACTIVO del mismo animal.
- *  - Un apadrinamiento PUNTUAL se marca como FINALIZADO inmediatamente
- *    (representa un pago único ya efectuado).
- */
 export async function createApadrinamiento(usuarioId, data) {
   const { animalId, tipo, cantidad } = data;
 
@@ -79,6 +65,7 @@ export async function createApadrinamiento(usuarioId, data) {
     throw error;
   }
 
+  // No puede tener dos apadrinamientos mensuales activos del mismo animal
   if (tipo === 'MENSUAL') {
     const activo = await prisma.apadrinamiento.findFirst({
       where: { animalId, usuarioId, estado: 'ACTIVO', tipo: 'MENSUAL' }
@@ -90,7 +77,7 @@ export async function createApadrinamiento(usuarioId, data) {
     }
   }
 
-  // Un puntual "nace" ya finalizado, un mensual queda ACTIVO.
+  // Un apadrinamiento puntual es un pago único, así que se crea ya finalizado.
   const estado = tipo === 'PUNTUAL' ? 'FINALIZADO' : 'ACTIVO';
   const fechaFin = tipo === 'PUNTUAL' ? new Date() : null;
 
@@ -99,10 +86,6 @@ export async function createApadrinamiento(usuarioId, data) {
   });
 }
 
-/**
- * Cancela un apadrinamiento mensual activo.
- * Solo el propio padrino o un admin pueden cancelarlo (el control se hace en el controller).
- */
 export async function cancelarApadrinamiento(id) {
   const apadrinamiento = await prisma.apadrinamiento.findUnique({ where: { id } });
   if (!apadrinamiento) {
@@ -122,9 +105,6 @@ export async function cancelarApadrinamiento(id) {
   });
 }
 
-/**
- * Devuelve los apadrinamientos del usuario logueado.
- */
 export async function listApadrinamientosUsuario(usuarioId) {
   return prisma.apadrinamiento.findMany({
     where: { usuarioId },

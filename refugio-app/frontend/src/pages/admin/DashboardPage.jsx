@@ -77,7 +77,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Métricas principales */}
+      {/* Métricas */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <MetricaCard
           titulo="Animales en el refugio"
@@ -105,7 +105,6 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* Métricas económicas */}
       <div className="grid gap-4 sm:grid-cols-3">
         <MetricaCard
           titulo="Ingreso recurrente"

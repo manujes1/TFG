@@ -2,24 +2,12 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { generarDescripcionIA } from '../api/recomendaciones.js';
 
-/**
- * Genera una descripción con el modelo local y la propone al trabajador.
- *
- * DISEÑO: el texto nunca se publica automáticamente. Se muestra como
- * propuesta y es la persona quien decide aceptarla, editarla o descartarla.
- * Esta supervisión humana es deliberada: el contenido generado se publica
- * de cara al público y una alucinación del modelo sería visible para
- * cualquier visitante.
- *
- * @param {string} animalId
- * @param {(texto: string) => void} onAceptar - Vuelca el texto en el formulario.
- */
 export default function GenerarDescripcionIA({ animalId, onAceptar }) {
   const [propuesta, setPropuesta] = useState(null);
   const [error, setError] = useState(null);
 
   const mutation = useMutation({
-    // guardar=false: solo queremos la propuesta, no persistirla todavía
+    // Solo propuesta: no se guarda hasta que el trabajador la acepta
     mutationFn: () => generarDescripcionIA(animalId, false),
     onSuccess: (res) => {
       setError(null);

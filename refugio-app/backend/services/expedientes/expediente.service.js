@@ -1,8 +1,5 @@
 import prisma from '../../shared/prisma.js';
 
-/**
- * Lanza un error 404 si el animal no existe.
- */
 async function ensureAnimalExists(animalId) {
   const animal = await prisma.animal.findUnique({ where: { id: animalId } });
   if (!animal) {
@@ -13,10 +10,6 @@ async function ensureAnimalExists(animalId) {
   return animal;
 }
 
-/**
- * Lista los expedientes de un animal, del más reciente al más antiguo.
- * @param {string} animalId
- */
 export async function listExpedientes(animalId) {
   await ensureAnimalExists(animalId);
 
@@ -26,11 +19,7 @@ export async function listExpedientes(animalId) {
   });
 }
 
-/**
- * Devuelve un expediente concreto, verificando que pertenece al animal indicado.
- * @param {string} animalId
- * @param {string} expedienteId
- */
+// Comprueba además que el expediente pertenece a ese animal.
 export async function getExpedienteById(animalId, expedienteId) {
   const expediente = await prisma.expedienteMedico.findUnique({
     where: { id: expedienteId }
@@ -45,11 +34,6 @@ export async function getExpedienteById(animalId, expedienteId) {
   return expediente;
 }
 
-/**
- * Crea un nuevo expediente asociado a un animal.
- * @param {string} animalId
- * @param {object} data - Datos validados.
- */
 export async function createExpediente(animalId, data) {
   await ensureAnimalExists(animalId);
 
@@ -62,9 +46,6 @@ export async function createExpediente(animalId, data) {
   });
 }
 
-/**
- * Actualiza un expediente existente.
- */
 export async function updateExpediente(animalId, expedienteId, data) {
   await getExpedienteById(animalId, expedienteId); // valida existencia y pertenencia
 
@@ -74,9 +55,6 @@ export async function updateExpediente(animalId, expedienteId, data) {
   });
 }
 
-/**
- * Elimina un expediente.
- */
 export async function deleteExpediente(animalId, expedienteId) {
   await getExpedienteById(animalId, expedienteId);
 

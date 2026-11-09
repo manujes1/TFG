@@ -4,9 +4,7 @@ import cors from 'cors';
 import { errorHandler } from '../../shared/errorHandler.js';
 import routes from './expediente.routes.js';
 
-/**
- * Servicio de expedientes médicos de los animales.
- */
+// Servicio de expedientes médicos de los animales.
 const app = express();
 const PORT = process.env.EXPEDIENTES_PORT || 3003;
 

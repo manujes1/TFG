@@ -4,9 +4,7 @@ import cors from 'cors';
 import { errorHandler } from '../../shared/errorHandler.js';
 import routes from './auth.routes.js';
 
-/**
- * Servicio de usuarios: registro, login, sesión y perfil de adopción.
- */
+// Servicio de usuarios: registro, login, sesión y perfil de adopción.
 const app = express();
 const PORT = process.env.AUTH_PORT || 3001;
 

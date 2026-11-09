@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // Si veníamos de una ruta protegida, volvemos allí tras el login
+  // Vuelve a la página protegida de la que venía
   const from = location.state?.from?.pathname || '/';
 
   async function handleSubmit(e) {

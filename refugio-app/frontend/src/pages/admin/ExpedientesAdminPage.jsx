@@ -107,6 +107,7 @@ export default function ExpedientesAdminPage() {
   }
 
   const lista = expedientes.data ?? [];
+  // Revisiones pendientes, de la más cercana a la más lejana
   const proximas = lista
     .filter((e) => e.proximaRevision && new Date(e.proximaRevision) >= new Date())
     .sort((a, b) => new Date(a.proximaRevision) - new Date(b.proximaRevision));
@@ -142,7 +143,7 @@ export default function ExpedientesAdminPage() {
         </div>
       )}
 
-      {/* Aviso de próximas revisiones */}
+      {/* Aviso de la próxima revisión */}
       {proximas.length > 0 && (
         <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 shadow-soft">
           <p className="text-sm text-amber-800">

@@ -1,9 +1,5 @@
 import { addFotoAnimal, removeFotoAnimal } from './foto.service.js';
 
-/**
- * Sube una foto al animal indicado.
- * Multer coloca el archivo en req.file.
- */
 export async function subir(req, res, next) {
   try {
     if (!req.file) {
@@ -17,11 +13,7 @@ export async function subir(req, res, next) {
   }
 }
 
-/**
- * Elimina una foto concreta.
- * La URL viene en el body porque no queremos codificarla en la ruta
- * (contiene barras que se escaparían mal).
- */
+// La URL va en el cuerpo porque contiene barras y no cabe bien en la ruta.
 export async function eliminar(req, res, next) {
   try {
     const { url } = req.body;

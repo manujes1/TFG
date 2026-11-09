@@ -4,9 +4,6 @@ import cors from 'cors';
 import { errorHandler } from '../../shared/errorHandler.js';
 import routes from './donacion.routes.js';
 
-/**
- * Servicio de donaciones.
- */
 const app = express();
 const PORT = process.env.DONACIONES_PORT || 3007;
 

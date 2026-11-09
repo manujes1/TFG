@@ -1,10 +1,3 @@
-/**
- * Navegación por pestañas controlada.
- *
- * @param {{ id: string, label: string, count?: number }[]} tabs
- * @param {string} activa - id de la pestaña activa
- * @param {(id: string) => void} onChange
- */
 export default function Tabs({ tabs, activa, onChange }) {
   return (
     <div className="border-b border-stone-200 px-2">

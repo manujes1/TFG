@@ -2,9 +2,6 @@ import prisma from '../../shared/prisma.js';
 import { hashPassword, verifyPassword } from './password.js';
 import { signToken } from '../../shared/jwt.js';
 
-/**
- * Registra un nuevo usuario en el sistema.
- */
 export async function registerUser(data) {
   const { email, password, nombre, apellidos, telefono } = data;
 
@@ -26,13 +23,10 @@ export async function registerUser(data) {
   return { user: userSafe, token };
 }
 
-/**
- * Autentica a un usuario por email y contraseña.
- */
 export async function loginUser({ email, password }) {
   const user = await prisma.user.findUnique({ where: { email } });
 
-  // Mensaje genérico: no revelamos si el email existe (evita enumeración)
+  // Mismo mensaje en ambos casos para no revelar qué emails existen
   if (!user || !user.activo) {
     const error = new Error('Credenciales inválidas');
     error.statusCode = 401;
@@ -52,9 +46,6 @@ export async function loginUser({ email, password }) {
   return { user: userSafe, token };
 }
 
-/**
- * Devuelve los datos del usuario a partir de su id.
- */
 export async function getUserById(id) {
   const user = await prisma.user.findUnique({ where: { id } });
 
@@ -68,7 +59,6 @@ export async function getUserById(id) {
   return userSafe;
 }
 
-// Datos de un usuario que puede ver el administrador (nunca la contraseña)
 const CAMPOS_USUARIO = {
   id: true,
   email: true,
@@ -80,10 +70,7 @@ const CAMPOS_USUARIO = {
   createdAt: true
 };
 
-/**
- * Lista los usuarios, con filtro por rol, búsqueda por nombre o email y
- * paginación. Solo para administradores.
- */
+// Búsqueda por nombre, apellidos o email
 export async function listUsuarios({ rol, search, page, pageSize }) {
   const where = {};
   if (rol) where.rol = rol;
@@ -112,14 +99,7 @@ export async function listUsuarios({ rol, search, page, pageSize }) {
   };
 }
 
-/**
- * Cambia el rol de un usuario o activa/desactiva su cuenta.
- *
- * Un administrador no puede quitarse a sí mismo el rol ni desactivar su
- * propia cuenta: así el sistema nunca se queda sin nadie que lo administre.
- * Una cuenta desactivada deja de poder usar la aplicación en su siguiente
- * petición, porque cada servicio comprueba que la cuenta sigue activa.
- */
+// Un administrador no puede quitarse el rol ni desactivarse, para que siempre quede alguno.
 export async function updateUsuario(adminId, usuarioId, { rol, activo }) {
   if (adminId === usuarioId && ((rol && rol !== 'ADMIN') || activo === false)) {
     const error = new Error('No puedes quitarte tu propio rol de administrador ni desactivar tu cuenta');
@@ -141,13 +121,6 @@ export async function updateUsuario(adminId, usuarioId, { rol, activo }) {
   });
 }
 
-/**
- * Actualiza el perfil de preferencias del adoptante.
- * Estas preferencias alimentan el algoritmo de compatibilidad.
- *
- * @param {string} id - ID del usuario (del token).
- * @param {object} preferencias - Datos validados.
- */
 export async function updatePreferencias(id, preferencias) {
   const user = await prisma.user.update({
     where: { id },

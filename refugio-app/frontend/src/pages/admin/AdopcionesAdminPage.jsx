@@ -37,7 +37,7 @@ export default function AdopcionesAdminPage() {
         tipo: 'ok',
         texto: `Solicitud actualizada a "${ESTADOS_ADOPCION[adopcion.estado]}".`
       });
-      // La adopción cambia; el animal puede cambiar de estado; las métricas también
+      // Al cambiar el estado pueden cambiar el animal y las estadísticas
       queryClient.invalidateQueries({ queryKey: ['adopciones'] });
       queryClient.invalidateQueries({ queryKey: ['animales'] });
       queryClient.invalidateQueries({ queryKey: ['estadisticas'] });
@@ -159,7 +159,7 @@ export default function AdopcionesAdminPage() {
                     </div>
                   )}
 
-                  {/* Aviso cuando el animal no está disponible */}
+                  {/* Aviso si el animal ya no está disponible */}
                   {adopcion.animal.estado !== 'DISPONIBLE' &&
                     !['COMPLETADA', 'RECHAZADA', 'CANCELADA'].includes(adopcion.estado) && (
                       <div className="bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg px-3 py-2 mb-3">

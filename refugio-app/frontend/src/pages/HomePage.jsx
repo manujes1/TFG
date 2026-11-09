@@ -5,8 +5,6 @@ import ResumenUsuario from '../components/ResumenUsuario.jsx';
 export default function HomePage() {
   const { user } = useAuth();
 
-  // Un adoptante con sesión ve su resumen; los visitantes, la bienvenida.
-  // (El personal del refugio no llega aquí: InicioRedirect lo lleva al panel.)
   if (user) return <ResumenUsuario />;
 
   return (

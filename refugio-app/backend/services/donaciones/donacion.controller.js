@@ -8,9 +8,6 @@ import {
   listDonacionesQuerySchema
 } from '../../shared/validation.js';
 
-/**
- * Listado global de donaciones. Solo admin.
- */
 export async function list(req, res, next) {
   try {
     const filters = listDonacionesQuerySchema.parse(req.query);
@@ -21,10 +18,6 @@ export async function list(req, res, next) {
   }
 }
 
-/**
- * Registrar una donación. Cualquier usuario autenticado.
- * (El caso "donación anónima sin login" quedará como trabajo futuro con Stripe).
- */
 export async function create(req, res, next) {
   try {
     const data = createDonacionSchema.parse(req.body);
@@ -38,9 +31,6 @@ export async function create(req, res, next) {
   }
 }
 
-/**
- * Donaciones del usuario logueado.
- */
 export async function misDonaciones(req, res, next) {
   try {
     const donaciones = await listDonacionesUsuario(req.user.id);

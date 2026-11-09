@@ -7,7 +7,6 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Paleta corporativa del refugio: terracota cálido (hogar, cercanía)
         refugio: {
           50: '#fef5ed',
           100: '#fde7d3',
@@ -20,8 +19,7 @@ export default {
           800: '#7d3415',
           900: '#672d14'
         },
-        // Acento secundario frío: reservado para lo generado por IA
-        // y avisos que requieren atención (contraste intencionado con el terracota).
+        // Acento para las funciones de IA
         teal: {
           50: '#eefcfa',
           100: '#d2f5f0',
@@ -34,8 +32,6 @@ export default {
           800: '#1a4c48',
           900: '#193f3c'
         },
-        // Lienzo cálido para el fondo general: evita el blanco plano y
-        // hace que las tarjetas blancas destaquen por contraste real.
         sand: {
           50: '#fbf8f2',
           100: '#f5eee0',

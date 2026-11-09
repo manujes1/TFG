@@ -1,18 +1,7 @@
 import axios from 'axios';
 
-/**
- * Cliente axios centralizado para hablar con el backend.
- *
- * Todas las peticiones a la API pasan por aquí, lo que nos permite:
- *  - Inyectar automáticamente el token JWT si el usuario está autenticado.
- *  - Manejar globalmente errores comunes (401 → forzar logout, etc.).
- */
-// No hay una única URL base: el backend está dividido en microservicios y
-// cada llamada indica la dirección completa del servicio que la atiende
-// (ver los archivos de src/api/).
 const api = axios.create();
 
-// Interceptor de petición: añade el token si existe en localStorage
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -21,8 +10,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Interceptor de respuesta: si el backend responde 401 (token expirado o inválido),
-// limpiamos la sesión local. El AuthContext detectará el cambio y redirigirá al login.
+// Con un 401 se borra la sesión y AuthContext pasa a modo visitante.
 api.interceptors.response.use(
   (response) => response,
   (error) => {

@@ -152,7 +152,7 @@ export default function AnimalDetallePage() {
           )}
         </div>
 
-        {/* Datos principales */}
+        {/* Datos */}
         <div className="space-y-4">
           <div className="flex items-start justify-between gap-3">
             <h1 className="text-3xl font-extrabold text-stone-900 tracking-tight">{animal.nombre}</h1>
@@ -231,7 +231,6 @@ export default function AnimalDetallePage() {
             </div>
           )}
 
-          {/* Feedback de acciones */}
           {feedback && (
             <div
               className={`text-sm rounded-lg px-3 py-2 border ${
@@ -244,7 +243,7 @@ export default function AnimalDetallePage() {
             </div>
           )}
 
-          {/* Acciones (no para el personal del refugio) */}
+          {/* Acciones */}
           {!isStaff && (
             <div className="flex flex-wrap gap-3 pt-2">
               {puedeAdoptar && !mostrarFormAdopcion && (
@@ -260,7 +259,6 @@ export default function AnimalDetallePage() {
             </div>
           )}
 
-          {/* Formulario de adopción */}
           {mostrarFormAdopcion && (
             <div className="card p-4 space-y-3 animate-popIn">
               <h3 className="font-semibold text-stone-800">Solicitar la adopción de {animal.nombre}</h3>
@@ -291,7 +289,6 @@ export default function AnimalDetallePage() {
             </div>
           )}
 
-          {/* Formulario de apadrinamiento */}
           {mostrarFormApadrinar && (
             <div className="card p-4 space-y-3 animate-popIn">
               <h3 className="font-semibold text-stone-800">Apadrinar a {animal.nombre}</h3>
@@ -335,12 +332,12 @@ export default function AnimalDetallePage() {
         </div>
       </div>
 
-      {/* Compatibilidad personalizada: solo para adoptantes logueados */}
+      {/* Compatibilidad */}
       {user && !isStaff && (
         <CompatibilidadAnimal animalId={animal.id} nombreAnimal={animal.nombre} />
       )}
 
-      {/* Historial médico: solo staff */}
+      {/* Historial médico */}
       {isStaff && (
         <section className="card p-6">
           <div className="flex items-center justify-between gap-3 mb-3 pb-3 border-b border-stone-100">
@@ -359,9 +356,6 @@ export default function AnimalDetallePage() {
   );
 }
 
-/**
- * Traduce una clave/valor de características a una etiqueta legible.
- */
 function etiquetaCaracteristica(clave, valor) {
   const etiquetas = {
     energia: 'Energía',

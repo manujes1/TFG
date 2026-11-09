@@ -7,11 +7,6 @@ const ESTILOS = {
   neutro: 'btn-ghost border border-stone-300'
 };
 
-/**
- * Botonera de transiciones válidas para una adopción.
- * Cuando la acción requiere motivo (rechazo), muestra un campo de texto
- * antes de confirmar.
- */
 export default function AccionesAdopcion({ adopcion, onCambiarEstado, cargando }) {
   const [motivoAbierto, setMotivoAbierto] = useState(null);
   const [motivo, setMotivo] = useState('');
@@ -28,6 +23,7 @@ export default function AccionesAdopcion({ adopcion, onCambiarEstado, cargando }
 
   function handleClick(estado) {
     const accion = ACCIONES[estado];
+    // Rechazar pide un motivo antes de confirmar
     if (accion.requiereMotivo) {
       setMotivoAbierto(estado);
       setMotivo('');

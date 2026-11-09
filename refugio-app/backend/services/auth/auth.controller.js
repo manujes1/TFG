@@ -44,10 +44,7 @@ export async function me(req, res, next) {
   }
 }
 
-/**
- * Actualiza el perfil de preferencias del usuario logueado.
- * El id se toma del token: nadie puede modificar el perfil de otro.
- */
+// El id sale del token, así que cada usuario solo puede cambiar su propio perfil.
 export async function updatePerfil(req, res, next) {
   try {
     const preferencias = perfilAdoptanteSchema.parse(req.body);
@@ -58,9 +55,6 @@ export async function updatePerfil(req, res, next) {
   }
 }
 
-/**
- * Listado de usuarios para el panel de administración.
- */
 export async function usuarios(req, res, next) {
   try {
     const filtros = listUsuariosQuerySchema.parse(req.query);
@@ -70,9 +64,6 @@ export async function usuarios(req, res, next) {
   }
 }
 
-/**
- * Cambia el rol o el estado de la cuenta de un usuario.
- */
 export async function actualizarUsuario(req, res, next) {
   try {
     const id = z.string().uuid().parse(req.params.id);

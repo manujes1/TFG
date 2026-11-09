@@ -1,8 +1,6 @@
 import { z } from 'zod';
 
-// =========================================
 // Auth
-// =========================================
 
 export const registerSchema = z.object({
   email: z.string().email('Email no válido').toLowerCase(),
@@ -39,9 +37,7 @@ export const updateUsuarioSchema = z
     message: 'Indica el nuevo rol o si la cuenta queda activa'
   });
 
-// =========================================
 // Animales
-// =========================================
 
 const especieEnum = z.enum(['PERRO', 'GATO', 'OTRO']);
 const sexoEnum = z.enum(['MACHO', 'HEMBRA']);
@@ -80,9 +76,7 @@ export const listAnimalesQuerySchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).default(20)
 });
 
-// =========================================
 // Expedientes médicos
-// =========================================
 
 const tipoExpedienteEnum = z.enum([
   'VACUNA',
@@ -103,9 +97,7 @@ export const createExpedienteSchema = z.object({
 
 export const updateExpedienteSchema = createExpedienteSchema.partial();
 
-// =========================================
 // Adopciones
-// =========================================
 
 export const estadoAdopcionEnum = z.enum([
   'SOLICITADA',
@@ -135,9 +127,7 @@ export const listAdopcionesQuerySchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).default(20)
 });
 
-// =========================================
 // Apadrinamientos
-// =========================================
 
 const tipoApadrinamientoEnum = z.enum(['MENSUAL', 'PUNTUAL']);
 const estadoApadrinamientoEnum = z.enum(['ACTIVO', 'CANCELADO', 'FINALIZADO']);
@@ -156,15 +146,12 @@ export const listApadrinamientosQuerySchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).default(20)
 });
 
-// =========================================
 // Donaciones
-// =========================================
 
 export const createDonacionSchema = z.object({
   cantidad: z.number().positive('La cantidad debe ser positiva').max(100000),
   concepto: z.string().max(200).optional(),
   metodoPago: z.string().max(50).optional(),
-  // Opcional: si viene, marca al usuario donante; si no, es anónima
   usuarioId: z.string().uuid().optional()
 });
 
@@ -176,17 +163,13 @@ export const listDonacionesQuerySchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).default(20)
 });
 
-// =========================================
 // IA
-// =========================================
 
 export const generarDescripcionSchema = z.object({
   guardar: z.boolean().optional().default(false)
 });
 
-// =========================================
 // Perfil del adoptante
-// =========================================
 
 export const perfilAdoptanteSchema = z.object({
   tipoVivienda: z.enum(['piso', 'casa']),

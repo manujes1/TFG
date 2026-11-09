@@ -1,24 +1,11 @@
 import * as ollama from './ollama.provider.js';
 import * as gemini from './gemini.provider.js';
 
-/**
- * Selector del proveedor de IA, con fallback opcional.
- *
- * Todos los proveedores exponen la misma interfaz:
- *   - generarTexto(prompt, { temperature, numPredict, json })
- *   - comprobar()
- *
- * Configuración:
- *   - IA_PROVIDER: proveedor principal (ollama | gemini). Por defecto, Ollama,
- *     que no requiere clave ni sale de la máquina.
- *   - IA_FALLBACK_PROVIDER: proveedor de respaldo (opcional). Si el principal
- *     falla por indisponibilidad, timeout o respuesta vacía, se reintenta con
- *     este. Vacío o igual al principal = sin fallback.
- */
+// Proveedor principal: IA_PROVIDER (ollama por defecto). Si se define
+// IA_FALLBACK_PROVIDER, se reintenta con él cuando el principal falla.
 const PROVIDERS = { ollama, gemini };
 
-// Errores que justifican probar con el proveedor de respaldo: el servicio no
-// está disponible (503), tardó demasiado (504) o no devolvió contenido (502).
+// 502: respuesta vacía, 503: no disponible, 504: timeout
 const ERRORES_CON_FALLBACK = [502, 503, 504];
 
 function proveedor(nombre, porDefecto) {

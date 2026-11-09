@@ -1,11 +1,4 @@
-/**
- * Componentes de presentación para el dashboard de estadísticas.
- * Puramente visuales: reciben datos ya calculados y los pintan.
- */
 
-/**
- * Tarjeta con una métrica destacada.
- */
 export function MetricaCard({ titulo, valor, subtitulo, icono, acento = false }) {
   return (
     <div
@@ -37,12 +30,7 @@ export function MetricaCard({ titulo, valor, subtitulo, icono, acento = false })
   );
 }
 
-/**
- * Gráfico de barras horizontales sencillo, hecho con divs.
- * Evitamos una librería de gráficos: para esta escala no aporta.
- *
- * @param {{ etiqueta: string, valor: number, color: string }[]} datos
- */
+// Barras hechas con divs, sin librería de gráficos
 export function BarrasHorizontales({ datos, vacio = 'Sin datos' }) {
   const total = datos.reduce((suma, d) => suma + d.valor, 0);
 
@@ -75,9 +63,6 @@ export function BarrasHorizontales({ datos, vacio = 'Sin datos' }) {
   );
 }
 
-/**
- * Contenedor de sección con título.
- */
 export function SeccionCard({ titulo, children, accion }) {
   return (
     <section className="card p-5">

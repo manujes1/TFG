@@ -3,16 +3,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { recomendarDesdeTexto } from '../api/recomendaciones.js';
 import { useAuth } from '../context/AuthContext.jsx';
 
-/**
- * Cuadro de texto libre para describir las preferencias de adopción.
- *
- * DISEÑO: el texto se interpreta con IA y se traduce a los mismos campos
- * estructurados que rellena el formulario de /perfil (ver backend,
- * ia.service.js). La compatibilidad con cada animal la sigue calculando
- * el algoritmo determinista: la IA solo traduce texto libre a datos, nunca
- * decide qué animal encaja mejor. Por eso el resultado sustituye al perfil
- * guardado, igual que si la persona hubiera rellenado el formulario.
- */
 export default function PreferenciasTexto() {
   const [texto, setTexto] = useState('');
   const [error, setError] = useState(null);
@@ -23,9 +13,7 @@ export default function PreferenciasTexto() {
     mutationFn: recomendarDesdeTexto,
     onSuccess: async (res) => {
       setError(null);
-      // Actualizamos directamente la caché de recomendaciones: es la misma
-      // forma que devuelve /api/recomendaciones, así la página se actualiza
-      // sin pedir los datos otra vez.
+      // La respuesta tiene la misma forma que /api/recomendaciones
       queryClient.setQueryData(['recomendaciones'], res);
       queryClient.invalidateQueries({ queryKey: ['compatibilidad'] });
       await refrescarUsuario();

@@ -43,8 +43,6 @@ export default function RecomendacionesPage() {
 
       <PreferenciasTexto />
 
-      {/* Sin perfil: la vía rápida es el cuadro de texto de arriba; dejamos
-          el formulario detallado como alternativa para quien lo prefiera. */}
       {!data.perfilCompleto && (
         <p className="text-sm text-stone-500 text-center">
           ¿Prefieres un formulario paso a paso?{' '}
@@ -71,6 +69,7 @@ export default function RecomendacionesPage() {
         </div>
       ) : (
         <ul className="space-y-4">
+          {/* Animales ordenados por compatibilidad */}
           {data.recomendaciones.map(({ animal, puntuacion, criterios, origen }) => (
             <li key={animal.id} className="card card-hover overflow-hidden">
               <div className="grid sm:grid-cols-[180px_1fr] gap-0">

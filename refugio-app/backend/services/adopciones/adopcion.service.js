@@ -2,10 +2,6 @@ import prisma from '../../shared/prisma.js';
 import { evaluarAnimal } from '../../shared/matchmaking.js';
 import { transicionValida } from './adopcionEstados.js';
 
-/**
- * Lista adopciones con filtros y paginación.
- * Incluye datos básicos del animal y del usuario.
- */
 export async function listAdopciones(filters) {
   const { estado, animalId, usuarioId, page, pageSize } = filters;
 
@@ -41,9 +37,6 @@ export async function listAdopciones(filters) {
   };
 }
 
-/**
- * Obtiene una adopción por ID con datos del animal y usuario.
- */
 export async function getAdopcionById(id) {
   const adopcion = await prisma.adopcion.findUnique({
     where: { id },
@@ -64,19 +57,9 @@ export async function getAdopcionById(id) {
   return adopcion;
 }
 
-/**
- * Crea una nueva solicitud de adopción.
- * Reglas:
- *  - El animal debe existir y estar DISPONIBLE.
- *  - El usuario no puede tener otra solicitud activa para el mismo animal.
- *
- * @param {string} usuarioId - ID del usuario que solicita (viene del token).
- * @param {object} data - Datos validados.
- */
 export async function createAdopcion(usuarioId, data) {
   const { animalId, notas } = data;
 
-  // 1. Animal existe y está disponible
   const animal = await prisma.animal.findUnique({ where: { id: animalId } });
   if (!animal) {
     const error = new Error('Animal no encontrado');
@@ -89,7 +72,7 @@ export async function createAdopcion(usuarioId, data) {
     throw error;
   }
 
-  // 2. El usuario no tiene otra solicitud activa (no finalizada) para este animal
+  // Solo puede haber una solicitud activa por usuario y animal
   const solicitudActiva = await prisma.adopcion.findFirst({
     where: {
       animalId,
@@ -103,7 +86,6 @@ export async function createAdopcion(usuarioId, data) {
     throw error;
   }
 
-  // 3. Foto de la compatibilidad en el momento de solicitar
   const compatibilidad = await fotoCompatibilidad(usuarioId, animal);
 
   return prisma.adopcion.create({
@@ -118,16 +100,7 @@ export async function createAdopcion(usuarioId, data) {
   });
 }
 
-/**
- * Calcula la compatibilidad del solicitante con el animal para guardarla
- * junto a la solicitud. Así el personal ve la misma nota y los mismos
- * motivos que vio la persona, aunque después cambien los datos o Gemini
- * diera otra respuesta. Usa la misma evaluación que la ficha del animal,
- * así que normalmente sale de la caché del matchmaking.
- *
- * Si el matchmaking no responde, devuelve null: la solicitud se crea
- * igualmente y el personal verá la compatibilidad calculada en ese momento.
- */
+// Se guarda con la solicitud para que el personal vea la misma valoración que vio el adoptante.
 async function fotoCompatibilidad(usuarioId, animal) {
   const usuario = await prisma.user.findUnique({
     where: { id: usuarioId },
@@ -148,13 +121,6 @@ async function fotoCompatibilidad(usuarioId, animal) {
   }
 }
 
-/**
- * Cambia el estado de una adopción respetando las transiciones válidas.
- * Cuando pasa a COMPLETADA, marca al animal como ADOPTADO (transacción atómica).
- *
- * @param {string} adopcionId
- * @param {object} data - { estado, motivoRechazo?, notas? }
- */
 export async function updateEstadoAdopcion(adopcionId, data) {
   const { estado: nuevoEstado, motivoRechazo, notas } = data;
 
@@ -167,7 +133,6 @@ export async function updateEstadoAdopcion(adopcionId, data) {
     throw error;
   }
 
-  // Validar transición
   if (adopcion.estado === nuevoEstado) {
     const error = new Error('La adopción ya está en ese estado');
     error.statusCode = 400;
@@ -194,14 +159,12 @@ export async function updateEstadoAdopcion(adopcionId, data) {
     }
   }
 
-  // Datos que se actualizan siempre
   const dataToUpdate = {
     estado: nuevoEstado,
     ...(motivoRechazo !== undefined && { motivoRechazo }),
     ...(notas !== undefined && { notas })
   };
 
-  // Timestamps por estado
   if (nuevoEstado === 'APROBADA') {
     dataToUpdate.fechaAprobacion = new Date();
   }
@@ -209,9 +172,8 @@ export async function updateEstadoAdopcion(adopcionId, data) {
     dataToUpdate.fechaCompletada = new Date();
   }
 
-  // Si la adopción se completa, marcamos al animal como ADOPTADO
-  // en la misma transacción, para que sea atómico.
   if (nuevoEstado === 'COMPLETADA') {
+    // Al completarse, el animal pasa a ADOPTADO y se cancelan sus otras solicitudes.
     return prisma.$transaction(async (tx) => {
       const updated = await tx.adopcion.update({
         where: { id: adopcionId },
@@ -223,8 +185,6 @@ export async function updateEstadoAdopcion(adopcionId, data) {
         data: { estado: 'ADOPTADO' }
       });
 
-      // También cancelamos las otras solicitudes activas para este animal
-      // (ya no tiene sentido mantenerlas abiertas).
       await tx.adopcion.updateMany({
         where: {
           animalId: adopcion.animalId,
@@ -238,17 +198,12 @@ export async function updateEstadoAdopcion(adopcionId, data) {
     });
   }
 
-  // Cambio de estado sin efectos colaterales
   return prisma.adopcion.update({
     where: { id: adopcionId },
     data: dataToUpdate
   });
 }
 
-/**
- * Lista las adopciones de un usuario concreto (para su panel personal).
- * @param {string} usuarioId
- */
 export async function listAdopcionesUsuario(usuarioId) {
   return prisma.adopcion.findMany({
     where: { usuarioId },

@@ -4,9 +4,7 @@ import cors from 'cors';
 import { errorHandler } from '../../shared/errorHandler.js';
 import routes from './foto.routes.js';
 
-/**
- * Servicio de fotos de los animales: subida, borrado y descarga (/uploads).
- */
+// Servicio de fotos de los animales: subida, borrado y descarga (/uploads).
 const app = express();
 const PORT = process.env.FOTOS_PORT || 3004;
 
@@ -17,7 +15,6 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', servicio: 'fotos' });
 });
 
-// Fotos subidas, accesibles públicamente
 app.use('/uploads', express.static(process.env.UPLOAD_DIR || './uploads'));
 
 app.use('/api/animales/:animalId/fotos', routes);

@@ -4,9 +4,6 @@ import cors from 'cors';
 import { errorHandler } from '../../shared/errorHandler.js';
 import routes from './adopcion.routes.js';
 
-/**
- * Servicio de adopciones: solicitudes y su ciclo de vida.
- */
 const app = express();
 const PORT = process.env.ADOPCIONES_PORT || 3005;
 

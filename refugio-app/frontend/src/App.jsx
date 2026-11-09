@@ -29,11 +29,10 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          {/* Rutas sin layout (pantalla completa) */}
+          {/* Login y registro, sin cabecera */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/registro" element={<RegisterPage />} />
 
-          {/* Rutas con layout compartido */}
           <Route element={<Layout />}>
             <Route
               path="/"
@@ -46,7 +45,7 @@ export default function App() {
             <Route path="/animales" element={<AnimalesPage />} />
             <Route path="/animales/:id" element={<AnimalDetallePage />} />
 
-            {/* Área personal del usuario */}
+            {/* Área personal */}
             <Route
               path="/perfil"
               element={
@@ -83,7 +82,7 @@ export default function App() {
               }
             />
 
-            {/* Panel de administración (rutas anidadas) */}
+            {/* Panel de gestión */}
             <Route
               path="/admin"
               element={

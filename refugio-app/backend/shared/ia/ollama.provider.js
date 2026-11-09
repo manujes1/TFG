@@ -4,21 +4,9 @@ const OLLAMA_TIMEOUT_MS = Number(process.env.OLLAMA_TIMEOUT_MS) || 180000;
 
 export const nombre = 'ollama';
 
-/**
- * Genera texto a partir de un prompt.
- *
- * @param {string} prompt - Instrucción para el modelo.
- * @param {object} [opciones]
- * @param {number} [opciones.temperature=0.7] - Creatividad (0 = determinista).
- * @param {number} [opciones.numPredict=200] - Máximo de tokens a generar.
- * @param {boolean} [opciones.json=false] - Pide al modelo que responda con JSON.
- * @returns {Promise<string>} Texto generado, ya recortado.
- * @throws Error con statusCode 503 (no disponible) o 504 (timeout).
- */
 export async function generarTexto(prompt, opciones = {}) {
   const { temperature = 0.7, numPredict = 200, json = false } = opciones;
 
-  // AbortController para no dejar la petición colgada indefinidamente
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), OLLAMA_TIMEOUT_MS);
 
@@ -52,7 +40,7 @@ export async function generarTexto(prompt, opciones = {}) {
       error.statusCode = 504;
       throw error;
     }
-    // Fallo de red: Ollama no está levantado
+    // Fallo de red: Ollama no está arrancado
     if (err.statusCode === undefined) {
       const error = new Error('El servicio de IA no está disponible');
       error.statusCode = 503;
@@ -64,10 +52,7 @@ export async function generarTexto(prompt, opciones = {}) {
   }
 }
 
-/**
- * Comprueba si Ollama está accesible y tiene el modelo descargado.
- * Se usa en el health check para diagnosticar el entorno de un vistazo.
- */
+// Para /health: comprueba que Ollama responde y tiene el modelo descargado.
 export async function comprobar() {
   try {
     const respuesta = await fetch(`${OLLAMA_URL}/api/tags`, {

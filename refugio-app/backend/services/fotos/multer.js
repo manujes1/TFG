@@ -6,16 +6,11 @@ import crypto from 'node:crypto';
 const UPLOAD_DIR = process.env.UPLOAD_DIR || './uploads';
 const MAX_FILE_SIZE_MB = Number(process.env.MAX_FILE_SIZE_MB) || 5;
 
-// Aseguramos que la carpeta de uploads existe al arrancar
 if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 }
 
-/**
- * Configuración de almacenamiento en disco.
- * Genera nombres únicos para evitar colisiones cuando dos usuarios suben
- * archivos con el mismo nombre.
- */
+// Nombre único para que dos archivos con el mismo nombre no se pisen
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, UPLOAD_DIR);
@@ -27,9 +22,6 @@ const storage = multer.diskStorage({
   }
 });
 
-/**
- * Filtro que solo acepta imágenes.
- */
 function fileFilter(req, file, cb) {
   const tiposPermitidos = ['image/jpeg', 'image/png', 'image/webp'];
   if (tiposPermitidos.includes(file.mimetype)) {
@@ -41,9 +33,6 @@ function fileFilter(req, file, cb) {
   }
 }
 
-/**
- * Multer configurado para subida de una sola imagen por petición.
- */
 export const uploadImage = multer({
   storage,
   fileFilter,

@@ -25,10 +25,6 @@ const SIGUIENTE_PASO = {
   APROBADA: '¡Aprobada! El refugio se pondrá en contacto contigo para la entrega.'
 };
 
-/**
- * Página de inicio de un adoptante con sesión iniciada: resumen de su
- * actividad con el refugio y animales recomendados para él.
- */
 export default function ResumenUsuario() {
   const { user, tienePerfil } = useAuth();
 
@@ -166,7 +162,6 @@ function fraseBienvenida(enCurso, completadas, apadrinados, tienePerfil) {
   if (completadas.length > 0 || apadrinados.length > 0) {
     return 'Gracias por formar parte de la familia del refugio.';
   }
-  // Sin actividad todavía: depende de si ya sabemos qué busca
   if (!tienePerfil) {
     return 'Te damos la bienvenida al refugio. Completa tu perfil y te diremos qué animales encajan contigo.';
   }

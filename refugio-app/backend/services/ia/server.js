@@ -5,9 +5,6 @@ import { comprobarIA } from '../../shared/ia/index.js';
 import { errorHandler } from '../../shared/errorHandler.js';
 import routes from './ia.routes.js';
 
-/**
- * Servicio de IA: descripciones de animales y explicación de la compatibilidad.
- */
 const app = express();
 const PORT = process.env.IA_PORT || 3009;
 

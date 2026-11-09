@@ -3,19 +3,11 @@ import api from '../api/client.js';
 
 const AuthContext = createContext(null);
 
-/**
- * Proveedor de autenticación.
- * Mantiene el usuario actual en estado y lo sincroniza con localStorage,
- * de modo que la sesión sobreviva a recargas de página.
- */
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  /**
-   * Vuelve a pedir los datos del usuario al backend.
-   * Se usa tras modificar el perfil, para que el contexto refleje los cambios.
-   */
+  // Se llama tras editar el perfil para tener los datos al día
   const refrescarUsuario = useCallback(async () => {
     const token = localStorage.getItem('token');
     if (!token) return null;
@@ -29,7 +21,7 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // Al montar, si hay token guardado, verificamos que sigue siendo válido
+  // Al cargar la app se comprueba si el token guardado sigue siendo válido
   useEffect(() => {
     const token = localStorage.getItem('token');
 
@@ -51,7 +43,7 @@ export function AuthProvider({ children }) {
       .finally(() => setLoading(false));
   }, []);
 
-  // Si el interceptor detecta un 401, cerramos la sesión en el estado de React
+  // El interceptor de axios avisa cuando el token caduca
   useEffect(() => {
     const onExpirada = () => setUser(null);
     window.addEventListener('auth:expirada', onExpirada);

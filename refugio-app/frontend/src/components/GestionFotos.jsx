@@ -44,8 +44,7 @@ export default function GestionFotos({ animalId, fotos }) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validación en cliente antes de gastar ancho de banda.
-    // La validación real la hace el backend; esta es solo para UX.
+    // Solo para avisar antes de subir; la validación real la hace el backend
     if (!TIPOS_PERMITIDOS.includes(file.type)) {
       setError('Formato no permitido. Usa JPEG, PNG o WEBP.');
       e.target.value = '';

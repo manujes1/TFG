@@ -7,10 +7,6 @@ import { formatFecha } from '../../utils/format.js';
 
 const PAGE_SIZE = 15;
 
-/**
- * Gestión de usuarios (solo administradores): cambiar el rol de cada
- * persona y activar o desactivar su cuenta.
- */
 export default function UsuariosAdminPage() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -116,6 +112,7 @@ export default function UsuariosAdminPage() {
           ) : (
             <ul className="space-y-3">
               {data.data.map((u) => {
+                // Nadie puede cambiar su propio rol ni desactivarse
                 const esYo = u.id === user.id;
                 const cargando = enProceso === u.id;
                 return (

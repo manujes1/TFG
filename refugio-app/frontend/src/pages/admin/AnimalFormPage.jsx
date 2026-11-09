@@ -38,14 +38,12 @@ export default function AnimalFormPage() {
   const [form, setForm] = useState(FORM_INICIAL);
   const [error, setError] = useState(null);
 
-  // En edición, cargamos el animal existente
   const { data: animal, isPending: cargando } = useQuery({
     queryKey: ['animal', id],
     queryFn: () => fetchAnimalById(id),
     enabled: esEdicion
   });
 
-  // Rellenamos el formulario cuando llegan los datos
   useEffect(() => {
     if (!animal) return;
     const c = animal.caracteristicas ?? {};
@@ -79,7 +77,7 @@ export default function AnimalFormPage() {
         queryClient.invalidateQueries({ queryKey: ['animal', id] });
         navigate('/admin/animales');
       } else {
-        // Tras crear, vamos a la edición para poder subir fotos
+        // Tras crear se pasa a la edición, que es donde se suben las fotos
         navigate(`/admin/animales/${animalGuardado.id}/editar`);
       }
     },
@@ -102,9 +100,6 @@ export default function AnimalFormPage() {
     e.preventDefault();
     setError(null);
 
-    // Construimos el payload que espera el backend:
-    // - campos opcionales vacíos se omiten
-    // - números se envían como number, no como string
     const payload = {
       nombre: form.nombre.trim(),
       especie: form.especie,
@@ -119,7 +114,7 @@ export default function AnimalFormPage() {
       }
     };
 
-    // En edición enviamos null para poder vaciar un campo; al crear se omite
+    // En edición se envía null para poder vaciar un campo; al crear se omite
     const vacio = esEdicion ? null : undefined;
     for (const campo of ['raza', 'color', 'chip', 'ubicacion', 'descripcionManual']) {
       payload[campo] = form[campo].trim() || vacio;
@@ -128,7 +123,6 @@ export default function AnimalFormPage() {
       payload[campo] = form[campo] !== '' ? Number(form[campo]) : vacio;
     }
 
-    // Limpiamos claves undefined dentro de caracteristicas
     payload.caracteristicas = Object.fromEntries(
       Object.entries(payload.caracteristicas).filter(([, v]) => v !== undefined)
     );
@@ -326,8 +320,6 @@ export default function AnimalFormPage() {
               </p>
             </div>
 
-            {/* La generación requiere un animal ya creado, porque el modelo
-                necesita sus datos persistidos para construir el prompt */}
             {esEdicion && (
               <GenerarDescripcionIA
                 animalId={id}
@@ -339,7 +331,7 @@ export default function AnimalFormPage() {
           </div>
         </fieldset>
 
-        {/* Características para matchmaking */}
+        {/* Características */}
         <fieldset className="space-y-4 pt-2 border-t border-stone-100">
           <legend className="text-sm font-semibold text-stone-800 mb-2 pt-4 uppercase tracking-wide">
             Carácter y convivencia
@@ -423,7 +415,6 @@ export default function AnimalFormPage() {
         </div>
       </form>
 
-      {/* Las fotos solo se gestionan sobre un animal ya creado */}
       {esEdicion && animal && (
         <GestionFotos animalId={animal.id} fotos={animal.fotos ?? []} />
       )}

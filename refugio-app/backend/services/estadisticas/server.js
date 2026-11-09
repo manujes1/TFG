@@ -4,9 +4,6 @@ import cors from 'cors';
 import { errorHandler } from '../../shared/errorHandler.js';
 import routes from './estadisticas.routes.js';
 
-/**
- * Servicio de estadísticas para el panel de gestión (solo lectura).
- */
 const app = express();
 const PORT = process.env.ESTADISTICAS_PORT || 3008;
 
