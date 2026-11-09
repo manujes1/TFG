@@ -3,28 +3,7 @@ import { z } from 'zod';
 import { calcularCompatibilidad } from './compatibilidad.js';
 import { generarTexto } from '../../shared/ia/gemini.provider.js';
 
-/**
- * Evaluación de compatibilidad entre un adoptante y los animales.
- *
- * Dos métodos:
- *   - determinista: reglas ponderadas (`calcularCompatibilidad`). Reproducible.
- *   - llm: Gemini puntúa los pares. No es reproducible; sirve para comparar.
- *
- * Los descartes (especie distinta, o no apto para niños si hay niños en
- * casa) los decide SIEMPRE el algoritmo determinista, también en modo `llm`:
- * Gemini solo puntúa los animales que pasan esos filtros. Así un error del
- * modelo al leer el perfil nunca descarta un animal que sí encaja, ni
- * recomienda uno incompatible.
- *
- * El método se elige con MATCHMAKING_MODE (determinista | llm). El modo `llm`
- * solo se usa si el proveedor de IA activo es Gemini: así, si la aplicación
- * está configurada con Ollama local, los datos del usuario no salen hacia
- * Google. Si Gemini falla o no devuelve un resultado válido para un animal, se
- * usa el algoritmo determinista (nunca Ollama).
- *
- * Cada resultado incluye `origen` ('llm' | 'determinista') para que la
- * interfaz y la evaluación sepan qué método calculó la puntuación.
- */
+// Evaluación de compatibilidad: reglas por defecto, o Gemini si MATCHMAKING_MODE=llm
 
 const ETIQUETAS_CRITERIOS = {
   convivenciaNinos: 'Convivencia con niños',
@@ -38,8 +17,7 @@ const TAMANO_LOTE = 15;
 const CACHE_TTL_MS = 60 * 60 * 1000;
 const CACHE_MAX = 500;
 
-// Evita llamar a Gemini en cada visita y que la puntuación de un mismo par
-// cambie entre pantallas. La clave incluye el perfil y la versión del animal.
+// La clave cambia si cambia el perfil o el animal (updatedAt).
 const cache = new Map();
 
 function usaLLM() {
@@ -49,21 +27,14 @@ function usaLLM() {
   );
 }
 
-// Marca el resultado con su origen, para que la interfaz y la evaluación sepan qué método calculó la puntuación.
 function conOrigen(resultado, origen) {
   return { ...resultado, origen };
 }
 
-
-// En caso de que el perfil o el animal cambien, la clave de caché cambia y se recalcula la puntuación.
 function claveCache(perfil, animal) {
   const huella = crypto.createHash('sha1').update(JSON.stringify(perfil)).digest('hex');
   return `${huella}:${animal.id}:${new Date(animal.updatedAt).getTime()}`;
 }
-
-/* ------------------------------------------------------------------ */
-/* Puntuación con Gemini                                               */
-/* ------------------------------------------------------------------ */
 
 const respuestaSchema = z.array(
   z.object({
@@ -125,7 +96,8 @@ function extraerArray(texto) {
   }
 }
 
-async function puntuarLote(perfil, animales) {
+// También la usa scripts/evaluar-matchmaking.js.
+export async function puntuarLote(perfil, animales) {
   const texto = await generarTexto(construirPrompt(perfil, animales), {
     temperature: 0.2,
     numPredict: 600 + 300 * animales.length,
@@ -158,22 +130,9 @@ async function puntuarLote(perfil, animales) {
   return resultados;
 }
 
-/* ------------------------------------------------------------------ */
-/* API del servicio                                                    */
-/* ------------------------------------------------------------------ */
-
-/**
- * Evalúa la compatibilidad del perfil con una lista de animales.
- *
- * @param {object} perfil
- * @param {object[]} animales
- * @returns {Promise<Array<{ animal: object, puntuacion: number, criterios: object[],
- *   descartado: boolean, motivoDescarte?: string, origen: 'llm' | 'determinista' }>>}
- *   En el mismo orden que `animales`.
- */
 export async function evaluarAnimales(perfil, animales) {
-  // Las reglas evalúan siempre todos los animales: deciden los descartes y
-  // son el resultado de respaldo si Gemini no puntúa alguno.
+  // Los descartes los deciden siempre las reglas; en modo llm, Gemini solo puntúa el resto
+  // y, si falla, se usa la puntuación de las reglas.
   const reglas = new Map(animales.map((a) => [a.id, calcularCompatibilidad(perfil, a)]));
   const candidatos = animales.filter((a) => !reglas.get(a.id).descartado);
   const porId = new Map();
@@ -194,7 +153,7 @@ export async function evaluarAnimales(perfil, animales) {
         const resultados = await puntuarLote(perfil, lote);
         for (const animal of lote) {
           const resultado = resultados.get(animal.id);
-          if (!resultado) continue; // este animal cae al determinista
+          if (!resultado) continue;
           const conMarca = conOrigen(resultado, 'llm');
           porId.set(animal.id, conMarca);
           if (cache.size >= CACHE_MAX) cache.delete(cache.keys().next().value);
@@ -202,7 +161,7 @@ export async function evaluarAnimales(perfil, animales) {
         }
       } catch (err) {
         console.warn(`[matchmaking] Gemini no disponible (${err.message}); se usa el algoritmo determinista`);
-        break; // si Gemini falla, no insistimos con el resto de lotes
+        break;
       }
     }
   }

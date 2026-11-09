@@ -1,22 +1,11 @@
-/**
- * Evaluación offline del emparejamiento adoptante-animal.
- *
- * Compara la puntuación del algoritmo determinista (`calcularCompatibilidad`)
- * con la que asigna un LLM (Gemini u Ollama) a los mismos pares, para
- * justificar con datos la decisión de diseño de la memoria.
- *
- * No toca la base de datos ni la aplicación.
- *
- * Uso:
- *   node scripts/evaluar-matchmaking.js --provider gemini --repeticiones 3 --pares 30
- *
- * Opciones:
- *   --provider      gemini | ollama            (por defecto: IA_PROVIDER o ollama)
- *   --repeticiones  llamadas por par           (por defecto 3)
- *   --pares         nº de pares a evaluar      (por defecto 30, selección reproducible)
- *   --pausa         ms entre llamadas          (por defecto 1000, para respetar cuotas)
- *   --salida        carpeta de resultados      (por defecto scripts/resultados)
- */
+// Compara la puntuación de las reglas con la de un LLM sobre los mismos pares.
+//
+// Uso:
+//   node scripts/evaluar-matchmaking.js --provider gemini --repeticiones 3 --pares 30
+//   node scripts/evaluar-matchmaking.js --modo lote --repeticiones 3
+//
+// Opciones: --modo par|lote, --provider gemini|ollama, --repeticiones, --pares,
+// --perfiles, --pausa (ms entre llamadas) y --salida (carpeta de resultados).
 import 'dotenv/config';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -29,27 +18,27 @@ const args = Object.fromEntries(
   }, [])
 );
 
-if (args.provider) process.env.IA_PROVIDER = args.provider;
-// La evaluación mide un único proveedor: el fallback falsearía los resultados
+const MODO = args.modo === 'lote' ? 'lote' : 'par';
+if (MODO === 'lote') process.env.IA_PROVIDER = 'gemini';
+else if (args.provider) process.env.IA_PROVIDER = args.provider;
+// Sin fallback: se mide un único proveedor
 process.env.IA_FALLBACK_PROVIDER = '';
 const PROVEEDOR = process.env.IA_PROVIDER || 'ollama';
 const REPETICIONES = Number(args.repeticiones) || 3;
 const N_PARES = Number(args.pares) || 30;
-const PAUSA_MS = args.pausa !== undefined ? Number(args.pausa) : 1000;
+const N_PERFILES = Number(args.perfiles) || Infinity;
+const PAUSA_MS = args.pausa !== undefined ? Number(args.pausa) : MODO === 'lote' ? 4500 : 1000;
 
 const aqui = path.dirname(fileURLToPath(import.meta.url));
 const SALIDA = path.resolve(args.salida || path.join(aqui, 'resultados'));
 
-// Import dinámico: el proveedor se lee de process.env al cargar el módulo.
+// Import dinámico: el proveedor se lee de process.env al cargar el módulo
 const { generarTexto } = await import('../../../shared/ia/index.js');
 const { calcularCompatibilidad } = await import('../compatibilidad.js');
+const { puntuarLote } = await import('../matchmaking.service.js');
 
 const animales = JSON.parse(fs.readFileSync(path.join(aqui, 'datos/animales.json'), 'utf8'));
 const perfiles = JSON.parse(fs.readFileSync(path.join(aqui, 'datos/perfiles.json'), 'utf8'));
-
-/* ------------------------------------------------------------------ */
-/* Utilidades estadísticas                                             */
-/* ------------------------------------------------------------------ */
 
 const media = (xs) => xs.reduce((a, b) => a + b, 0) / xs.length;
 const desviacion = (xs) =>
@@ -82,11 +71,7 @@ function pearson(x, y) {
 
 const spearman = (x, y) => pearson(rangos(x), rangos(y));
 
-/* ------------------------------------------------------------------ */
-/* Selección reproducible de pares                                     */
-/* ------------------------------------------------------------------ */
-
-// Generador pseudoaleatorio con semilla fija: mismos pares en cada ejecución.
+// Semilla fija: los mismos pares en cada ejecución
 function mulberry32(seed) {
   return () => {
     seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
@@ -105,10 +90,6 @@ function seleccionarPares(n) {
     .slice(0, Math.min(n, todos.length))
     .map((x) => x.par);
 }
-
-/* ------------------------------------------------------------------ */
-/* Puntuación con LLM                                                  */
-/* ------------------------------------------------------------------ */
 
 function promptPuntuacion(perfil, animal) {
   const { id: _p, ...p } = perfil;
@@ -143,12 +124,11 @@ function extraerPuntuacion(texto) {
 
 const dormir = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function llamarConReintento(prompt) {
+async function conReintento(fn) {
   for (let intento = 0; intento < 4; intento++) {
     try {
-      return await generarTexto(prompt, { temperature: 0.2, numPredict: 150, json: true });
+      return await fn();
     } catch (err) {
-      // 503 incluye la cuota agotada (429): esperamos y reintentamos
       if (err.statusCode === 503 && intento < 3) {
         await dormir(5000 * (intento + 1));
         continue;
@@ -158,60 +138,108 @@ async function llamarConReintento(prompt) {
   }
 }
 
-/* ------------------------------------------------------------------ */
-/* Ejecución                                                           */
-/* ------------------------------------------------------------------ */
-
-const pares = seleccionarPares(N_PARES);
-console.log(
-  `Proveedor: ${PROVEEDOR} | pares: ${pares.length} | repeticiones: ${REPETICIONES}`
-);
-
 const filas = [];
+const latenciasLlamadas = [];
 let invalidas = 0;
 let llamadas = 0;
+let omitidas = 0; // modo lote: animales que Gemini no devolvió
+let totalPares;
 
-for (const [i, { perfil, animal }] of pares.entries()) {
-  const det = calcularCompatibilidad(perfil, animal);
-  const muestras = [];
-  const latencias = [];
-
-  for (let r = 0; r < REPETICIONES; r++) {
-    const t0 = performance.now();
-    llamadas++;
-    try {
-      const texto = await llamarConReintento(promptPuntuacion(perfil, animal));
-      latencias.push(performance.now() - t0);
-      const n = extraerPuntuacion(texto);
-      if (n === null) invalidas++;
-      else muestras.push(n);
-    } catch (err) {
-      invalidas++;
-      console.warn(`  [${i + 1}] ${perfil.id}/${animal.id}: ${err.message}`);
-    }
-    if (PAUSA_MS) await dormir(PAUSA_MS);
-  }
-
-  filas.push({
-    perfil: perfil.id,
-    animal: animal.id,
-    descartado: det.descartado,
-    determinista: det.puntuacion,
-    llm_media: muestras.length ? media(muestras) : null,
-    llm_desv: muestras.length ? desviacion(muestras) : null,
-    llm_validas: muestras.length,
-    latencia_ms: latencias.length ? Math.round(media(latencias)) : null
-  });
+if (MODO === 'par') {
+  const pares = seleccionarPares(N_PARES);
+  totalPares = pares.length;
   console.log(
-    `[${i + 1}/${pares.length}] ${perfil.id}/${animal.id} det=${det.puntuacion}${
-      det.descartado ? ' (descartado)' : ''
-    } llm=${filas.at(-1).llm_media?.toFixed(1) ?? 'n/d'}`
+    `Modo: par | proveedor: ${PROVEEDOR} | pares: ${pares.length} | repeticiones: ${REPETICIONES}`
   );
-}
 
-/* ------------------------------------------------------------------ */
-/* Métricas y resultados                                               */
-/* ------------------------------------------------------------------ */
+  for (const [i, { perfil, animal }] of pares.entries()) {
+    const det = calcularCompatibilidad(perfil, animal);
+    const muestras = [];
+
+    for (let r = 0; r < REPETICIONES; r++) {
+      const t0 = performance.now();
+      llamadas++;
+      try {
+        const texto = await conReintento(() =>
+          generarTexto(promptPuntuacion(perfil, animal), { temperature: 0.2, numPredict: 150, json: true })
+        );
+        latenciasLlamadas.push(performance.now() - t0);
+        const n = extraerPuntuacion(texto);
+        if (n === null) invalidas++;
+        else muestras.push(n);
+      } catch (err) {
+        invalidas++;
+        console.warn(`  [${i + 1}] ${perfil.id}/${animal.id}: ${err.message}`);
+      }
+      if (PAUSA_MS) await dormir(PAUSA_MS);
+    }
+
+    filas.push({
+      perfil: perfil.id,
+      animal: animal.id,
+      descartado: det.descartado,
+      determinista: det.puntuacion,
+      llm_media: muestras.length ? media(muestras) : null,
+      llm_desv: muestras.length ? desviacion(muestras) : null,
+      llm_validas: muestras.length
+    });
+    console.log(
+      `[${i + 1}/${pares.length}] ${perfil.id}/${animal.id} det=${det.puntuacion}${
+        det.descartado ? ' (descartado)' : ''
+      } llm=${filas.at(-1).llm_media?.toFixed(1) ?? 'n/d'}`
+    );
+  }
+} else {
+  const seleccion = perfiles.slice(0, N_PERFILES);
+  totalPares = seleccion.length * animales.length;
+  console.log(
+    `Modo: lote | proveedor: gemini | perfiles: ${seleccion.length} | animales: ${animales.length} | repeticiones: ${REPETICIONES}`
+  );
+
+  for (const [i, perfil] of seleccion.entries()) {
+    const { id: _, ...datosPerfil } = perfil;
+    const reglas = new Map(animales.map((a) => [a.id, calcularCompatibilidad(perfil, a)]));
+    const candidatos = animales.filter((a) => !reglas.get(a.id).descartado);
+    const muestras = new Map(candidatos.map((a) => [a.id, []]));
+
+    for (let r = 0; r < REPETICIONES && candidatos.length > 0; r++) {
+      const t0 = performance.now();
+      llamadas++;
+      try {
+        const resultados = await conReintento(() => puntuarLote(datosPerfil, candidatos));
+        latenciasLlamadas.push(performance.now() - t0);
+        for (const animal of candidatos) {
+          const resultado = resultados.get(animal.id);
+          if (resultado) muestras.get(animal.id).push(resultado.puntuacion);
+          else omitidas++;
+        }
+      } catch (err) {
+        invalidas++;
+        console.warn(`  [${i + 1}] ${perfil.id}: ${err.message}`);
+      }
+      if (PAUSA_MS) await dormir(PAUSA_MS);
+    }
+
+    for (const animal of animales) {
+      const det = reglas.get(animal.id);
+      const m = muestras.get(animal.id) ?? [];
+      filas.push({
+        perfil: perfil.id,
+        animal: animal.id,
+        descartado: det.descartado,
+        determinista: det.puntuacion,
+        llm_media: m.length ? media(m) : null,
+        llm_desv: m.length ? desviacion(m) : null,
+        llm_validas: m.length
+      });
+    }
+    console.log(
+      `[${i + 1}/${seleccion.length}] ${perfil.id}: ${candidatos.length} puntuados por Gemini, ${
+        animales.length - candidatos.length
+      } descartados por las reglas`
+    );
+  }
+}
 
 const validas = filas.filter((f) => f.llm_media !== null);
 const noDescartadas = validas.filter((f) => !f.descartado);
@@ -223,16 +251,15 @@ const rho = noDescartadas.length >= 3
 const mae = noDescartadas.length
   ? media(noDescartadas.map((f) => Math.abs(f.determinista - f.llm_media)))
   : NaN;
-// Un descarte duro del algoritmo debería recibir una puntuación baja del LLM
 const acuerdoDescartes = descartadas.length
   ? descartadas.filter((f) => f.llm_media <= 30).length / descartadas.length
   : NaN;
 const consistencia = media(validas.map((f) => f.llm_desv));
-const latencia = media(filas.filter((f) => f.latencia_ms !== null).map((f) => f.latencia_ms));
+const latencia = latenciasLlamadas.length ? media(latenciasLlamadas) : NaN;
 const fmt = (x, d = 2) => (Number.isFinite(x) ? x.toFixed(d) : 'n/d');
 
 fs.mkdirSync(SALIDA, { recursive: true });
-const base = `${PROVEEDOR}-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}`;
+const base = `${PROVEEDOR}-${MODO}-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}`;
 
 const cabecera = Object.keys(filas[0]).join(',');
 const csv = [cabecera, ...filas.map((f) => Object.values(f).map((v) => v ?? '').join(','))].join('\n');
@@ -240,9 +267,12 @@ fs.writeFileSync(path.join(SALIDA, `${base}.csv`), csv);
 
 const resumen = `# Evaluación del emparejamiento: algoritmo determinista vs ${PROVEEDOR}
 
-- Pares evaluados: ${pares.length} (${descartadas.length + filas.filter((f) => f.descartado && f.llm_media === null).length} con descarte duro)
-- Repeticiones por par: ${REPETICIONES}
-- Llamadas totales: ${llamadas} (inválidas o fallidas: ${invalidas}, ${fmt((invalidas / llamadas) * 100, 1)} %)
+- Modo: ${MODO}${MODO === 'lote' ? ' (las reglas descartan y Gemini puntúa el resto de cada perfil en una llamada)' : ''}
+- Pares evaluados: ${totalPares} (${filas.filter((f) => f.descartado).length} con descarte duro)
+- Repeticiones: ${REPETICIONES}
+- Llamadas totales: ${llamadas} (inválidas o fallidas: ${invalidas}, ${fmt((invalidas / llamadas) * 100, 1)} %)${
+  MODO === 'lote' ? `\n- Animales que Gemini no devolvió en su lote: ${omitidas}` : ''
+}
 
 | Métrica | Valor |
 |---|---|

@@ -1,32 +1,6 @@
-/**
- * Algoritmo de compatibilidad entre un adoptante y un animal.
- *
- * DISEÑO: el cálculo es determinista y basado en reglas ponderadas sobre
- * datos estructurados. No interviene ningún modelo de lenguaje en la
- * puntuación. Esto garantiza que:
- *   - El resultado es reproducible (misma entrada, misma salida).
- *   - Es explicable: cada punto tiene un criterio identificable.
- *   - Es rápido: no requiere inferencia, se calcula en microsegundos.
- *
- * El modelo de lenguaje se emplea únicamente, y de forma opcional, para
- * redactar una explicación en lenguaje natural del resultado ya calculado.
- *
- * Cada criterio devuelve una puntuación de 0 a 1 y tiene un peso asociado.
- * La puntuación final es la media ponderada, expresada de 0 a 100.
- */
+// Compatibilidad por reglas: filtros que descartan y cinco criterios ponderados (0-100)
 
-/**
- * Pesos de cada criterio. Suman 1.
- *
- * Justificación de la ponderación:
- *  - La convivencia con niños tiene el peso mayor porque un desajuste aquí
- *    puede derivar en un incidente o en una devolución.
- *  - La convivencia con otros animales, la energía frente al espacio y la
- *    experiencia pesan lo mismo: un fallo en cualquiera de ellas complica
- *    la adaptación del animal al hogar.
- *  - La energía frente al tiempo disponible pesa algo menos porque la rutina
- *    del hogar suele poder ajustarse más que el espacio o la convivencia.
- */
+// Pesos de cada criterio (suman 1)
 const PESOS = {
   convivenciaNinos: 0.25,
   convivenciaAnimales: 0.20,
@@ -39,17 +13,10 @@ const NIVEL_ENERGIA = { baja: 1, media: 2, alta: 3 };
 const NIVEL_TIEMPO = { poco: 1, medio: 2, mucho: 3 };
 const NIVEL_EXPERIENCIA = { ninguna: 0, baja: 1, media: 2, alta: 3 };
 
-/**
- * Calcula la compatibilidad entre un perfil de adoptante y un animal.
- *
- * @param {object} perfil - Preferencias del adoptante.
- * @param {object} animal - Registro del animal.
- * @returns {{ puntuacion: number, criterios: object[], descartado: boolean, motivoDescarte?: string }}
- */
 export function calcularCompatibilidad(perfil, animal) {
   const caracteristicas = animal.caracteristicas ?? {};
 
-  // --- Filtros duros: descartan al animal por completo ---
+  // Filtros que descartan directamente
   if (
     perfil.preferenciaEspecie !== 'indiferente' &&
     animal.especie !== perfil.preferenciaEspecie
@@ -71,7 +38,7 @@ export function calcularCompatibilidad(perfil, animal) {
     };
   }
 
-  // --- Criterios ponderados ---
+  // Criterios ponderados
   const criterios = [];
 
   criterios.push(evaluarConvivenciaNinos(perfil, caracteristicas));
@@ -92,23 +59,17 @@ export function calcularCompatibilidad(perfil, animal) {
   };
 }
 
-/* ------------------------------------------------------------------ */
-/* Criterios individuales                                              */
-/* ------------------------------------------------------------------ */
-
 function evaluarConvivenciaNinos(perfil, c) {
   let valor;
   let detalle;
 
   if (!perfil.ninos) {
-    // Sin niños en casa, el criterio no penaliza
     valor = 1;
     detalle = 'No hay niños en el hogar';
   } else if (c.aptoNinos === true) {
     valor = 1;
     detalle = 'Convive bien con niños';
   } else {
-    // aptoNinos indefinido: incertidumbre, ni premio ni castigo fuerte
     valor = 0.5;
     detalle = 'No hay información sobre su convivencia con niños';
   }
@@ -165,7 +126,7 @@ function evaluarEnergiaEspacio(perfil, c) {
     };
   }
 
-  // Espacio disponible en una escala de 1 a 3
+  // Espacio en escala de 1 a 3, para compararlo con la energía
   let espacio = perfil.tipoVivienda === 'casa' ? 2 : 1;
   if (perfil.jardin) espacio += 1;
   if (perfil.metrosCuadrados >= 120) espacio = Math.min(3, espacio + 1);
@@ -220,7 +181,7 @@ function evaluarEnergiaTiempo(perfil, c) {
 function evaluarExperiencia(perfil, c, animal) {
   const experiencia = NIVEL_EXPERIENCIA[perfil.experiencia] ?? 0;
 
-  // Exigencia estimada del animal según temperamento y tamaño
+  // Exigencia del animal según temperamento, tamaño y energía
   let exigencia = 1;
   if (c.temperamento === 'tímido') exigencia = 3;
   else if (c.temperamento === 'independiente') exigencia = 2;
