@@ -26,7 +26,7 @@ export default function Layout() {
             to="/"
             className="text-xl font-bold text-refugio-700 shrink-0 tracking-tight hover:text-refugio-800 transition-colors"
           >
-            🐾 Refugio
+            🐾 Koti
           </Link>
 
           <div className="flex items-center gap-1 flex-wrap">
