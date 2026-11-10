@@ -25,6 +25,10 @@ El núcleo del proyecto es un sistema de emparejamiento entre adoptantes y anima
 
 Requisitos: Docker con Docker Compose y Node.js 20.
 
+Todos los comandos se ejecutan dentro de la carpeta del proyecto:
+
+       cd refugio-app
+
 1. Crear el archivo de configuración a partir del de ejemplo y rellenar al menos `JWT_SECRET` y, para usar Gemini, `IA_PROVIDER="gemini"` y `GEMINI_API_KEY`:
 
        cp backend/.env.example backend/.env
