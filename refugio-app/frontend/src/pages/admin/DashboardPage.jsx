@@ -83,25 +83,21 @@ export default function DashboardPage() {
           titulo="Animales en el refugio"
           valor={data.animales.total}
           subtitulo={`${disponibles} disponibles para adopción`}
-          icono="🐾"
         />
         <MetricaCard
           titulo="Solicitudes pendientes"
           valor={pendientes}
           subtitulo="Requieren revisión"
-          icono="📋"
           acento={pendientes > 0}
         />
         <MetricaCard
           titulo="Adopciones este año"
           valor={data.adopciones.completadasEsteAnio}
           subtitulo={`${data.adopciones.completadasEsteMes} este mes`}
-          icono="🏡"
         />
         <MetricaCard
           titulo="Usuarios registrados"
           valor={data.usuarios.total}
-          icono="👥"
         />
       </div>
 
@@ -110,18 +106,15 @@ export default function DashboardPage() {
           titulo="Ingreso recurrente"
           valor={formatEuros(data.apadrinamientos.ingresoMensualEstimado)}
           subtitulo={`${data.apadrinamientos.activosMensuales} apadrinamientos activos`}
-          icono="💚"
         />
         <MetricaCard
           titulo="Donado este mes"
           valor={formatEuros(data.donaciones.totalEsteMes)}
-          icono="💶"
         />
         <MetricaCard
           titulo="Donado en total"
           valor={formatEuros(data.donaciones.totalHistorico)}
           subtitulo="Histórico acumulado"
-          icono="📈"
         />
       </div>
 

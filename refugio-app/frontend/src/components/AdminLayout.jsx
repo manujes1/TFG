@@ -3,10 +3,10 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { ROLES } from '../utils/constants.js';
 
 const SECCIONES = [
-  { to: '/admin', end: true, label: 'Resumen', icono: '📊' },
-  { to: '/admin/animales', label: 'Animales', icono: '🐾' },
-  { to: '/admin/adopciones', label: 'Adopciones', icono: '📋' },
-  { to: '/admin/usuarios', label: 'Usuarios', icono: '👥', soloAdmin: true }
+  { to: '/admin', end: true, label: 'Resumen' },
+  { to: '/admin/animales', label: 'Animales' },
+  { to: '/admin/adopciones', label: 'Adopciones' },
+  { to: '/admin/usuarios', label: 'Usuarios', soloAdmin: true }
 ];
 
 export default function AdminLayout() {
@@ -42,7 +42,6 @@ export default function AdminLayout() {
                 end={seccion.end}
                 className={linkClass}
               >
-                <span aria-hidden="true">{seccion.icono}</span>
                 <span className="whitespace-nowrap">{seccion.label}</span>
               </NavLink>
             ))}

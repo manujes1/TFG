@@ -47,7 +47,7 @@ export default function ResumenUsuario() {
     <div className="space-y-8">
       <section className="rounded-2xl bg-gradient-to-br from-refugio-600 via-refugio-700 to-refugio-800 p-6 sm:p-8 shadow-elevated">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-          Hola, {user.nombre} 👋
+          Hola, {user.nombre}
         </h1>
         <p className="text-refugio-50 mt-1">{fraseBienvenida(enCurso, completadas, apadrinamientosActivos, tienePerfil)}</p>
       </section>

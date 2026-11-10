@@ -1,5 +1,5 @@
 
-export function MetricaCard({ titulo, valor, subtitulo, icono, acento = false }) {
+export function MetricaCard({ titulo, valor, subtitulo, acento = false }) {
   return (
     <div
       className={`rounded-xl p-5 transition-all duration-200 hover:-translate-y-0.5 ${
@@ -8,16 +8,9 @@ export function MetricaCard({ titulo, valor, subtitulo, icono, acento = false })
           : 'card card-hover'
       }`}
     >
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <p className={`text-sm font-medium ${acento ? 'text-teal-50' : 'text-stone-500'}`}>
-          {titulo}
-        </p>
-        {icono && (
-          <span className="text-xl shrink-0" aria-hidden="true">
-            {icono}
-          </span>
-        )}
-      </div>
+      <p className={`text-sm font-medium mb-2 ${acento ? 'text-teal-50' : 'text-stone-500'}`}>
+        {titulo}
+      </p>
       <p className={`text-3xl font-bold tracking-tight ${acento ? 'text-white' : 'text-stone-900'}`}>
         {valor}
       </p>

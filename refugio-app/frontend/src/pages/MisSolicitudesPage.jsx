@@ -121,7 +121,7 @@ function PanelAdopciones({ query }) {
 
             {adopcion.estado === 'COMPLETADA' && (
               <p className="text-sm text-refugio-700 mt-2 font-medium">
-                🎉 Adopción completada el {formatFecha(adopcion.fechaCompletada)}
+                Adopción completada el {formatFecha(adopcion.fechaCompletada)}
               </p>
             )}
           </div>

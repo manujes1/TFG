@@ -32,12 +32,7 @@ export default {
           800: '#1a4c48',
           900: '#193f3c'
         },
-        sand: {
-          50: '#fbf8f2',
-          100: '#f5eee0',
-          200: '#e9dcc3',
-          300: '#d9c4a0'
-        }
+        fondo: '#f6e5d0'
       },
       boxShadow: {
         soft: '0 1px 2px 0 rgb(15 23 42 / 0.04), 0 1px 3px 0 rgb(15 23 42 / 0.06)',
