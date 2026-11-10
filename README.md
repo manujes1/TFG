@@ -33,6 +33,8 @@ Todos los comandos se ejecutan dentro de la carpeta del proyecto:
 
        cp backend/.env.example backend/.env
 
+   La clave de Gemini se puede obtener gratis en Google AI Studio (https://aistudio.google.com/apikey). Sin ella, la plataforma funciona igual, salvo las funciones de IA: interpretar el texto libre, explicar la compatibilidad y proponer descripciones.
+
 2. Construir y arrancar los contenedores:
 
        docker compose --profile app up -d --build
@@ -48,4 +50,16 @@ Todos los comandos se ejecutan dentro de la carpeta del proyecto:
        npm install
        DATABASE_URL="postgresql://refugio:refugio_dev_password@localhost:5432/refugio_db?schema=public" npx prisma migrate deploy
 
-4. Abrir http://localhost:5173
+4. Cargar los datos de ejemplo (opcional; borra los datos que hubiera):
+
+       DATABASE_URL="postgresql://refugio:refugio_dev_password@localhost:5432/refugio_db?schema=public" npm run db:seed
+
+   Cuentas de prueba:
+
+   | Rol | Email | Contraseña |
+   |---|---|---|
+   | Administrador | admin@refugio.com | admin12345 |
+   | Trabajador | voluntario@refugio.com | admin12345 |
+   | Adoptante | maria@example.com | password123 |
+
+5. Abrir http://localhost:5173
